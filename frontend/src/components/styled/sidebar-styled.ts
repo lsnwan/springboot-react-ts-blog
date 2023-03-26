@@ -5,6 +5,12 @@ export const SidebarBox = styled.div`
   background-color: coral;
   width: 240px;
   height: 100vh;
+  transition: .3s ease;
+  
+  &.close {
+    width: 50px;
+  }
+  
   @media (max-width: 660px) {
     display: block;
     position: absolute;

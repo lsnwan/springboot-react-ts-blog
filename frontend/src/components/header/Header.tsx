@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
-import * as headerStyle from "./styled/header-styled";
-import {MobileSearchButtonBox} from "./styled/header-styled";
+import * as headerStyle from "../styled/header-styled";
+import ToggleMenu from "./ToggleMenu";
 
 type HeaderPropsType = {
   theme: string;
+  onClick: () => void;
 }
 
 const Header = (props :HeaderPropsType) => {
@@ -13,17 +14,15 @@ const Header = (props :HeaderPropsType) => {
   return (
     <headerStyle.HeaderBox theme={props.theme}>
       <headerStyle.BrandBox>
-        <headerStyle.MenuIcon>
-          <FontAwesomeIcon icon={icon.faBars} />
-        </headerStyle.MenuIcon>
+        <ToggleMenu onClick={props.onClick} />
         <headerStyle.Logo></headerStyle.Logo>
       </headerStyle.BrandBox>
 
       <headerStyle.SearchBox>
-        <headerStyle.SearchInputBox>
+        <headerStyle.SearchInputBox theme={props.theme}>
           <headerStyle.SearchInput/>
         </headerStyle.SearchInputBox>
-        <headerStyle.SearchButtonBox>
+        <headerStyle.SearchButtonBox theme={props.theme}>
           <FontAwesomeIcon icon={icon.faSearch} />
         </headerStyle.SearchButtonBox>
       </headerStyle.SearchBox>

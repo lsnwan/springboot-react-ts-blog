@@ -22,28 +22,6 @@ export const BrandBox = styled.div`
   align-items: center;
 `
 
-export const SearchInputBox = styled.div`
-  display: flex;
-  align-items: center;
-  height: 35px;
-  background-color: #333;
-  border-top: 1px solid #222;
-  border-left: 1px solid #222;
-  border-bottom: 1px solid #222;
-  border-radius: 50px 0 0 50px;
-  padding: 0 20px;
-  flex: auto;
-`
-
-export const SearchInput = styled.input`
-  font-size: 1em;
-  background: none;
-  border-style: none;
-  width: 100%;
-  color: white;
-  outline: none;
-`
-
 export const SearchBox = styled.div`
   width: 500px;
   height: inherit;
@@ -59,16 +37,44 @@ export const SearchBox = styled.div`
   }
 `;
 
+export const SearchInputBox = styled.div`
+  display: flex;
+  align-items: center;
+  height: 35px;
+  background-color: ${(props) => (props.theme === 'light'  ? '#fff' : '#333')};
+  border-top: 1px solid #222;
+  border-left: 1px solid #222;
+  border-bottom: 1px solid #222;
+  border-radius: 50px 0 0 50px;
+  padding: 0 20px;
+  flex: auto;
+  z-index: 10;
+`
+
+export const SearchInput = styled.input`
+  font-size: 1em;
+  background: none;
+  border-style: none;
+  width: 100%;
+  color: white;
+  outline: none;
+`
+
 export const SearchButtonBox = styled.div`
   width: 60px;
   height: 35px;
   border-radius: 0 50px 50px 0;
   background-color: #222;
   border: 1px solid #222;
+  color: ${(props) => (props.theme === 'light' ? '#fff' : '')};
   text-align: center;
   font-size: 1.2em;
   line-height: 35px;
   cursor: pointer;
+  transition: .3s ease;
+  &:hover {
+    background-color: #111;
+  }
 `
 
 export const MenuIcon = styled.div`
@@ -99,7 +105,7 @@ export const Logo = styled.a`
     content: 'DevAround';
   }
   
-  @media (max-width: 730px) {
+  @media (max-width: 430px) {
     font-size: 1.2em;
     &:after {
       content: 'D.A';
