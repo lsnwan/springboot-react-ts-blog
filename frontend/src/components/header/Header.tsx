@@ -30,14 +30,16 @@ const Header = (props :HeaderPropsType) => {
         <styled.MobileSearchButtonBox>
           <FontAwesomeIcon icon={icon.faSearch} />
         </styled.MobileSearchButtonBox>
-        {/*익명 사용자*/}
+
         <styled.ThemeButton>
           <FontAwesomeIcon icon={icon.faSun} />
         </styled.ThemeButton>
-        <styled.LoginButton>시작하기</styled.LoginButton>
+
+        {/*익명 사용자*/}
+        {/*<styled.headerButton>시작하기</styled.headerButton>*/}
 
         {/*인증된 사용자*/}
-        {/*<headerStyle.ProfileButton></headerStyle.ProfileButton>*/}
+        <styled.ProfileButton></styled.ProfileButton>
       </styled.ProfileBox>
     </styled.HeaderBox>
   );
