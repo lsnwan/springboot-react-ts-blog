@@ -16,9 +16,6 @@ const SideBar = () => {
       dispatch({type: "@isSideBar/setIsSideBar", payload: false});
       return;
     }
-
-    dispatch({type: "@isSideBar/setIsSideBar", payload: true});
-
   }
 
   useEffect(() => {
