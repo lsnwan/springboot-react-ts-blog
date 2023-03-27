@@ -1,32 +1,25 @@
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import './App.css'
-import React, {useState} from "react";
-import Home from "./pages/Home";
-import Header from "./components/header/Header";
-import SideBar from "./components/sidebar/SideBar";
-import {BodyBox} from "./components/styled/body-styled";
-import Write from "./pages/Write";
-import Login from "./pages/Login";
+import React from "react";
+import Login from "./pages/cmm/Login";
 import {useStore} from "./store";
 import {Provider} from "react-redux";
+import MainLayout from "./pages/MainLayout";
+import Home from "./pages/main/Home";
 
 function App() {
 
   const store = useStore();
-  const [theme, setTheme] = useState<string>('dark');
 
   return (
     <Provider store={store}>
       <Router>
-        <Header theme={theme}/>
-        <BodyBox>
-          <SideBar></SideBar>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/write" element={<Write />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </BodyBox>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route index element={<Home />}></Route>
+          </Route>
+          <Route path="/login" element={<Login />}></Route>
+        </Routes>
       </Router>
     </Provider>
   )
