@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SidebarBox} from "../styled/sidebar-styled";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../store";
@@ -12,10 +12,12 @@ const SideBar = () => {
 
   const handleResize = () => {
     let innerWidth = window.innerWidth;
-    if (innerWidth < 730) {
+
+    if (innerWidth < 430) {
       dispatch({type: "@isSideBar/setIsSideBar", payload: false});
       return;
     }
+
   }
 
   useEffect(() => {

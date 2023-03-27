@@ -12,8 +12,9 @@ export const HeaderBox = styled.div`
   align-items: center;
   width: 100%;
   height: 56px;
-  background-color: ${(props) => (props.theme === "light" ? "#fff" : "#222")};
+  background-color: ${(props) => (props.theme === "light" ? "#fff" : "#0f0f0f")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
+  z-index: 1;
 `;
 
 export const BrandBox = styled.div`
@@ -42,9 +43,9 @@ export const SearchInputBox = styled.div`
   align-items: center;
   height: 35px;
   background-color: ${(props) => (props.theme === 'light'  ? '#fff' : '#2a2a2a')};
-  border-top: 1px solid #222;
-  border-left: 1px solid #222;
-  border-bottom: 1px solid #222;
+  border-top: 1px solid #2a2a2a;
+  border-left: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
   border-radius: 50px 0 0 50px;
   padding: 0 20px;
   flex: auto;
@@ -65,7 +66,7 @@ export const SearchButtonBox = styled.div`
   height: 35px;
   border-radius: 0 50px 50px 0;
   background-color: #111;
-  border: 1px solid #222;
+  border: 1px solid #2a2a2a;
   color: ${(props) => (props.theme === 'light' ? '#fff' : '')};
   text-align: center;
   font-size: 1.2em;

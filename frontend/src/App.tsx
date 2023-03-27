@@ -11,14 +11,16 @@ function App() {
 
   const store = useStore();
 
+
+
   return (
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route element={<MainLayout />}>
-            <Route index element={<Home />}></Route>
-          </Route>
-          <Route path="/login" element={<Login />}></Route>
+            <Route element={<MainLayout />}>
+              <Route index path="/" element={<Home />}></Route>
+            </Route>
+            <Route path="/login" element={<Login />}></Route>
         </Routes>
       </Router>
     </Provider>

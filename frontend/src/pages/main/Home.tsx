@@ -1,9 +1,13 @@
 import React from 'react';
-import {ContentBox} from "../../components/styled/content-box";
+import {Container, ContentBody} from "../../components/styled/content-styled";
 
 const Home = () => {
   return (
-    <ContentBox>Home</ContentBox>
+    <ContentBody>
+      <Container>
+        메인 페이지
+      </Container>
+    </ContentBody>
   );
 };
 
