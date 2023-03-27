@@ -121,7 +121,7 @@ export const ProfileBox = styled.div`
   align-items: center;
 `;
 
-export const LoginButton = styled.div`
+export const headerButton = styled.div`
   background-color: #1abc9c;
   display: inline;
   padding: 10px 20px;
@@ -162,6 +162,7 @@ export const ProfileButton = styled.div`
   height: 30px;
   background-color: white;
   border-radius: 50%;
+  cursor: pointer;
 `
 
 export const NotificationButton = styled.div`
