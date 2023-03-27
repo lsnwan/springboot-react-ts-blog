@@ -5,7 +5,7 @@ export const BodyBox = styled.div`
 `
 
 export const ContentBody = styled.div`
-  padding: 66px 25px 10px 25px;
+  padding: 66px 13px 10px 13px;
   background-color: #0f0f0f;
   color: white;
   flex: auto;
@@ -14,12 +14,9 @@ export const ContentBody = styled.div`
 `
 
 export const Container = styled.div`
-  width: 1150px;
+  width: 1100px;
   height: 500px;
   background-color: cornflowerblue;
   margin: 0 auto;
   
-  @media (max-width: 1440px) {
-    width: 100%;
-  }
 `

@@ -15,6 +15,11 @@ export const HeaderBox = styled.div`
   background-color: ${(props) => (props.theme === "light" ? "#fff" : "#0f0f0f")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   z-index: 1;
+  
+  @media (max-width: 1366px) {
+    width: 1366px;
+  }
+  
 `;
 
 export const BrandBox = styled.div`
@@ -29,13 +34,6 @@ export const SearchBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  @media (max-width: 900px) {
-    width: 300px;
-  }
-
-  @media (max-width: 730px) {
-    display: none;
-  }
 `;
 
 export const SearchInputBox = styled.div`
@@ -102,17 +100,6 @@ export const Logo = styled.a`
   display: block;
   font-weight: bold;
   cursor: pointer;
-  
-  &:after {
-    content: 'DevAround';
-  }
-  
-  @media (max-width: 430px) {
-    font-size: 1.2em;
-    &:after {
-      content: 'D.A';
-    }
-  }
 `;
 
 

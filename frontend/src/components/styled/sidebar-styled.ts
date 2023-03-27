@@ -11,7 +11,7 @@ export const SidebarBox = styled.div`
   flex-shrink: 0;
   
   &.close {
-    width: 50px;
+    width: 60px;
   }
   
 `

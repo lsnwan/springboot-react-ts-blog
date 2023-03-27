@@ -14,7 +14,7 @@ const Header = (props :HeaderPropsType) => {
     <styled.HeaderBox theme={props.theme}>
       <styled.BrandBox>
         <ToggleMenu />
-        <styled.Logo></styled.Logo>
+        <styled.Logo>YouBlog</styled.Logo>
       </styled.BrandBox>
 
       <styled.SearchBox>
@@ -27,9 +27,6 @@ const Header = (props :HeaderPropsType) => {
       </styled.SearchBox>
 
       <styled.ProfileBox>
-        <styled.MobileSearchButtonBox>
-          <FontAwesomeIcon icon={icon.faSearch} />
-        </styled.MobileSearchButtonBox>
 
         <styled.ThemeButton>
           <FontAwesomeIcon icon={icon.faSun} />
