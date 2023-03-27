@@ -1,14 +1,35 @@
-import React, {useRef} from 'react';
+import React, {useEffect} from 'react';
 import {SidebarBox} from "../styled/sidebar-styled";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../store";
+import * as S from "../../store/sidebar";
 
-type HeaderPropsType = {
-  isSideOpen: boolean;
-}
 
-const SideBar = (props :HeaderPropsType) => {
+const SideBar = () => {
+
+  const isSideBar = useSelector<AppState, S.State>(state => state.isSideBar);
+  const dispatch = useDispatch();
+
+  const handleResize = () => {
+    let innerWidth = window.innerWidth;
+    if (innerWidth < 730) {
+      dispatch({type: "@isSideBar/setIsSideBar", payload: false});
+      return;
+    }
+
+    dispatch({type: "@isSideBar/setIsSideBar", payload: true});
+
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => { // cleanup
+      window.removeEventListener('resize', handleResize);
+    }
+  }, [innerWidth, innerHeight]);
 
   return (
-    <SidebarBox className={props.isSideOpen ? '' : 'close'}>
+    <SidebarBox className={isSideBar ? "" : "close"}>
       사이드 메뉴
     </SidebarBox>
   );

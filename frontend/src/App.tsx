@@ -6,27 +6,30 @@ import Header from "./components/header/Header";
 import SideBar from "./components/sidebar/SideBar";
 import {BodyBox} from "./components/styled/body-styled";
 import Write from "./pages/Write";
+import Login from "./pages/Login";
+import {useStore} from "./store";
+import {Provider} from "react-redux";
 
 function App() {
 
+  const store = useStore();
   const [theme, setTheme] = useState<string>('dark');
-  const [isSideOpen, setIsSideOpen] = useState<boolean>(true);
-  const handleToggleMenu = () => {
-    setIsSideOpen(!isSideOpen);
-  };
 
   return (
-    <Router>
-      <Header theme={theme} onClick={handleToggleMenu}/>
-      <BodyBox>
-        <SideBar isSideOpen={isSideOpen}></SideBar>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/write" element={<Write />} />
-        </Routes>
-      </BodyBox>
-    </Router>
-)
+    <Provider store={store}>
+      <Router>
+        <Header theme={theme}/>
+        <BodyBox>
+          <SideBar></SideBar>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/write" element={<Write />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </BodyBox>
+      </Router>
+    </Provider>
+  )
 }
 
 export default App

@@ -1,46 +1,45 @@
 import React, {useRef, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
-import * as headerStyle from "../styled/header-styled";
+import * as styled from "../styled/header-styled";
 import ToggleMenu from "./ToggleMenu";
 
 type HeaderPropsType = {
   theme: string;
-  onClick: () => void;
 }
 
 const Header = (props :HeaderPropsType) => {
 
   return (
-    <headerStyle.HeaderBox theme={props.theme}>
-      <headerStyle.BrandBox>
-        <ToggleMenu onClick={props.onClick} />
-        <headerStyle.Logo></headerStyle.Logo>
-      </headerStyle.BrandBox>
+    <styled.HeaderBox theme={props.theme}>
+      <styled.BrandBox>
+        <ToggleMenu />
+        <styled.Logo></styled.Logo>
+      </styled.BrandBox>
 
-      <headerStyle.SearchBox>
-        <headerStyle.SearchInputBox theme={props.theme}>
-          <headerStyle.SearchInput/>
-        </headerStyle.SearchInputBox>
-        <headerStyle.SearchButtonBox theme={props.theme}>
+      <styled.SearchBox>
+        <styled.SearchInputBox theme={props.theme}>
+          <styled.SearchInput/>
+        </styled.SearchInputBox>
+        <styled.SearchButtonBox theme={props.theme}>
           <FontAwesomeIcon icon={icon.faSearch} />
-        </headerStyle.SearchButtonBox>
-      </headerStyle.SearchBox>
+        </styled.SearchButtonBox>
+      </styled.SearchBox>
 
-      <headerStyle.ProfileBox>
-        <headerStyle.MobileSearchButtonBox>
+      <styled.ProfileBox>
+        <styled.MobileSearchButtonBox>
           <FontAwesomeIcon icon={icon.faSearch} />
-        </headerStyle.MobileSearchButtonBox>
+        </styled.MobileSearchButtonBox>
         {/*익명 사용자*/}
-        {/*<headerStyle.LoginButton>시작하기</headerStyle.LoginButton>*/}
+        <styled.ThemeButton>
+          <FontAwesomeIcon icon={icon.faSun} />
+        </styled.ThemeButton>
+        <styled.LoginButton>시작하기</styled.LoginButton>
 
         {/*인증된 사용자*/}
-        <headerStyle.NotificationButton>
-          <FontAwesomeIcon icon={icon.faBell} />
-        </headerStyle.NotificationButton>
-        <headerStyle.ProfileButton></headerStyle.ProfileButton>
-      </headerStyle.ProfileBox>
-    </headerStyle.HeaderBox>
+        {/*<headerStyle.ProfileButton></headerStyle.ProfileButton>*/}
+      </styled.ProfileBox>
+    </styled.HeaderBox>
   );
 
 };

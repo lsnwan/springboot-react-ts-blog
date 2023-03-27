@@ -10,13 +10,4 @@ export const SidebarBox = styled.div`
   &.close {
     width: 50px;
   }
-  
-  @media (max-width: 660px) {
-    display: block;
-    position: absolute;
-    top: 56px;
-    padding-top: 10px;
-    width: 100%;
-    box-sizing: border-box;
-  }
 `
