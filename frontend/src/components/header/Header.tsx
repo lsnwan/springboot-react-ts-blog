@@ -1,7 +1,7 @@
-import React, {useRef, useState} from 'react';
+import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
-import * as styled from "../styled/header-styled";
+import * as SH from "../styled/header-styled";
 import ToggleMenu from "./ToggleMenu";
 
 type HeaderPropsType = {
@@ -11,34 +11,34 @@ type HeaderPropsType = {
 const Header = (props :HeaderPropsType) => {
 
   return (
-    <styled.HeaderBox theme={props.theme}>
-      <styled.BrandBox>
+    <SH.HeaderBox theme={props.theme}>
+      <SH.BrandBox>
         <ToggleMenu />
-        <styled.Logo>YouBlog</styled.Logo>
-      </styled.BrandBox>
+        <SH.Logo>YouBlog</SH.Logo>
+      </SH.BrandBox>
 
-      <styled.SearchBox>
-        <styled.SearchInputBox theme={props.theme}>
-          <styled.SearchInput/>
-        </styled.SearchInputBox>
-        <styled.SearchButtonBox theme={props.theme}>
+      <SH.SearchBox>
+        <SH.SearchInputBox theme={props.theme}>
+          <SH.SearchInput/>
+        </SH.SearchInputBox>
+        <SH.SearchButtonBox theme={props.theme}>
           <FontAwesomeIcon icon={icon.faSearch} />
-        </styled.SearchButtonBox>
-      </styled.SearchBox>
+        </SH.SearchButtonBox>
+      </SH.SearchBox>
 
-      <styled.ProfileBox>
+      <SH.ProfileBox>
 
-        <styled.ThemeButton>
+        <SH.ThemeButton>
           <FontAwesomeIcon icon={icon.faSun} />
-        </styled.ThemeButton>
+        </SH.ThemeButton>
 
         {/*익명 사용자*/}
         {/*<styled.headerButton>시작하기</styled.headerButton>*/}
 
         {/*인증된 사용자*/}
-        <styled.ProfileButton></styled.ProfileButton>
-      </styled.ProfileBox>
-    </styled.HeaderBox>
+        <SH.ProfileButton></SH.ProfileButton>
+      </SH.ProfileBox>
+    </SH.HeaderBox>
   );
 
 };

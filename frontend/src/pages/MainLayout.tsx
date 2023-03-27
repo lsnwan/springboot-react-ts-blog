@@ -6,14 +6,14 @@ import {Outlet} from "react-router-dom";
 import {BrowserView, MobileOnlyView, MobileView, TabletView} from 'react-device-detect';
 const MainLayout = () => {
 
-  const [theme, setTheme] = useState<string>('dark');
+  const [theme, setTheme] = useState<string>('light');
 
   return (
     <>
       <BrowserView>
         <Header theme={theme}/>
         <BodyBox>
-          <SideBar></SideBar>
+          <SideBar theme={theme}></SideBar>
           <Outlet />
         </BodyBox>
       </BrowserView>
@@ -21,7 +21,7 @@ const MainLayout = () => {
       <TabletView>
         <Header theme={theme}/>
         <BodyBox>
-          <SideBar></SideBar>
+          <SideBar theme={theme}></SideBar>
           <Outlet />
         </BodyBox>
       </TabletView>

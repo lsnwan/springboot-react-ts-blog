@@ -12,7 +12,7 @@ export const HeaderBox = styled.div`
   align-items: center;
   width: 100%;
   height: 56px;
-  background-color: ${(props) => (props.theme === "light" ? "#fff" : "#0f0f0f")};
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#0f0f0f")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   z-index: 1;
   

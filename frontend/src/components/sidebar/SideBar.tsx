@@ -4,13 +4,16 @@ import {useSelector} from "react-redux";
 import {AppState} from "../../store";
 import * as S from "../../store/sidebar";
 
+type PropsType = {
+  theme: string;
+}
 
-const SideBar = () => {
+const SideBar = (props: PropsType) => {
 
   const isSideBar = useSelector<AppState, S.State>(state => state.isSideBar);
 
   return (
-    <SidebarBox className={isSideBar ? "" : "close"}>
+    <SidebarBox theme={props.theme} className={isSideBar ? "" : "close"}>
       사이드 메뉴
     </SidebarBox>
   );

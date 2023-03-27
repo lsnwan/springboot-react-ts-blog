@@ -11,8 +11,6 @@ function App() {
 
   const store = useStore();
 
-
-
   return (
     <Provider store={store}>
       <Router>
