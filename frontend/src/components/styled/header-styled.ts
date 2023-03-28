@@ -15,7 +15,7 @@ export const HeaderBox = styled.div`
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#0f0f0f")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   z-index: 1;
-  
+  transition: all .3s;
   @media (max-width: 1366px) {
     width: 1366px;
   }
@@ -55,7 +55,7 @@ export const SearchInput = styled.input`
   background: none;
   border-style: none;
   width: 100%;
-  color: white;
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   outline: none;
 `
 

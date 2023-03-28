@@ -1,13 +1,14 @@
 import React from 'react';
 import {Outlet} from "react-router-dom";
+import {CommonStyled} from "../components/styled/common-styled";
 
-const MainLayout = () => {
+const CommonLayout = () => {
 
   return (
-    <div>
+    <CommonStyled>
       <Outlet />
-    </div>
+    </CommonStyled>
   );
 };
 
-export default MainLayout;
+export default CommonLayout;

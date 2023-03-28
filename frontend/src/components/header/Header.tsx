@@ -1,14 +1,40 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SH from "../styled/header-styled";
 import ToggleMenu from "./ToggleMenu";
+import {useNavigate} from "react-router";
+import * as Utils from "../../utils";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../store";
+import * as T from "../../store/theme";
 
-type HeaderPropsType = {
-  theme: string;
+type PropsType = {
+  theme: string | undefined;
 }
 
-const Header = (props :HeaderPropsType) => {
+const Header = (props: PropsType) => {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const themeType = useSelector<AppState, T.State>(state => state.themeType);
+
+  const goLoginHandler = useCallback(() => {
+    navigate('/login');
+  }, [navigate])
+
+  const changeThemeHandler = () => {
+    console.log('테마변경');
+
+    if (themeType === undefined || themeType === 'dark') {
+      Utils.setCookie('theme', 'light');
+    } else {
+      Utils.setCookie('theme', 'dark');
+    }
+
+    dispatch({type: '@theme/setTheme', payload: Utils.getCookie('theme')});
+  }
 
   return (
     <SH.HeaderBox theme={props.theme}>
@@ -19,7 +45,7 @@ const Header = (props :HeaderPropsType) => {
 
       <SH.SearchBox>
         <SH.SearchInputBox theme={props.theme}>
-          <SH.SearchInput/>
+          <SH.SearchInput theme={props.theme}/>
         </SH.SearchInputBox>
         <SH.SearchButtonBox theme={props.theme}>
           <FontAwesomeIcon icon={icon.faSearch} />
@@ -28,15 +54,20 @@ const Header = (props :HeaderPropsType) => {
 
       <SH.ProfileBox>
 
-        <SH.ThemeButton>
-          <FontAwesomeIcon icon={icon.faSun} />
+        <SH.ThemeButton onClick={changeThemeHandler}>
+          {themeType === 'light' && (
+            <FontAwesomeIcon icon={icon.faMoon} />
+          )}
+          {themeType === 'dark' && (
+            <FontAwesomeIcon icon={icon.faSun} />
+          )}
         </SH.ThemeButton>
 
         {/*익명 사용자*/}
-        {/*<styled.headerButton>시작하기</styled.headerButton>*/}
+        <SH.headerButton onClick={goLoginHandler}>시작하기</SH.headerButton>
 
         {/*인증된 사용자*/}
-        <SH.ProfileButton></SH.ProfileButton>
+        {/*<SH.ProfileButton></SH.ProfileButton>*/}
       </SH.ProfileBox>
     </SH.HeaderBox>
   );

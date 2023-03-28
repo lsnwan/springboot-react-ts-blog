@@ -3,16 +3,21 @@ import Header from "../components/header/Header";
 import {BodyBox} from "../components/styled/content-styled";
 import SideBar from "../components/sidebar/SideBar";
 import {Outlet} from "react-router-dom";
-import {BrowserView, MobileOnlyView, MobileView, TabletView} from 'react-device-detect';
+import {BrowserView, MobileOnlyView, TabletView} from 'react-device-detect';
+import * as Utils from '../utils';
+import {useSelector} from "react-redux";
+import {AppState} from "../store";
+import * as T from "../store/theme";
+
 const MainLayout = () => {
 
-  const [theme, setTheme] = useState<string>('light');
+  const theme = useSelector<AppState, T.State>(state => state.themeType);
 
   return (
     <>
       <BrowserView>
         <Header theme={theme}/>
-        <BodyBox>
+        <BodyBox theme={theme}>
           <SideBar theme={theme}></SideBar>
           <Outlet />
         </BodyBox>
@@ -20,7 +25,7 @@ const MainLayout = () => {
 
       <TabletView>
         <Header theme={theme}/>
-        <BodyBox>
+        <BodyBox theme={theme}>
           <SideBar theme={theme}></SideBar>
           <Outlet />
         </BodyBox>

@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, ContentBody} from "../../components/styled/content-styled";
 
 const Home = () => {
+
   return (
     <ContentBody>
       <Container>

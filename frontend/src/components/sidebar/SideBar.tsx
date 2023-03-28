@@ -5,7 +5,7 @@ import {AppState} from "../../store";
 import * as S from "../../store/sidebar";
 
 type PropsType = {
-  theme: string;
+  theme: string | undefined;
 }
 
 const SideBar = (props: PropsType) => {
