@@ -6,7 +6,11 @@ import {useDispatch, useSelector} from "react-redux";
 import type {AppState} from "../../store";
 import * as S from '../../store/sidebar';
 
-const ToggleMenu = () => {
+type PropsType = {
+  theme: string | undefined;
+}
+
+const ToggleMenu = (props: PropsType) => {
 
   const dispatch = useDispatch();
   const isSideBar = useSelector<AppState, S.State>(state => state.isSideBar);
@@ -16,7 +20,7 @@ const ToggleMenu = () => {
   }
 
   return (
-    <headerStyle.MenuIcon>
+    <headerStyle.MenuIcon theme={props.theme}>
       <FontAwesomeIcon icon={icon.faBars} onClick={toggleSideBar} />
     </headerStyle.MenuIcon>
   );

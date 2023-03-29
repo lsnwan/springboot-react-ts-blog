@@ -2,7 +2,6 @@ import React, {useCallback, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SH from "../styled/header-styled";
-import ToggleMenu from "./ToggleMenu";
 import {useNavigate} from "react-router";
 import * as Utils from "../../utils";
 import {useDispatch, useSelector} from "react-redux";
@@ -25,7 +24,6 @@ const Header = (props: PropsType) => {
   }, [navigate])
 
   const changeThemeHandler = () => {
-    console.log('테마변경');
 
     if (themeType === undefined || themeType === 'dark') {
       Utils.setCookie('theme', 'light');
@@ -39,18 +37,9 @@ const Header = (props: PropsType) => {
   return (
     <SH.HeaderBox theme={props.theme}>
       <SH.BrandBox>
-        <ToggleMenu />
-        <SH.Logo>YouBlog</SH.Logo>
+        <SH.Logo theme={props.theme} onClick={() => navigate('/')}>YouBlog</SH.Logo>
       </SH.BrandBox>
 
-      <SH.SearchBox>
-        <SH.SearchInputBox theme={props.theme}>
-          <SH.SearchInput theme={props.theme}/>
-        </SH.SearchInputBox>
-        <SH.SearchButtonBox theme={props.theme}>
-          <FontAwesomeIcon icon={icon.faSearch} />
-        </SH.SearchButtonBox>
-      </SH.SearchBox>
 
       <SH.ProfileBox>
 
