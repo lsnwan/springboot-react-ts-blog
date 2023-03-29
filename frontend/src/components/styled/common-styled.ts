@@ -23,22 +23,10 @@ export const Title = styled.h2`
   font-weight: bold;
 `;
 
-export const CommonLogo = styled.h1`
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 15px 100px;
-  background-color: #ffffff;
-  border-radius: 20px;
-  color: #333;
-  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
-`;
-
 export const InputLabelBlock = styled.label`
   display: inline-block;
   margin-bottom: 5px;
-  font-size: 15px;
+  font-size: 14px;
   color: #939393;
   cursor: pointer;
 `;
@@ -51,7 +39,6 @@ export const InputTextBlock = styled.input`
   outline: none;
   border: 1px solid #dadada;
   padding: 5px 15px;
-  margin-bottom: 20px;
 `;
 
 export const ButtonPrimary = styled.button`
@@ -210,7 +197,6 @@ export const ButtonDark = styled.button`
 `;
 
 export const MessageBox = styled.div`
-  margin: 10px 0;
   padding: 5px 0;
   font-size: 13px;
 
