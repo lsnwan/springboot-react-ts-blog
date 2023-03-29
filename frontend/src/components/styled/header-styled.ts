@@ -89,8 +89,8 @@ export const MenuIcon = styled.div`
   transition: .3s ease;
   border-radius: 50%;
   &:hover {
-    background-color: white;
-    color: #333;
+    background-color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};;
+    color: ${(props) => (props.theme === "light" ? "#fff" : "#333")};;
   }
 `
 
@@ -100,6 +100,11 @@ export const Logo = styled.a`
   display: block;
   font-weight: bold;
   cursor: pointer;
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
+  text-decoration: none;
+  &:hover {
+    color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
+  }
 `;
 
 
@@ -113,7 +118,7 @@ export const ProfileBox = styled.div`
 export const headerButton = styled.div`
   background-color: #1abc9c;
   display: inline;
-  padding: 10px 20px;
+  padding: 8px 20px;
   border-radius: 10px;
   cursor: pointer;
   transition: ease 0.3s;
