@@ -6,13 +6,11 @@ import {useStore} from "./store";
 import {Provider} from "react-redux";
 import MainLayout from "./pages/MainLayout";
 import Home from "./pages/main/Home";
-import * as Utils from "./utils";
 import CommonLayout from "./pages/CommLayout";
 
 function App() {
 
   const store = useStore();
-  Utils.setCookie('theme', 'dark');
 
   return (
     <Provider store={store}>
