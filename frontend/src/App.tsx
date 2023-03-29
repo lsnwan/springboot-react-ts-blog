@@ -7,6 +7,8 @@ import {Provider} from "react-redux";
 import MainLayout from "./pages/MainLayout";
 import Home from "./pages/main/Home";
 import CommonLayout from "./pages/CommLayout";
+import SignUp from "./pages/cmm/SignUp";
+import FindPassword from "./pages/cmm/FindPassword";
 
 function App() {
 
@@ -21,6 +23,8 @@ function App() {
             </Route>
             <Route element={<CommonLayout />}>
               <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/find-password" element={<FindPassword />} />
             </Route>
         </Routes>
       </Router>

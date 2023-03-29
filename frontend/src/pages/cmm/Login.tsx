@@ -18,7 +18,7 @@ const Login = () => {
   return (
     <CommonBody>
       <Helmet>
-        <title>YouBlog - Login</title>
+        <title>YouBlog - 로그인</title>
       </Helmet>
 
       <Title>로그인</Title>

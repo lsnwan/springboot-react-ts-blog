@@ -52,11 +52,6 @@ const Header = (props: PropsType) => {
           )}
         </SH.ThemeButton>
 
-        {/*익명 사용자*/}
-        <SH.headerButton onClick={goLoginHandler}>시작하기</SH.headerButton>
-
-        {/*인증된 사용자*/}
-        {/*<SH.ProfileButton></SH.ProfileButton>*/}
       </SH.ProfileBox>
     </SH.HeaderBox>
   );
