@@ -23,18 +23,18 @@ const Login = () => {
 
       <Title>로그인</Title>
 
-      <InputLabelBlock htmlFor="userId">이메일</InputLabelBlock>
+      <InputLabelBlock htmlFor="userId" className="mt-3">이메일</InputLabelBlock>
       <InputTextBlock type="text" id="userId" />
 
-      <InputLabelBlock htmlFor="userPw">비밀번호</InputLabelBlock>
+      <InputLabelBlock htmlFor="userPw" className="mt-3">비밀번호</InputLabelBlock>
       <InputTextBlock type="password" id="userPw" />
 
       <MessageBox className="center error">아이디와 비밀번호를 확인하세요</MessageBox>
       
-      <ButtonPrimary className="block">로그인</ButtonPrimary>
+      <ButtonPrimary className="block mt-3">로그인</ButtonPrimary>
 
 
-      <FlexBetween className="mt-1">
+      <FlexBetween className="mt-3">
         <MessageBox className="desc m-0">비밀번호를 잊어버렸나요?</MessageBox>
         <Link style={{fontSize: "13px"}} to="/find-password">비밀번호 찾기</Link>
       </FlexBetween>
@@ -44,7 +44,7 @@ const Login = () => {
         <Link style={{fontSize: "13px"}} to="/signup">회원가입</Link>
       </FlexBetween>
 
-      <FlexBetween className="mt-1">
+      <FlexBetween className="mt-3 mb-3">
         <Divider/>
         <DividerText>OR</DividerText>
         <Divider/>
