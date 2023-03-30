@@ -1,12 +1,11 @@
-import React, {useCallback, useState} from 'react';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import * as icon from "@fortawesome/free-solid-svg-icons";
+import React, {useCallback} from 'react';
 import * as SH from "../styled/header-styled";
 import {useNavigate} from "react-router";
 import * as Utils from "../../utils";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../store";
 import * as T from "../../store/theme";
+import {BsBrightnessHighFill, BsFillMoonFill} from "react-icons/all";
 
 type PropsType = {
   theme: string | undefined;
@@ -45,10 +44,10 @@ const Header = (props: PropsType) => {
 
         <SH.ThemeButton onClick={changeThemeHandler}>
           {themeType === 'light' && (
-            <FontAwesomeIcon icon={icon.faMoon} />
+            <BsFillMoonFill/>
           )}
           {themeType === 'dark' && (
-            <FontAwesomeIcon icon={icon.faSun} />
+            <BsBrightnessHighFill/>
           )}
         </SH.ThemeButton>
 

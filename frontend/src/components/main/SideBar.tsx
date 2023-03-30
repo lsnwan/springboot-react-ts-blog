@@ -3,6 +3,7 @@ import {SidebarBox} from "../styled/sidebar-styled";
 import {useSelector} from "react-redux";
 import {AppState} from "../../store";
 import * as S from "../../store/sidebar";
+import SideMenu from "./SideMenu";
 
 type PropsType = {
   theme: string | undefined;
@@ -14,7 +15,7 @@ const SideBar = (props: PropsType) => {
 
   return (
     <SidebarBox theme={props.theme} className={isSideBar ? "" : "close"}>
-      사이드 메뉴
+      <SideMenu isSideBar={isSideBar} />
     </SidebarBox>
   );
 };

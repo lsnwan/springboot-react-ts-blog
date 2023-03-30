@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Header from "../components/main/Header";
 import {BodyBox} from "../components/styled/content-styled";
 import SideBar from "../components/main/SideBar";
 import {Outlet} from "react-router-dom";
 import {BrowserView, MobileOnlyView, TabletView} from 'react-device-detect';
-import * as Utils from '../utils';
 import {useSelector} from "react-redux";
 import {AppState} from "../store";
 import * as T from "../store/theme";

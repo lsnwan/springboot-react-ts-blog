@@ -52,13 +52,20 @@ export const ButtonPrimary = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+  
   &.block {
     width: 100%;
+    padding-left: 0;
+    padding-right: 0;
   }
   
   &:hover {
     background-color: #0975c9;
   }
+  
 `;
 
 export const ButtonSecondary = styled.button`
@@ -229,7 +236,10 @@ export const Divider = styled.div`
   height: 1px;
   background-color: #ccc;
   margin: 10px 0;
-  
+
+  &.dark {
+    background-color: #414141;
+  }
 `;
 
 export const FlexBetween = styled.div`
