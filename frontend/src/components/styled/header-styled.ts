@@ -17,7 +17,7 @@ export const HeaderBox = styled.div`
   z-index: 1;
   transition: all .3s;
   @media (max-width: 1366px) {
-    width: 1366px;
+    width: 1348px;
   }
   
 `;
