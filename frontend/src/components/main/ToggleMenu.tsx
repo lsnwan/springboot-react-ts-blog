@@ -20,8 +20,8 @@ const ToggleMenu = (props: PropsType) => {
   }
 
   return (
-    <headerStyle.MenuIcon theme={props.theme}>
-      <FontAwesomeIcon icon={icon.faBars} onClick={toggleSideBar} />
+    <headerStyle.MenuIcon theme={props.theme} onClick={toggleSideBar}>
+      <FontAwesomeIcon icon={icon.faBars} />
     </headerStyle.MenuIcon>
   );
 };
