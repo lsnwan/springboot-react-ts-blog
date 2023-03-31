@@ -10,7 +10,7 @@ import {
   SubMenuTitle,
   SubMenuUL, SubscribeProfile, SubscribeProfileBox, SubscribeProfileName
 } from "../styled/sidebar-styled";
-import {BsClockHistory, BsFillHouseFill, BsFillStarFill} from "react-icons/all";
+import {BsClockHistory, BsFillHouseFill, BsFillStarFill, GoLightBulb} from "react-icons/all";
 
 type PropsType = {
   isSideBar: boolean;
@@ -43,7 +43,7 @@ const SideMenu = (props :PropsType) => {
           <SingleMenuButton isSideBar={props.isSideBar}>
             <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
             {props.isSideBar && (
-              <SingleMenuButtonName>본 블로그 이력</SingleMenuButtonName>
+              <SingleMenuButtonName>이력</SingleMenuButtonName>
             )}
           </SingleMenuButton>
         </SingleMenuLI>
@@ -72,7 +72,7 @@ const SideMenu = (props :PropsType) => {
           <SingleMenuUL className="border_none">
             <SingleMenuLI isSideBar={props.isSideBar}>
               <SingleMenuButton isSideBar={props.isSideBar}>
-                <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
+                <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (
                   <SingleMenuButtonName>취미</SingleMenuButtonName>
                 )}
@@ -80,7 +80,7 @@ const SideMenu = (props :PropsType) => {
             </SingleMenuLI>
             <SingleMenuLI isSideBar={props.isSideBar}>
               <SingleMenuButton isSideBar={props.isSideBar}>
-                <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
+                <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (
                   <SingleMenuButtonName>생활</SingleMenuButtonName>
                 )}
@@ -88,7 +88,7 @@ const SideMenu = (props :PropsType) => {
             </SingleMenuLI>
             <SingleMenuLI isSideBar={props.isSideBar}>
               <SingleMenuButton isSideBar={props.isSideBar}>
-                <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
+                <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (
                   <SingleMenuButtonName>쇼핑</SingleMenuButtonName>
                 )}
@@ -96,7 +96,7 @@ const SideMenu = (props :PropsType) => {
             </SingleMenuLI>
             <SingleMenuLI isSideBar={props.isSideBar}>
               <SingleMenuButton isSideBar={props.isSideBar}>
-                <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
+                <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (
                   <SingleMenuButtonName>IT</SingleMenuButtonName>
                 )}
