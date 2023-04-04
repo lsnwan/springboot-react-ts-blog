@@ -17,6 +17,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable();
         http.headers().frameOptions().sameOrigin();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.authorizeRequests()
+                .antMatchers("/api/login").permitAll();
     }
 
     @Override
