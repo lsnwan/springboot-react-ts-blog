@@ -65,11 +65,11 @@ public class ApplicationStartRunner implements ApplicationRunner {
                 .account(account)
                 .authority(userRole)
                 .build());
-//        accountAuthorityRepository.save(AccountAuthority.builder()
-//                .idx(2L)
-//                .account(account)
-//                .authority(adminRole)
-//                .build());
+        accountAuthorityRepository.save(AccountAuthority.builder()
+                .idx(2L)
+                .account(account)
+                .authority(adminRole)
+                .build());
 
     }
 }

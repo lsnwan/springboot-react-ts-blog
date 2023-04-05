@@ -1,9 +1,13 @@
 package com.example.backend.security.provider;
 
+import com.example.backend.entity.Account;
+import com.example.backend.repository.AccountRepository;
+import com.example.backend.security.UserAccount;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +22,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -28,14 +33,16 @@ public class TokenProvider implements InitializingBean {
 
     private final String secret;
     private final long tokenExpireTime;
+    private final AccountRepository accountRepository;
 
     private Key key;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-expire-time}") long tokenExpireTime) {
+            @Value("${jwt.token-expire-time}") long tokenExpireTime, AccountRepository accountRepository) {
         this.secret = secret;
         this.tokenExpireTime = tokenExpireTime * 1000;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -82,7 +89,11 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        Optional<Account> optAccount = accountRepository.findOneWithAuthoritiesByEmail(claims.getSubject());
+        if (optAccount.isEmpty()) {
+            return null;
+        }
+        UserAccount principal = new UserAccount(optAccount.get(), authorities);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 

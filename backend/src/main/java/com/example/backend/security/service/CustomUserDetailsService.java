@@ -2,6 +2,7 @@ package com.example.backend.security.service;
 
 import com.example.backend.entity.Account;
 import com.example.backend.repository.AccountRepository;
+import com.example.backend.security.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +40,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthority().getAuthCode()))
                 .collect(Collectors.toList());
 
-        return new User(account.getEmail(), account.getPassword(), grantedAuthorities);
+        return new UserAccount(account, grantedAuthorities);
     }
 }

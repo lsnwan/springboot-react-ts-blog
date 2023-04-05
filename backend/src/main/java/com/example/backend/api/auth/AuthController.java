@@ -36,8 +36,6 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(reqLogin.getUsername(), reqLogin.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = tokenProvider.createToken(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();
