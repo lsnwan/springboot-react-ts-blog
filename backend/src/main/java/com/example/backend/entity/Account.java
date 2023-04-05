@@ -3,6 +3,7 @@ package com.example.backend.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -11,7 +12,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class Account implements Serializable {
+
+    private static final long serialVersionUID = -1479982802553286611L;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "acc_idx")
@@ -22,6 +25,9 @@ public class Account {
 
     @Column(name = "acc_id", unique = true)
     private String id;
+
+    @Column(name = "acc_email", unique = true)
+    private String email;
 
     @Column(name = "acc_nnm")
     private String nickname;

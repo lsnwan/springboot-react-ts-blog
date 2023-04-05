@@ -17,3 +17,8 @@ spring:
 logging:
   level:
     com.example.backend: DEBUG
+
+jwt:
+  header: Authorization
+  secret: Y3FpYWVydWhvZ2NxbnVlaGdvcWl1ZWNoZ29pcXVnb2lxcmVidmlxcmhub2NlcnV5Z2hub2NxdWVyaGdvcW5peWVtZ3JxaXVocmJvdXFuY29p
+  token-expire-time: 86400
