@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,18 +31,15 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping("/login")
-    public ResponseEntity<ResToken> Login(@Valid @RequestBody ReqLogin reqLogin) {
+    public ResponseDto<ResToken> login(@Valid @RequestBody ReqLogin reqLogin, BindingResult bindingResult) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(reqLogin.getUsername(), reqLogin.getPassword());
+                new UsernamePasswordAuthenticationToken(reqLogin.getUserEmail(), reqLogin.getUserPw());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         String jwt = tokenProvider.createToken(authentication);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new ResToken(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseDto<>(String.valueOf(HttpStatus.OK.value()), "asdfadsf", new ResToken(jwt));
     }
 
 }
