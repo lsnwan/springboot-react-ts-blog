@@ -34,7 +34,7 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         String jwt = tokenProvider.createToken(authentication);
 
-        return new ResponseDto<>(String.valueOf(HttpStatus.OK.value()), "asdfadsf", new ResToken(jwt));
+        return new ResponseDto<>(String.valueOf(HttpStatus.OK.value()), "로그인 완료 하였습니다.", new ResToken(jwt));
     }
 
 }
