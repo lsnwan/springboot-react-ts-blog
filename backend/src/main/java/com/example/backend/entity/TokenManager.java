@@ -17,8 +17,12 @@ public class TokenManager {
     @Column(name = "tm_idx")
     private Long idx;
 
-    @Column(name = "acc_id")
-    private String accountId;
+    @Column(name = "platform_type")
+    private String platformType;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "acc_id", referencedColumnName = "acc_id")
+    private Account account;
 
     @Column(name = "tm_refsh_tokn")
     private String refreshToken;

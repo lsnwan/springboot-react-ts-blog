@@ -1,5 +1,6 @@
 package com.example.backend.entity;
 
+import com.example.backend.entity.base.RegisteredDateEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,11 +8,11 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "account_authority")
-@Getter @Setter @EqualsAndHashCode(of = "idx")
+@Getter @Setter @EqualsAndHashCode(of = "idx", callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountAuthority implements Serializable {
+public class AccountAuthority extends RegisteredDateEntity implements Serializable {
 
     private static final long serialVersionUID = 9114081288341605343L;
 

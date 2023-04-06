@@ -1,6 +1,8 @@
 package com.example.backend.entity;
 
+import com.example.backend.entity.base.RegisteredDateEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,11 +10,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "account")
-@Getter @Setter @EqualsAndHashCode(of = "idx")
+@Getter @Setter @EqualsAndHashCode(of = "idx", callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account implements Serializable {
+public class Account extends RegisteredDateEntity implements Serializable {
 
     private static final long serialVersionUID = -1479982802553286611L;
 
@@ -36,9 +38,13 @@ public class Account implements Serializable {
     private String password;
 
     @Column(name = "enabled")
+    @ColumnDefault("0")
     private boolean enabled;
 
     @OneToMany(mappedBy = "account")
     private List<AccountAuthority> authorities;
+
+    @OneToOne(mappedBy = "account")
+    private TokenManager tokenManager;
 
 }
