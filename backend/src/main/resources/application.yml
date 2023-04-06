@@ -25,3 +25,6 @@ jwt:
 
 jasypt:
   password: ${PASSWORD}
+
+aes:
+  key: ${AES_KEY}

@@ -1,5 +1,6 @@
 package com.example.backend.security.provider;
 
+import com.example.backend.cmm.utils.AES256;
 import com.example.backend.entity.Account;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.security.UserAccount;
@@ -32,15 +33,16 @@ public class TokenProvider implements InitializingBean {
     private final String secret;
     private final long tokenExpireTime;
     private final AccountRepository accountRepository;
-
+    private final AES256 aes256;
     private Key key;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-expire-time}") long tokenExpireTime, AccountRepository accountRepository) {
+            @Value("${jwt.token-expire-time}") long tokenExpireTime, AccountRepository accountRepository, AES256 aes256) {
         this.secret = secret;
         this.tokenExpireTime = tokenExpireTime * 1000;
         this.accountRepository = accountRepository;
+        this.aes256 = aes256;
     }
 
     @Override
@@ -61,12 +63,21 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenExpireTime);
 
-        return Jwts.builder()
+        String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
+
+        String encryptAccessToken = "";
+        try {
+            encryptAccessToken = aes256.encrypt(accessToken);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return encryptAccessToken;
     }
 
     /**
@@ -75,11 +86,19 @@ public class TokenProvider implements InitializingBean {
      * @return
      */
     public Authentication getAuthentication(String token) {
+
+        String decryptAccessToken = "";
+        try {
+            decryptAccessToken = aes256.decrypt(token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         Claims claims = Jwts
                 .parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(decryptAccessToken)
                 .getBody();
 
         Collection<? extends GrantedAuthority> authorities =
@@ -92,7 +111,7 @@ public class TokenProvider implements InitializingBean {
             return null;
         }
         UserAccount principal = new UserAccount(optAccount.get(), authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, decryptAccessToken, authorities);
     }
 
     /**
@@ -101,8 +120,16 @@ public class TokenProvider implements InitializingBean {
      * @return
      */
     public boolean validateToken(String token) {
+
+        String decryptAccessToken = "";
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            decryptAccessToken = aes256.decrypt(token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptAccessToken);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명 입니다.");
