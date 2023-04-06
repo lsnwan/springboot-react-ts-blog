@@ -8,6 +8,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,24 +27,20 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class TokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
 
-    private final String secret;
-    private final long tokenExpireTime;
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.token-expire-time}")
+    private long tokenExpireTime;
     private final AccountRepository accountRepository;
-    private final AES256 aes256;
     private Key key;
 
-    public TokenProvider(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-expire-time}") long tokenExpireTime, AccountRepository accountRepository, AES256 aes256) {
-        this.secret = secret;
-        this.tokenExpireTime = tokenExpireTime * 1000;
-        this.accountRepository = accountRepository;
-        this.aes256 = aes256;
-    }
+    private final AES256 aes256;
 
     @Override
     public void afterPropertiesSet() throws Exception {

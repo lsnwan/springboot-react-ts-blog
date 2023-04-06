@@ -22,7 +22,7 @@ public class TestController {
     @Value("${jasypt.password}")
     private String password;
 
-    @Value("${aes.key}")
+    @Value("${aes256.key}")
     private String key;
 
     private final AES256 aes256;

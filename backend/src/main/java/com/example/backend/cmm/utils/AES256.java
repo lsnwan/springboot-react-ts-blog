@@ -1,6 +1,8 @@
 package com.example.backend.cmm.utils;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
