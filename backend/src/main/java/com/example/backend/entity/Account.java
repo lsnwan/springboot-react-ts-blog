@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"authorities"})
 public class Account extends RegisteredDateEntity implements Serializable {
 
     private static final long serialVersionUID = -1479982802553286611L;
@@ -41,10 +43,7 @@ public class Account extends RegisteredDateEntity implements Serializable {
     @ColumnDefault("0")
     private boolean enabled;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<AccountAuthority> authorities;
-
-    @OneToOne(mappedBy = "account")
-    private TokenManager tokenManager;
 
 }
