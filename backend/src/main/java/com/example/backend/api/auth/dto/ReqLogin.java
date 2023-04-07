@@ -1,4 +1,4 @@
-package com.example.backend.api.auth.domain;
+package com.example.backend.api.auth.dto;
 
 import lombok.Data;
 

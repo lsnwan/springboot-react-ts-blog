@@ -1,7 +1,7 @@
 package com.example.backend.api.auth;
 
-import com.example.backend.api.auth.domain.ReqLogin;
-import com.example.backend.api.auth.domain.ResToken;
+import com.example.backend.api.auth.dto.ReqLogin;
+import com.example.backend.api.auth.dto.ResToken;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.security.provider.TokenProvider;
 import lombok.RequiredArgsConstructor;
