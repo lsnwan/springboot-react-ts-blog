@@ -1,6 +1,5 @@
 package com.example.backend.init;
 
-import com.example.backend.cmm.utils.CommonUtils;
 import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;

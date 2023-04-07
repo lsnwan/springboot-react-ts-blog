@@ -1,12 +1,8 @@
 package com.example.backend.security.handler;
 
 import com.example.backend.cmm.dto.ResponseDataDto;
-import com.example.backend.cmm.dto.ResponseDto;
-import com.example.backend.cmm.error.type.ErrorType;
-import com.example.backend.security.dto.LoginDto;
 import com.example.backend.security.provider.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
