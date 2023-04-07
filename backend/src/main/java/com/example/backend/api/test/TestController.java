@@ -38,6 +38,7 @@ public class TestController {
     }
 
     @PostMapping("/post")
+    @PreAuthorize("isAuthenticated()")
     public String testPost() {
         log.info("jasypt 비밀번호 : " + password);
         log.info("aes 키 : " + key);
