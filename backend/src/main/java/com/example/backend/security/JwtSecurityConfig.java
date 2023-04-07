@@ -1,6 +1,6 @@
 package com.example.backend.security;
 
-import com.example.backend.security.filter.JwtFilter;
+import com.example.backend.security.filter.JwtVerificationFilter;
 import com.example.backend.security.provider.TokenProvider;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +17,7 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
 
     @Override
     public void configure(HttpSecurity builder) {
-        JwtFilter customFilter = new JwtFilter(tokenProvider);
+        JwtVerificationFilter customFilter = new JwtVerificationFilter(tokenProvider);
         builder.addFilterAfter(customFilter, FilterSecurityInterceptor.class);
     }
 }

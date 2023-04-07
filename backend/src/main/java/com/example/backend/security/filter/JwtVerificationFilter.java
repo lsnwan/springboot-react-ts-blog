@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Slf4j
-public class JwtFilter extends GenericFilter {
+public class JwtVerificationFilter extends GenericFilter {
 
     private static final long serialVersionUID = -6164102562069746554L;
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
 
-    public JwtFilter(TokenProvider tokenProvider) {
+    public JwtVerificationFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
