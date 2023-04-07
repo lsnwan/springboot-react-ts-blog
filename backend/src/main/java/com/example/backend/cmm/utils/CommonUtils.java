@@ -1,7 +1,6 @@
 package com.example.backend.cmm.utils;
 
-import kr.co.onss.linglabel.cmm.entity.type.DataType;
-import kr.co.onss.linglabel.cmm.exception.CustomUnknownHostException;
+import com.example.backend.cmm.error.exception.CustomUnknownClientException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -46,27 +45,6 @@ public class CommonUtils {
         return result;
     }
 
-    public static Object getTypeOfData(DataType dataType, String value) {
-
-        if (dataType == DataType.INT) {
-            return Integer.parseInt(value);
-        }
-
-        if (dataType == DataType.DOUBLE) {
-            return Double.parseDouble(value);
-        }
-
-        if (dataType == DataType.BOOLEAN) {
-            return Boolean.parseBoolean(value);
-        }
-
-        if (dataType == DataType.STRING) {
-            return value;
-        }
-
-        return null;
-    }
-
     public static String getClientIp() {
 
         try {
@@ -84,7 +62,7 @@ public class CommonUtils {
                 }
             }
         } catch (SocketException e) {
-            throw new CustomUnknownHostException(e.getMessage());
+            throw new CustomUnknownClientException(e.getMessage());
         }
 
         return null;

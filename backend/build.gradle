@@ -49,12 +49,6 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.5.5'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
-
-    // https://mvnrepository.com/artifact/org.springframework.session/spring-session-data-redis
-    implementation group: 'org.springframework.session', name: 'spring-session-data-redis', version: '2.7.0'
-
     // QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
