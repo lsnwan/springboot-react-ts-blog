@@ -60,8 +60,10 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenExpireTime);
 
+        Account account = (Account) authentication.getPrincipal();
+
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(account.getId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
@@ -103,7 +105,7 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        Optional<Account> optAccount = accountRepository.findOneWithAuthoritiesByEmail(claims.getSubject());
+        Optional<Account> optAccount = accountRepository.findOneWithAuthoritiesById(claims.getSubject());
         if (optAccount.isEmpty()) {
             return null;
         }

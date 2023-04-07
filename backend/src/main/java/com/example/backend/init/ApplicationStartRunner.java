@@ -1,5 +1,7 @@
 package com.example.backend.init;
 
+import com.example.backend.cmm.utils.CommonUtils;
+import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;
 import com.example.backend.entity.Authority;
@@ -42,7 +44,7 @@ public class ApplicationStartRunner implements ApplicationRunner {
                 .idx(1L)
                 .accountType("MASTER")
                 .email("admin")
-                .id("admin")
+                .id(GeneratorUtils.uniqueId())
                 .password(passwordEncoder.encode("1234"))
                 .nickname("관리자")
                 .enabled(true)
