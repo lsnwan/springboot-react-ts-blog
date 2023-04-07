@@ -1,6 +1,10 @@
 package com.example.backend.security.entrypoint;
 
+import com.example.backend.cmm.dto.ResponseDto;
+import com.example.backend.cmm.error.type.ErrorType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -16,7 +20,16 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        log.info("접근이 거부 되었다!!!!!!!!!!!!!!!!!!!!!!!");
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        log.error("인증을 하지 않았습니다.");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(
+                response.getOutputStream(),
+                ResponseDto.builder()
+                        .code(ErrorType.UNAUTHORIZED.getErrorCode())
+                        .message("로그인이 필요합니다.").build()
+        );
     }
 }

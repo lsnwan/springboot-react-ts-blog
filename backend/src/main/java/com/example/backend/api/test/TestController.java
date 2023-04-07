@@ -1,6 +1,6 @@
 package com.example.backend.api.test;
 
-import com.example.backend.cmm.domain.ResponseDto;
+import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.utils.AES256;
 import com.example.backend.entity.Account;
 import com.example.backend.security.CurrentAccount;
@@ -29,8 +29,8 @@ public class TestController {
 
 
     @GetMapping("/get")
-    public ResponseDto<Object> test() {
-        return ResponseDto.builder()
+    public ResponseDataDto<Object> test() {
+        return ResponseDataDto.builder()
                 .code("T001")
                 .message("HelloWorld")
                 .data("HelloWorld")

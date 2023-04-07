@@ -1,4 +1,4 @@
-package com.example.backend.cmm.domain;
+package com.example.backend.cmm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseDto<T> {
+public class ResponseDto {
 
     private String code;
     private String message;
-    private T data;
+
 }
