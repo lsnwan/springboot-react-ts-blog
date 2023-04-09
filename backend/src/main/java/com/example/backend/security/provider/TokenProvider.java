@@ -35,8 +35,11 @@ public class TokenProvider implements InitializingBean {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.token-expire-time}")
-    private long tokenExpireTime;
+    @Value("${jwt.expired-time.access-token}")
+    private long accessTokenExpiredTime;
+
+    @Value("${jwt.expired-time.refresh-token}")
+    private long refreshTokenExpiredTime;
     private final AccountRepository accountRepository;
     private Key key;
 
@@ -58,7 +61,7 @@ public class TokenProvider implements InitializingBean {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenExpireTime);
+        Date validity = new Date(now + this.accessTokenExpiredTime);
 
         Account account = (Account) authentication.getPrincipal();
 
