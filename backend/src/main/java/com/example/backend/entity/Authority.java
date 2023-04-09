@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"authorities"})
 public class Authority implements Serializable {
 
     private static final long serialVersionUID = 8541944454048928706L;
@@ -25,6 +26,9 @@ public class Authority implements Serializable {
 
     @Column(name = "auth_code", unique = true)
     private String authCode;
+
+    @Column(name = "auth_sort")
+    private Integer authSort;
 
     @OneToMany(mappedBy = "authority")
     private List<AccountAuthority> authorities;
