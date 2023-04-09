@@ -33,11 +33,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+//    private final RoleHierarchyService roleHierarchyService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /**
+     * 계층 권한 설정
+     * : ApplicationStartRunner가 실행 되기 전에 작동
+     * @return
+     */
+//    @Bean
+//    public RoleHierarchyImpl roleHierarchy() {
+//        String allHierarchy = roleHierarchyService.findAllHierarchy();
+//        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+//        roleHierarchy.setHierarchy(allHierarchy);
+//        return roleHierarchy;
+//    }
 
     @Bean
     public JwtLoginProcessingFilter jwtLoginProcessingFilter() throws Exception {
