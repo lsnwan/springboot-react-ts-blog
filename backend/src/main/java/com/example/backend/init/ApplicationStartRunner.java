@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Profile("default")
@@ -32,16 +33,11 @@ public class ApplicationStartRunner implements ApplicationRunner {
     private final TokenManagerRepository tokenManagerRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("======================================================");
-        log.info("시작");
-        log.info("======================================================");
+        log.info("==== Initialize ==================================================");
 
         Account account = Account.builder()
-                .idx(1L)
-                .accountType("MASTER")
                 .email("admin")
                 .id(GeneratorUtils.uniqueId())
                 .password(passwordEncoder.encode("1234"))
@@ -51,42 +47,46 @@ public class ApplicationStartRunner implements ApplicationRunner {
 
         accountRepository.save(account);
 
+        Authority adminRole = Authority.builder()
+                .authCode("ROLE_ADMIN")
+                .authName("관리자")
+                .authSort(1)
+                .build();
+        authorityRepository.save(adminRole);
 
         Authority userRole = Authority.builder()
-                .idx(1L)
                 .authCode("ROLE_USER")
                 .authName("유저")
+                .authSort(2)
                 .build();
 
         authorityRepository.save(userRole);
 
-        Authority adminRole = Authority.builder()
-                .idx(2L)
-                .authCode("ROLE_ADMIN")
-                .authName("관리자")
-                .build();
-        authorityRepository.save(adminRole);
-
         accountAuthorityRepository.save(AccountAuthority.builder()
-                .idx(1L)
                 .account(account)
                 .authority(userRole)
                 .build());
-//        accountAuthorityRepository.save(AccountAuthority.builder()
-//                .idx(2L)
-//                .account(account)
-//                .authority(adminRole)
-//                .build());
+
+        accountAuthorityRepository.save(AccountAuthority.builder()
+                .account(account)
+                .authority(adminRole)
+                .build());
 
         tokenManagerRepository.save(TokenManager.builder()
-                        .idx(1L)
                         .accountId("admin")
                         .platformType("WEB")
                         .refreshToken("123123123123123")
                         .expireTime(LocalDateTime.now())
                 .build());
 
+
+        List<Authority> authorities = authorityRepository.findAllByOrderByAuthSort();
+        for (Authority auth : authorities) {
+            log.info(auth.toString());
+        }
+
         Optional<Account> optionalAccount = accountRepository.findOneWithAuthoritiesByEmail("admin");
         log.info(optionalAccount.get().toString());
+
     }
 }

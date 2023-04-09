@@ -23,9 +23,6 @@ public class Account extends RegisteredDateEntity implements Serializable {
     @Column(name = "acc_idx")
     private Long idx;
 
-    @Column(name = "acc_type")
-    private String accountType;
-
     @Column(name = "acc_id", unique = true)
     private String id;
 
