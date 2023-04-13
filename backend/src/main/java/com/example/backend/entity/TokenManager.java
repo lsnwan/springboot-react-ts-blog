@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "token_manager")
@@ -23,10 +24,13 @@ public class TokenManager {
     @Column(name = "acc_id")
     private String accountId;
 
-    @Column(name = "tm_refsh_tokn")
+    @Column(name = "tm_refsh_tokn", length = 4000)
     private String refreshToken;
 
+    @Column(name = "client_ip")
+    private String clientIp;
+
     @Column(name = "tm_tokn_expire")
-    private LocalDateTime expireTime;
+    private Date expireTime;
 
 }

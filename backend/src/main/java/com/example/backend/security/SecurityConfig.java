@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtLoginProcessingFilter jwtLoginProcessingFilter() throws Exception {
-        JwtLoginProcessingFilter jwtLoginProcessingFilter = new JwtLoginProcessingFilter("/api/login");
+        JwtLoginProcessingFilter jwtLoginProcessingFilter = new JwtLoginProcessingFilter("/login");
         jwtLoginProcessingFilter.setAuthenticationManager(authenticationManagerBean());
         jwtLoginProcessingFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler());
         jwtLoginProcessingFilter.setAuthenticationFailureHandler(jwtAuthenticationFailureHandler());
@@ -99,6 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(jwtLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        http.cors();
     }
 
     @Override

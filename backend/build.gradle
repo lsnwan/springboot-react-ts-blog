@@ -57,6 +57,7 @@ dependencies {
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
     implementation "com.querydsl:querydsl-core:${queryDslVersion}"
 
+    implementation group: 'eu.bitwalker', name: 'UserAgentUtils', version: '1.17'
 }
 
 tasks.named('test') {

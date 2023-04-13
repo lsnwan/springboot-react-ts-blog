@@ -1,5 +1,9 @@
 package com.example.backend.security.provider;
 
+import com.example.backend.cmm.dto.ResponseDto;
+import com.example.backend.cmm.error.exception.DecryptionErrorException;
+import com.example.backend.cmm.error.exception.IsNotTokenException;
+import com.example.backend.cmm.type.JwtValidType;
 import com.example.backend.cmm.utils.AES256;
 import com.example.backend.entity.Account;
 import com.example.backend.repository.AccountRepository;
@@ -17,12 +21,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,11 +38,9 @@ public class TokenProvider implements InitializingBean {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expired-time.access-token}")
-    private long accessTokenExpiredTime;
+    @Value("${jwt.expired-time-token}")
+    private long expiredTime;
 
-    @Value("${jwt.expired-time.refresh-token}")
-    private long refreshTokenExpiredTime;
     private final AccountRepository accountRepository;
     private Key key;
 
@@ -56,30 +57,38 @@ public class TokenProvider implements InitializingBean {
      * @param authentication
      * @return
      */
-    public String createToken(Authentication authentication) {
+    public Map<String, Object> createToken(Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.accessTokenExpiredTime);
+        Date expiredDate = new Date(now + this.expiredTime);
 
         Account account = (Account) authentication.getPrincipal();
 
-        String accessToken = Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(account.getId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
+                .setExpiration(expiredDate)
                 .compact();
 
-        String encryptAccessToken = "";
+        String encToken = "";
         try {
-            encryptAccessToken = aes256.encrypt(accessToken);
+            encToken = aes256.encrypt(token);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return encryptAccessToken;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        log.info("===================================");
+        log.info(sdf.format(expiredDate));
+
+        result.put("authToken", encToken);
+        result.put("tokenExpiredTime", expiredDate);
+
+        return result;
     }
 
     /**
@@ -89,18 +98,18 @@ public class TokenProvider implements InitializingBean {
      */
     public Authentication getAuthentication(String token) {
 
-        String decryptAccessToken = "";
+        String decToken = "";
         try {
-            decryptAccessToken = aes256.decrypt(token);
+            decToken = aes256.decrypt(token);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DecryptionErrorException("서버에 문제가 발생했습니다.");
         }
 
         Claims claims = Jwts
                 .parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(decryptAccessToken)
+                .parseClaimsJws(decToken)
                 .getBody();
 
         Collection<? extends GrantedAuthority> authorities =
@@ -113,7 +122,7 @@ public class TokenProvider implements InitializingBean {
             return null;
         }
         UserAccount principal = new UserAccount(optAccount.get(), authorities);
-        return new UsernamePasswordAuthenticationToken(principal, decryptAccessToken, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, decToken, authorities);
     }
 
     /**
@@ -121,29 +130,32 @@ public class TokenProvider implements InitializingBean {
      * @param token
      * @return
      */
-    public boolean validateToken(String token) {
-
+    public JwtValidType validateToken(String token) {
+        log.info("토큰 검증!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        log.info(token);
         String decryptAccessToken = "";
         try {
             decryptAccessToken = aes256.decrypt(token);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DecryptionErrorException("서버에 문제가 발생 했습니다.");
         }
 
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(decryptAccessToken);
-            return true;
+            return JwtValidType.VALID_JWT;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명 입니다.");
+            log.error("잘못된 JWT 서명 입니다.");
+            return JwtValidType.INVALID_JWT;
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰 입니다.");
+            log.error("만료된 JWT 토큰 입니다.");
+            return JwtValidType.EXPIRED_JWT;
         } catch (UnsupportedJwtException e) {
-            log.info("지원하지 않는 JWT 토큰 입니다.");
+            log.error("지원하지 않는 JWT 토큰 입니다.");
+            return JwtValidType.UNSUPPORTED_JWT;
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            log.error("JWT 토큰이 잘못되었습니다.");
+            return JwtValidType.ILLEGAL_ARG_JWT;
         }
-
-        return false;
     }
 
 }

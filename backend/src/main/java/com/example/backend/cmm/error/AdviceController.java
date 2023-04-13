@@ -2,7 +2,10 @@ package com.example.backend.cmm.error;
 
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.BadRequestException;
-import com.example.backend.cmm.error.type.ErrorType;
+import com.example.backend.cmm.error.exception.BadTokenException;
+import com.example.backend.cmm.error.exception.DecryptionErrorException;
+import com.example.backend.cmm.error.exception.IsNotTokenException;
+import com.example.backend.cmm.type.ErrorType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,4 +21,27 @@ public class AdviceController {
                 .build();
     }
 
+    @ExceptionHandler(BadTokenException.class)
+    public ResponseDto badTokenException(BadTokenException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.UNAUTHORIZED.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(IsNotTokenException.class)
+    public ResponseDto isNotTokenException(IsNotTokenException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.UNAUTHORIZED.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(DecryptionErrorException.class)
+    public ResponseDto decryptionErrorException(DecryptionErrorException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.DECRYPTION_ERROR.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
 }

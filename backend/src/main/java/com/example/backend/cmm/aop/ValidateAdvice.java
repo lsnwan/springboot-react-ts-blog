@@ -1,10 +1,12 @@
 package com.example.backend.cmm.aop;
 
 import com.example.backend.cmm.dto.ResponseDataDto;
+import com.example.backend.cmm.type.ErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -31,7 +33,7 @@ public class ValidateAdvice {
                         errorMap.put(error.getField(), error.getDefaultMessage());
                     }
 
-                    return new ResponseDataDto<>("A-001", "잘못된 요청 입니다.", errorMap);
+                    return new ResponseDataDto<>(HttpStatus.BAD_REQUEST.value(), ErrorType.REQUEST_ERROR.getErrorCode(), "잘못된 요청 입니다.", errorMap);
                 }
             }
         }

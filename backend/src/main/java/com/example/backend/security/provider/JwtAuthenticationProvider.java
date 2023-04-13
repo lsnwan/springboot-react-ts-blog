@@ -3,6 +3,7 @@ package com.example.backend.security.provider;
 import com.example.backend.security.UserAccount;
 import com.example.backend.security.service.CustomUserDetailsService;
 import com.example.backend.security.token.JwtAuthenticationToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import javax.annotation.Resource;
 /**
  * 인증 처리
  */
+@Slf4j
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Resource
@@ -23,7 +25,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
      @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
+         log.info("/*************************************");
+         log.info("*  인증 로직");
+         log.info("/*************************************");
          String loginId = authentication.getName();
          String password = (String) authentication.getCredentials();
 

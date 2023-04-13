@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseDataDto<T> {
 
+    private int status;
     private String code;
     private String message;
     private T data;

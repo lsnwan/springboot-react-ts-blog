@@ -21,9 +21,7 @@ logging:
 jwt:
   header: Authorization
   secret: Y3FpYWVydWhvZ2NxbnVlaGdvcWl1ZWNoZ29pcXVnb2lxcmVidmlxcmhub2NlcnV5Z2hub2NxdWVyaGdvcW5peWVtZ3JxaXVocmJvdXFuY29p
-  expired-time:
-    access-token: 86400000
-    refresh-token: 31557600000
+  expired-time-token: 31557600000
 
 jasypt:
   password: 1234567890123456

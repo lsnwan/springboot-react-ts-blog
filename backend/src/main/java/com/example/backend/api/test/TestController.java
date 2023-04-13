@@ -1,7 +1,13 @@
 package com.example.backend.api.test;
 
 import com.example.backend.cmm.dto.ResponseDataDto;
+import com.example.backend.cmm.dto.ResponseDto;
+import com.example.backend.cmm.error.exception.BadRequestException;
+import com.example.backend.cmm.error.exception.BadTokenException;
+import com.example.backend.cmm.error.exception.DecryptionErrorException;
+import com.example.backend.cmm.error.exception.IsNotTokenException;
 import com.example.backend.cmm.utils.AES256;
+import com.example.backend.cmm.utils.CommonUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.security.CurrentAccount;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/test")
 @Slf4j
 @RequiredArgsConstructor
 public class TestController {
@@ -55,10 +65,27 @@ public class TestController {
         return "hello world!!! POST!!!";
     }
 
+    @GetMapping("/get-cookie")
+    @PreAuthorize("hasAnyRole('USER')")
+    public Map<String, Object> getCookie(HttpServletRequest request) {
+        log.info("토큰 가져오기!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            result.put("auth_token", CommonUtils.getCookie(request, "auth_token"));
+            result.put("msg", "토큰이 있어영");
+            return result;
+        } catch (NullPointerException e) {
+            result.put("msg", "토큰이 존재하지 않아요");
+            return result;
+        }
+
+    }
+
     @GetMapping("/admin-role")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public String adminRole(@CurrentAccount Account account) {
-        return account.getEmail() + "관리자 권한이 있으시군요";
+        return account.getEmail() + "님은 관리자 권한이 있으시군요";
     }
 
     @GetMapping("/user-role")
@@ -73,4 +100,8 @@ public class TestController {
         return "모든 권한이 있으시군요";
     }
 
+    @GetMapping("/exception")
+    public ResponseDto testException() {
+        throw new DecryptionErrorException("[테스트 익셉션] DecryptionErrorException");
+    }
 }

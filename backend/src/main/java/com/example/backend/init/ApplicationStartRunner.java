@@ -72,14 +72,6 @@ public class ApplicationStartRunner implements ApplicationRunner {
                 .authority(adminRole)
                 .build());
 
-        tokenManagerRepository.save(TokenManager.builder()
-                        .accountId("admin")
-                        .platformType("WEB")
-                        .refreshToken("123123123123123")
-                        .expireTime(LocalDateTime.now())
-                .build());
-
-
         List<Authority> authorities = authorityRepository.findAllByOrderByAuthSort();
         for (Authority auth : authorities) {
             log.info(auth.toString());

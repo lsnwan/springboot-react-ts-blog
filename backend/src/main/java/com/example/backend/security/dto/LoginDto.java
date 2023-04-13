@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 public class LoginDto implements Serializable {
     private static final long serialVersionUID = 725998942734190578L;
@@ -30,7 +31,10 @@ public class LoginDto implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private String token;
+        private String userId;
+        private String userEmail;
+        private String userNickname;
+        private List<String> userRole;
     }
 
 }

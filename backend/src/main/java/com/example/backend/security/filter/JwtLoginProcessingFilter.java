@@ -1,7 +1,7 @@
 package com.example.backend.security.filter;
 
 import com.example.backend.cmm.dto.ResponseDto;
-import com.example.backend.cmm.error.type.ErrorType;
+import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.security.dto.LoginDto;
 import com.example.backend.security.token.JwtAuthenticationToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
