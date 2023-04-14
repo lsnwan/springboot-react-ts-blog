@@ -5,11 +5,11 @@ import {useNavigate} from "react-router";
 type RequireAuthProps = {}
 
 const RequireAuth: FC<PropsWithChildren<RequireAuthProps>> = ({children}) => {
-  const {jwt} = useAuth();
+  const {loggedUser} = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    if (!jwt) navigate('/login')
-  }, [jwt, navigate]);
+    if (!loggedUser) navigate('/login')
+  }, [loggedUser, navigate]);
 
   return <>{children}</>
 }

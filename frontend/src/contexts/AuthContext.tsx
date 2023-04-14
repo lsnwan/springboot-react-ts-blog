@@ -2,12 +2,10 @@ import {createContext, FC, PropsWithChildren, useCallback, useContext, useEffect
 import * as U from '../utils';
 import axios from "axios";
 
-export type LoggedUser = {email: string; password: string}
-type Callback = () => void
+export type LoggedUser = {userId: string; userEmail: string; userNickname: string; userRole: string[]}
+type Callback = (message?: string) => void
 
 type ContextType = {
-  jwt?: string
-  errorMessage?: string
   loggedUser?: LoggedUser
   signup: (email: string, password: string, callback?: Callback) => void
   login: (email: string, password: string, callback?: Callback) => void
@@ -24,7 +22,6 @@ type AuthProviderProps = {}
 
 export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children}) => {
   const [loggedUser, setLoggedUser] = useState<LoggedUser | undefined>(undefined)
-  const [jwt, setJwt] = useState<string>('')
   const [message, setMessage] = useState<string>('')
 
   /*
@@ -38,25 +35,24 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
    ! 로그인
    */
   const login = useCallback((email: string, password: string, callback?: Callback) => {
-    const user = {email, password}
-    U.readStringP('jwt')
-      .then(jwt => {
-        setJwt(jwt ?? '')
+    U.readStringP('userId')
+      .then(() => {
         return axios.post('/api/login', {
-          userEmail: user.email,
-          userPw: user.password
+          userEmail: email,
+          userPw: password
         })
       })
       .then(res => res.data)
-      .then((result: {code: string; message?: string}) => {
+      .then((result: {code: string; message: string; data?: any;}) => {
         if (result.code === '200') {
-          setLoggedUser(notUsed => user)
+          setLoggedUser(notUsed => result.data.userInfo)
+          localStorage.setItem("userId", result.data.userInfo.userId);
           callback && callback()
         } else {
           setMessage(result.message ?? '')
+          callback && callback(result.message)
         }
       })
-      .catch((e: Error) => setMessage(e.message ?? ''))
 
   }, []);
 
@@ -64,34 +60,36 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
    ! 로그아웃
    */
   const logout = useCallback((callback?: Callback) => {
-    setJwt(notUsed => '')
-    setLoggedUser(undefined)
-    callback && callback()
+    setLoggedUser(undefined);
+    localStorage.removeItem("userId");
+    callback && callback();
   }, []);
 
 
   useEffect(() => {
-    const deleteToken = false
-    if (deleteToken) {
-      U.writeStringP('jwt', '')
-        .then(() => {})
-        .catch(() => {})
-    } else {
-      U.readStringP('jwt')
-        .then(jwt => setJwt(jwt ?? ''))
-        .catch(() => {})
-    }
-  })
 
-  useEffect(() => {
-    if (message) {
-      alert(message)
-      setMessage(notUsed => '')
+    const userId = localStorage.getItem("userId");
+    if (loggedUser == undefined) {
+      axios.post(`/api/accounts/my-info`, {userId: userId})
+        .then(res => res.data)
+        .then((result: {status: number; code: string; message: string; data: any;}) => {
+          console.log(result);
+          if (result.code === '200') {
+            setLoggedUser(result.data)
+            return;
+          }
+
+          if (result.code === 'A-001') {
+            U.removeStringP("userId").then(() => {});
+          }
+        });
     }
-  }, [message])
+
+  }, [])
+
 
   const value = {
-    jwt, message, loggedUser, signup, login, logout
+    loggedUser, signup, login, logout
   }
 
   return <AuthContext.Provider value={value} children={children} />

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {
   ButtonPrimary,
   CommonBody,
@@ -12,34 +12,36 @@ import {
 } from "../../components/styled/common-styled";
 import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
-import axios from 'axios';
-import * as Utils from "../../utils";
+import {useNavigate} from "react-router";
+import {useAuth} from "../../contexts";
 
 const Login = () => {
 
   const [userId, setUserId] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
+  const navigate = useNavigate();
+  const {login} = useAuth();
+  const [message, setMessage] = useState<string|undefined>('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    axios.post("/api/login", {
-      userEmail: userId,
-      userPw: userPassword
-    })
-    .then(response => {
-      console.log(response.data);
-      if (response.data.code === '200') {
-        alert('로그인 성공');
-      } else {
-        alert(response.data.message);
+    login(userId, userPassword, (message) => {
+      if (message === undefined) {
+        navigate('/')
       }
-    })
-    .catch(error => {
-      console.error(error);
-    });
 
+      setMessage(message);
+
+    });
   }
+
+  useEffect(() => {
+    if (inputRef.current !== null) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   return (
     <CommonBody>
@@ -51,12 +53,14 @@ const Login = () => {
 
       <form onSubmit={handleSubmit}>
         <InputLabelBlock htmlFor="userId" className="mt-3">이메일</InputLabelBlock>
-        <InputTextBlock type="text" id="userId" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserId(e.target.value)} />
+        <InputTextBlock type="text" id="userId" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserId(e.target.value)} ref={inputRef} />
 
         <InputLabelBlock htmlFor="userPw" className="mt-3">비밀번호</InputLabelBlock>
         <InputTextBlock type="password" id="userPw" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserPassword(e.target.value)} />
 
-        <MessageBox className="center error">아이디와 비밀번호를 확인하세요</MessageBox>
+        {message !== '' && (
+          <MessageBox className="center error">{message}</MessageBox>
+        )}
 
         <ButtonPrimary className="block mt-3" type="submit">로그인</ButtonPrimary>
       </form>

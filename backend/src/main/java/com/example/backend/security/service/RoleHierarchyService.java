@@ -32,26 +32,6 @@ public class RoleHierarchyService {
             }
         }
 
-
-
-        /*
-         * 권한 테이블에 데이터가 존재하는 경우
-         */
-//        do {
-//            Role byRole = roleRepository.findByParent(byParentRole);
-//
-//            sbHierarchy.append("ROLE_").append(byRole.getParent().getRoleType().getCode());
-//            sbHierarchy.append(" > ");
-//            sbHierarchy.append("ROLE_").append(byRole.getRoleType().getCode());
-//            sbHierarchy.append("\n");
-//
-//            byParentRole = byRole;
-//            if (roleRepository.findByParent(byRole) == null) {
-//                isExist = false;
-//            }
-//
-//        } while (isExist);
-
         log.debug("------------------------------------------------");
         log.debug(sbHierarchy.toString());
         log.debug("------------------------------------------------");

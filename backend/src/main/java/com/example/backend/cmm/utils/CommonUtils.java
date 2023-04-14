@@ -69,6 +69,17 @@ public class CommonUtils {
         response.addCookie(cookie);
     }
 
+    /**
+     * 쿠키 삭제
+     * @param response
+     * @param name
+     */
+    public static void deleteCookie(HttpServletResponse response, String name) {
+        Cookie deleteCookie = new Cookie(name, null);
+        deleteCookie.setMaxAge(0);
+        response.addCookie(deleteCookie);
+    }
+
     public static String getClientIp() {
 
         try {

@@ -11,6 +11,7 @@ import {
   SubMenuUL, SubscribeProfile, SubscribeProfileBox, SubscribeProfileName
 } from "../styled/sidebar-styled";
 import {BsClockHistory, BsFillHouseFill, BsFillStarFill, GoLightBulb} from "react-icons/all";
+import {MessageBox} from "../styled/common-styled";
 
 type PropsType = {
   isSideBar: boolean;
@@ -30,41 +31,51 @@ const SideMenu = (props :PropsType) => {
         </SingleMenuLI>
       </SingleMenuUL>
 
-      <SingleMenuUL>
-        <SingleMenuLI isSideBar={props.isSideBar}>
-          <SingleMenuButton isSideBar={props.isSideBar}>
-            <SingleMenuIcon><BsFillStarFill/></SingleMenuIcon>
-            {props.isSideBar && (
-              <SingleMenuButtonName>즐겨찾기</SingleMenuButtonName>
-            )}
-          </SingleMenuButton>
-        </SingleMenuLI>
-        <SingleMenuLI isSideBar={props.isSideBar}>
-          <SingleMenuButton isSideBar={props.isSideBar}>
-            <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
-            {props.isSideBar && (
-              <SingleMenuButtonName>이력</SingleMenuButtonName>
-            )}
-          </SingleMenuButton>
-        </SingleMenuLI>
-      </SingleMenuUL>
+      {!localStorage.getItem("userId") && (
+        <MessageBox className="desc center">
+          로그인 후 이용 가능합니다.
+        </MessageBox>
+      )}
 
-      {/* 구독 */}
-      <SubMenuUL>
-        <SubMenuLI>
-          <SubMenuTitle isSideBar={props.isSideBar}>구독</SubMenuTitle>
-          <SingleMenuUL className="border_none">
+      {localStorage.getItem("userId") && (
+        <>
+          <SingleMenuUL>
             <SingleMenuLI isSideBar={props.isSideBar}>
-              <SubscribeProfileBox isSideBar={props.isSideBar}>
-                <SubscribeProfile></SubscribeProfile>
+              <SingleMenuButton isSideBar={props.isSideBar}>
+                <SingleMenuIcon><BsFillStarFill/></SingleMenuIcon>
                 {props.isSideBar && (
-                  <SubscribeProfileName>홍길동</SubscribeProfileName>
+                  <SingleMenuButtonName>즐겨찾기</SingleMenuButtonName>
                 )}
-              </SubscribeProfileBox>
+              </SingleMenuButton>
+            </SingleMenuLI>
+            <SingleMenuLI isSideBar={props.isSideBar}>
+              <SingleMenuButton isSideBar={props.isSideBar}>
+                <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
+                {props.isSideBar && (
+                  <SingleMenuButtonName>이력</SingleMenuButtonName>
+                )}
+              </SingleMenuButton>
             </SingleMenuLI>
           </SingleMenuUL>
-        </SubMenuLI>
-      </SubMenuUL>
+
+          {/* 구독 */}
+          <SubMenuUL>
+            <SubMenuLI>
+              <SubMenuTitle isSideBar={props.isSideBar}>구독</SubMenuTitle>
+              <SingleMenuUL className="border_none">
+                <SingleMenuLI isSideBar={props.isSideBar}>
+                  <SubscribeProfileBox isSideBar={props.isSideBar}>
+                    <SubscribeProfile></SubscribeProfile>
+                    {props.isSideBar && (
+                      <SubscribeProfileName>홍길동</SubscribeProfileName>
+                    )}
+                  </SubscribeProfileBox>
+                </SingleMenuLI>
+              </SingleMenuUL>
+            </SubMenuLI>
+          </SubMenuUL>
+        </>
+      )}
 
       <SubMenuUL>
         <SubMenuLI>

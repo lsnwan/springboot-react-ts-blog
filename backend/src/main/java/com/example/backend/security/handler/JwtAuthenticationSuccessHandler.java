@@ -56,7 +56,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
         /*
          ! 리프레시 토큰을 쿠키에 저장
          */
-        ResponseCookie cookie = ResponseCookie.from("auth_token", (String) tokenMap.get("authToken"))
+        ResponseCookie cookie = ResponseCookie.from("auth_id", (String) tokenMap.get("authToken"))
                 .maxAge(expiredTime.intValue())
                 .path("/")
                 .secure(true)

@@ -1,12 +1,13 @@
 package com.example.backend.cmm.error;
 
 import com.example.backend.cmm.dto.ResponseDto;
-import com.example.backend.cmm.error.exception.BadRequestException;
-import com.example.backend.cmm.error.exception.BadTokenException;
-import com.example.backend.cmm.error.exception.DecryptionErrorException;
-import com.example.backend.cmm.error.exception.IsNotTokenException;
+import com.example.backend.cmm.error.exception.*;
 import com.example.backend.cmm.type.ErrorType;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice

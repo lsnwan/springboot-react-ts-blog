@@ -1,8 +1,6 @@
 package com.example.backend.security.filter;
 
 import com.example.backend.cmm.dto.ResponseDto;
-import com.example.backend.cmm.error.exception.BadTokenException;
-import com.example.backend.cmm.error.exception.IsNotTokenException;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.type.JwtValidType;
 import com.example.backend.cmm.utils.CommonUtils;
@@ -14,17 +12,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 @Slf4j
 public class JwtVerificationFilter extends GenericFilter {
 
     private static final long serialVersionUID = -6164102562069746554L;
-    public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
 
     public JwtVerificationFilter(TokenProvider tokenProvider) {
@@ -35,7 +29,7 @@ public class JwtVerificationFilter extends GenericFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.info("JWT 검증 필터 작동 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = resolveToken(httpServletRequest);
+        String token = tokenProvider.resolveToken(httpServletRequest);
 
         if (!StringUtils.hasText(token)) {
             chain.doFilter(request, response);
@@ -64,27 +58,4 @@ public class JwtVerificationFilter extends GenericFilter {
 
     }
 
-    /**
-     * 토큰 값 추출
-     * @param request
-     * @return
-     */
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (!StringUtils.hasText(bearerToken)) {
-
-            String authToken = CommonUtils.getCookie(request, "auth_id");
-            if (!StringUtils.hasText(authToken)) {
-                return null;
-            }
-
-            bearerToken = "Bearer " + authToken;
-        }
-
-        if (bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-
-        return null;
-    }
 }

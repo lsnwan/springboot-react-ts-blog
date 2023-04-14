@@ -20,7 +20,6 @@ const Header = (props: PropsType) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {loggedUser} = useAuth();
-
   const themeType = useSelector<AppState, T.State>(state => state.themeType);
 
   const goLoginHandler = useCallback(() => {
@@ -66,12 +65,12 @@ const Header = (props: PropsType) => {
         </SH.ThemeButton>
 
         {/*익명 사용자*/}
-        {!loggedUser && (
+        {!localStorage.getItem("userId") && (
           <SH.headerButton onClick={goLoginHandler}>시작하기</SH.headerButton>
         )}
 
         {/*인증된 사용자*/}
-        {loggedUser && (
+        {localStorage.getItem("userId") && (
           <SH.ProfileButton />
         )}
 

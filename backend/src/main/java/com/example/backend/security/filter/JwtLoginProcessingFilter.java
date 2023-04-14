@@ -5,6 +5,7 @@ import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.security.dto.LoginDto;
 import com.example.backend.security.token.JwtAuthenticationToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -31,7 +32,25 @@ public class JwtLoginProcessingFilter extends AbstractAuthenticationProcessingFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
-        LoginDto.Request loginForm = objectMapper.readValue(request.getReader(), LoginDto.Request.class);
+        LoginDto.Request loginForm = null;
+        try {
+            loginForm = objectMapper.readValue(request.getReader(), LoginDto.Request.class);
+        } catch (UnrecognizedPropertyException e) {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(
+                    response.getOutputStream(),
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("요청한 JSON 파라미터 중 잘못 되거나 존재하지 않는 데이터가 존재합니다.").build()
+            );
+
+            return null;
+        }
+
+
         if (StringUtils.isEmpty(loginForm.getUserEmail()) || StringUtils.isEmpty(loginForm.getUserPw())) {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);

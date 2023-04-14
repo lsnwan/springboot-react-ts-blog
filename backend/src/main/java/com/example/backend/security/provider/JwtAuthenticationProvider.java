@@ -25,9 +25,6 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
      @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-         log.info("/*************************************");
-         log.info("*  인증 로직");
-         log.info("/*************************************");
          String loginId = authentication.getName();
          String password = (String) authentication.getCredentials();
 

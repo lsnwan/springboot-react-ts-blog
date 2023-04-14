@@ -1,4 +1,4 @@
-export const readItemFromStorageP = (key: string) =>
+const readItemFromStorageP = (key: string) =>
   new Promise<string | null>(async (resolve, reject) => {
     try {
       const value = localStorage.getItem(key)
@@ -8,7 +8,7 @@ export const readItemFromStorageP = (key: string) =>
     }
   })
 
-export const writeItemToStorageP = (key: string, value: string) =>
+const writeItemToStorageP = (key: string, value: string) =>
   new Promise<string>(async (resolve, reject) => {
     try {
       localStorage.setItem(key, value)
@@ -18,5 +18,16 @@ export const writeItemToStorageP = (key: string, value: string) =>
     }
   })
 
+const removeItemToStorageP = (key: string) =>
+  new Promise<string>(async (resolve, reject) => {
+    try {
+      localStorage.removeItem(key);
+    }catch (e) {
+      reject(e);
+    }
+  })
+
+
 export const readStringP = readItemFromStorageP
 export const writeStringP = writeItemToStorageP
+export const removeStringP = removeItemToStorageP

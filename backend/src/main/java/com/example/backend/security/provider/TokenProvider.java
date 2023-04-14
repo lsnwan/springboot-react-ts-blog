@@ -1,10 +1,9 @@
 package com.example.backend.security.provider;
 
-import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.DecryptionErrorException;
-import com.example.backend.cmm.error.exception.IsNotTokenException;
 import com.example.backend.cmm.type.JwtValidType;
 import com.example.backend.cmm.utils.AES256;
+import com.example.backend.cmm.utils.CommonUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.security.UserAccount;
@@ -21,10 +20,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TokenProvider implements InitializingBean {
 
-    private static final String AUTHORITIES_KEY = "auth";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Value("${jwt.secret}")
     private String secret;
@@ -69,7 +68,9 @@ public class TokenProvider implements InitializingBean {
 
         String token = Jwts.builder()
                 .setSubject(account.getId())
-                .claim(AUTHORITIES_KEY, authorities)
+                .claim("roles", authorities)
+                .claim("email", account.getEmail())
+                .claim("nickname", account.getNickname())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(expiredDate)
                 .compact();
@@ -80,10 +81,6 @@ public class TokenProvider implements InitializingBean {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        log.info("===================================");
-        log.info(sdf.format(expiredDate));
 
         result.put("authToken", encToken);
         result.put("tokenExpiredTime", expiredDate);
@@ -102,6 +99,7 @@ public class TokenProvider implements InitializingBean {
         try {
             decToken = aes256.decrypt(token);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DecryptionErrorException("서버에 문제가 발생했습니다.");
         }
 
@@ -113,11 +111,11 @@ public class TokenProvider implements InitializingBean {
                 .getBody();
 
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                Arrays.stream(claims.get("roles").toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-
-        Optional<Account> optAccount = accountRepository.findOneWithAuthoritiesById(claims.getSubject());
+        String subject = claims.getSubject();
+        Optional<Account> optAccount = accountRepository.findOneWithAuthoritiesById(subject);
         if (optAccount.isEmpty()) {
             return null;
         }
@@ -131,8 +129,6 @@ public class TokenProvider implements InitializingBean {
      * @return
      */
     public JwtValidType validateToken(String token) {
-        log.info("토큰 검증!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        log.info(token);
         String decryptAccessToken = "";
         try {
             decryptAccessToken = aes256.decrypt(token);
@@ -158,4 +154,27 @@ public class TokenProvider implements InitializingBean {
         }
     }
 
+    /**
+     * 토큰 값 추출
+     * @param request
+     * @return
+     */
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (!StringUtils.hasText(bearerToken)) {
+
+            String authToken = CommonUtils.getCookie(request, "auth_id");
+            if (!StringUtils.hasText(authToken)) {
+                return null;
+            }
+
+            bearerToken = "Bearer " + authToken;
+        }
+
+        if (bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+
+        return null;
+    }
 }
