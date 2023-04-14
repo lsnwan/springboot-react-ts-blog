@@ -73,7 +73,6 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
       axios.post(`/api/accounts/my-info`, {userId: userId})
         .then(res => res.data)
         .then((result: {status: number; code: string; message: string; data: any;}) => {
-          console.log(result);
           if (result.code === '200') {
             setLoggedUser(result.data)
             return;

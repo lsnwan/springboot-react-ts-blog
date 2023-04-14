@@ -19,7 +19,6 @@ const Header = (props: PropsType) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {loggedUser} = useAuth();
   const themeType = useSelector<AppState, T.State>(state => state.themeType);
 
   const goLoginHandler = useCallback(() => {
