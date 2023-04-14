@@ -3,21 +3,23 @@ import './App.css'
 import React from "react";
 import Login from "./pages/cmm/Login";
 import {useStore} from "./store";
-import {Provider} from "react-redux";
+import {Provider as ReduxProvider} from "react-redux";
 import MainLayout from "./pages/MainLayout";
 import Home from "./pages/main/Home";
 import CommonLayout from "./pages/CommLayout";
 import SignUp from "./pages/cmm/SignUp";
 import FindPassword from "./pages/cmm/FindPassword";
+import {AuthProvider} from "./contexts";
 
 function App() {
 
   const store = useStore();
 
   return (
-    <Provider store={store}>
+    <ReduxProvider store={store}>
       <Router>
-        <Routes>
+        <AuthProvider>
+          <Routes>
             <Route element={<MainLayout />}>
               <Route index path="/" element={<Home />} />
             </Route>
@@ -26,9 +28,10 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/find-password" element={<FindPassword />} />
             </Route>
-        </Routes>
+          </Routes>
+        </AuthProvider>
       </Router>
-    </Provider>
+    </ReduxProvider>
   )
 }
 

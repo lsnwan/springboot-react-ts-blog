@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../store";
 import * as T from "../../store/theme";
 import {BsBrightnessHighFill, BsFillMoonFill} from "react-icons/all";
+import {useAuth} from "../../contexts";
 
 type PropsType = {
   theme: string | undefined;
@@ -18,6 +19,7 @@ const Header = (props: PropsType) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {loggedUser} = useAuth();
 
   const themeType = useSelector<AppState, T.State>(state => state.themeType);
 
@@ -64,10 +66,16 @@ const Header = (props: PropsType) => {
         </SH.ThemeButton>
 
         {/*익명 사용자*/}
-        <SH.headerButton onClick={goLoginHandler}>시작하기</SH.headerButton>
+        {!loggedUser && (
+          <SH.headerButton onClick={goLoginHandler}>시작하기</SH.headerButton>
+        )}
 
         {/*인증된 사용자*/}
-        {/*<SH.ProfileButton></SH.ProfileButton>*/}
+        {loggedUser && (
+          <SH.ProfileButton />
+        )}
+
+
       </SH.ProfileBox>
     </SH.HeaderBox>
   );
