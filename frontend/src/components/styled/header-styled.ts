@@ -157,6 +157,7 @@ export const ProfileButton = styled.div`
   background-color: white;
   border-radius: 50%;
   cursor: pointer;
+  position: relative;
 `
 
 export const NotificationButton = styled.div`
@@ -170,3 +171,43 @@ export const NotificationButton = styled.div`
   font-size: 1.3em;
   cursor: pointer;
 `
+
+export const ProfileDropBoxBody = styled.ul`
+  display: none;
+  position: absolute;
+  top: 42px;
+  right: 0;
+  min-width: 170px;
+  padding: 0 10px;
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#363636")};
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
+  margin-bottom: 0;
+  border-radius: 10px;
+  list-style: none;
+  ${(props) =>
+          (props.theme === "light" && `box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;`)
+  };
+  &.active {
+    display: block;  
+  }
+`;
+
+export const ProfileDropBoxList = styled.li`
+  height: 40px;
+  line-height: 40px;
+  padding: 0 10px;
+  
+  &:first-child {
+    margin-top: 10px;
+  }
+  
+  &:last-child {
+    margin-bottom: 10px;
+  }
+
+  &:hover {
+    background: #ce4e4e;
+    border-radius: 10px;
+    color: white;
+  }
+`;

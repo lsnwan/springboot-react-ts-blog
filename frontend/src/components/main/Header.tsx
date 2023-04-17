@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SH from "../styled/header-styled";
@@ -20,10 +20,13 @@ const Header = (props: PropsType) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const themeType = useSelector<AppState, T.State>(state => state.themeType);
-
+  const [profileMenuOpen, setProfileMenuOpen] = useState<boolean>();
+  const dropboxRef = useRef<HTMLUListElement>(null);
+  const theme = useSelector<AppState, T.State>(state => state.themeType);
   const goLoginHandler = useCallback(() => {
     navigate('/login');
   }, [navigate])
+  const {logout} = useAuth();
 
   const changeThemeHandler = () => {
 
@@ -36,10 +39,32 @@ const Header = (props: PropsType) => {
     dispatch({type: '@theme/setTheme', payload: Utils.getCookie('theme')});
   }
 
+  const handleOpen = () => {
+    setProfileMenuOpen(true);
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropboxRef.current && !dropboxRef.current.contains(e.target as Node)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropboxRef]);
+
+  const handleLogout = () => {
+    logout(() => {
+      navigate("/");
+    });
+  }
+
   return (
     <SH.HeaderBox theme={props.theme}>
       <SH.BrandBox>
-        <ToggleMenu theme={props.theme} />
+        <ToggleMenu theme={props.theme}/>
         <SH.Logo theme={props.theme} onClick={() => navigate('/')}>YouBlog</SH.Logo>
       </SH.BrandBox>
 
@@ -48,7 +73,7 @@ const Header = (props: PropsType) => {
           <SH.SearchInput theme={props.theme}/>
         </SH.SearchInputBox>
         <SH.SearchButtonBox theme={props.theme}>
-          <FontAwesomeIcon icon={icon.faSearch} />
+          <FontAwesomeIcon icon={icon.faSearch}/>
         </SH.SearchButtonBox>
       </SH.SearchBox>
 
@@ -70,7 +95,14 @@ const Header = (props: PropsType) => {
 
         {/*인증된 사용자*/}
         {localStorage.getItem("userId") && (
-          <SH.ProfileButton />
+          <SH.ProfileButton onClick={handleOpen}>
+            <SH.ProfileDropBoxBody theme={theme} className={profileMenuOpen ? "active" : ""} ref={dropboxRef}>
+              <SH.ProfileDropBoxList theme={theme}>내 블로그</SH.ProfileDropBoxList>
+              <SH.ProfileDropBoxList theme={theme}>개인정보</SH.ProfileDropBoxList>
+              <SH.ProfileDropBoxList theme={theme}>보안</SH.ProfileDropBoxList>
+              <SH.ProfileDropBoxList theme={theme} onClick={handleLogout}>로그아웃</SH.ProfileDropBoxList>
+            </SH.ProfileDropBoxBody>
+          </SH.ProfileButton>
         )}
 
 

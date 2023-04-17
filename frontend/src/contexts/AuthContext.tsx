@@ -60,8 +60,12 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
    ! 로그아웃
    */
   const logout = useCallback((callback?: Callback) => {
-    setLoggedUser(undefined);
-    localStorage.removeItem("userId");
+
+    axios.post('/api/auth/logout', null)
+      .then((res) => {
+        setLoggedUser(undefined);
+        localStorage.removeItem("userId");
+      })
     callback && callback();
   }, []);
 
@@ -72,16 +76,20 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
     if (loggedUser == undefined) {
       axios.post(`/api/accounts/my-info`, {userId: userId})
         .then(res => res.data)
-        .then((result: {status: number; code: string; message: string; data: any;}) => {
+        .then((result: { status: number; code: string; message: string; data: any; }) => {
           if (result.code === '200') {
             setLoggedUser(result.data)
             return;
           }
 
           if (result.code === 'A-001') {
-            U.removeStringP("userId").then(() => {});
+            U.removeStringP("userId").then(() => {
+            });
           }
-        });
+        })
+        .catch(e => {
+          alert('서버에 문제가 발생했습니다.');
+        })
     }
 
   }, [])
