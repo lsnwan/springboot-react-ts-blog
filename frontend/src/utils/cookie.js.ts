@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+
 export const setCookie = (name: string, value: any, options?: Cookies.CookieAttributes) => {
   Cookies.set(name, value, options);
 }

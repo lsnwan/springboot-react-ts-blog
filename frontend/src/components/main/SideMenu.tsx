@@ -2,13 +2,17 @@ import React from 'react';
 import {
   Footer,
   SideMenuStyled,
-  SingleMenuButton, SingleMenuButtonName,
+  SingleMenuButton,
+  SingleMenuButtonName,
   SingleMenuIcon,
   SingleMenuLI,
   SingleMenuUL,
   SubMenuLI,
   SubMenuTitle,
-  SubMenuUL, SubscribeProfile, SubscribeProfileBox, SubscribeProfileName
+  SubMenuUL,
+  SubscribeProfile,
+  SubscribeProfileBox,
+  SubscribeProfileName
 } from "../styled/sidebar-styled";
 import {BsClockHistory, BsFillHouseFill, BsFillStarFill, GoLightBulb} from "react-icons/all";
 import {MessageBox} from "../styled/common-styled";

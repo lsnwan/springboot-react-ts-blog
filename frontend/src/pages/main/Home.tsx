@@ -7,13 +7,14 @@ import {
   BlogThumb,
   BlogTitle,
   ContentBody,
-  ContentContainer, TagBadge, TagBody,
+  ContentContainer,
+  TagBadge,
+  TagBody,
   UserProfile,
   UserProfileMoreButton,
   UserProfileName
 } from "../../components/styled/content-styled";
 import {Helmet} from "react-helmet";
-import {BsThreeDots} from "react-icons/all";
 
 const Home = () => {
 

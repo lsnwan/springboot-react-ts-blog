@@ -2,8 +2,6 @@ import React from 'react';
 import {
   ButtonPrimary,
   CommonBody,
-  Divider,
-  DividerText,
   FlexBetween,
   InputLabelBlock,
   InputTextBlock,
