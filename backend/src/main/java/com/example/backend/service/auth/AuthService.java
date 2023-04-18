@@ -16,6 +16,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -46,6 +48,8 @@ public class AuthService {
         newAccount.setId(GeneratorUtils.uniqueId());
         newAccount.setEnabled(true);
         newAccount.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        newAccount.setEmailVerifiedDate(LocalDateTime.now());
+        newAccount.setEmailVerifiedCode(GeneratorUtils.token(6));
 
         /*
          * 사용자 권한 등록

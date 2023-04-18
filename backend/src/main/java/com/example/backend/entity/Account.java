@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,15 @@ public class Account extends RegisteredDateEntity implements Serializable {
     @Column(name = "enabled")
     @ColumnDefault("0")
     private boolean enabled;
+
+    @Column(name = "mail_verified_send_date")
+    private LocalDateTime emailVerifiedDate;
+
+    @Column(name = "mail_verified_code")
+    private String emailVerifiedCode;
+
+    @Column(name = "mail_verified_confirm_date")
+    private LocalDateTime emailVerifiedConfirmDate;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<AccountAuthority> authorities;
