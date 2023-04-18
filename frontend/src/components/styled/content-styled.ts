@@ -97,7 +97,11 @@ export const BlogCard = styled.div<ContentWidthType>`
   height: 300px;
   border-radius: 10px;
   margin: 5px;
-  
+  cursor: pointer;
+  &:hover {
+    transition: ease .3s;
+    transform: translateY(-5px);
+  }
 `;
 
 export const BlogThumb = styled.div`
