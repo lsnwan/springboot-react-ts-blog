@@ -7,6 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -30,10 +31,16 @@ public class ValidateAdvice {
                     Map<String, Object> errorMap = new HashMap<>();
 
                     for (FieldError error : bindingResult.getFieldErrors()) {
+                        log.debug(error.getField() + "=>" + error.getDefaultMessage());
                         errorMap.put(error.getField(), error.getDefaultMessage());
                     }
 
-                    return new ResponseDataDto<>(HttpStatus.BAD_REQUEST.value(), ErrorType.REQUEST_ERROR.getErrorCode(), "잘못된 요청 입니다.", errorMap);
+                    return ResponseEntity.ok(ResponseDataDto.builder()
+                                    .status(HttpStatus.BAD_REQUEST.value())
+                                    .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                                    .message("잘못된 요청 입니다.")
+                                    .data(errorMap)
+                                    .build());
                 }
             }
         }

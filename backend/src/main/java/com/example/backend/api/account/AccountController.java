@@ -45,19 +45,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AccountController {
 
-    @Value("${jwt.secret}")
-    private String secret;
-
     private final ModelMapper modelMapper;
     private final AES256 aes256;
     private final TokenProvider tokenProvider;
 
 
     @PostMapping("/my-info")
-    public ResponseEntity<?> getMyInfo(HttpServletRequest request, HttpServletResponse response, @CurrentAccount Account account, @RequestBody Map<String, Object> params) {
+    public ResponseEntity<?> getMyInfo(HttpServletResponse response, @CurrentAccount Account account, @RequestBody Map<String, Object> params) {
 
         if (params.get("userId") == null || account == null) {
-//            CommonUtils.deleteCookie(response, "auth_id");
             ResponseCookie cookie = ResponseCookie.from("auth_id", "")
                     .maxAge(0)
                     .path("/")

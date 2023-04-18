@@ -8,4 +8,5 @@ import java.util.List;
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 
     List<Authority> findAllByOrderByAuthSort();
+    Authority findByAuthCode(String authCode);
 }

@@ -14,4 +14,6 @@ public class ResponseDto {
     private String code;
     private String message;
 
+    private String path;
+
 }
