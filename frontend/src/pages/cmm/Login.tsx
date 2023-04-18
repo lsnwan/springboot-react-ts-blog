@@ -14,8 +14,13 @@ import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
 import {useNavigate} from "react-router";
 import {useAuth} from "../../contexts";
+import {useSelector} from "react-redux";
+import {AppState} from "../../store";
+import * as T from "../../store/theme";
 
 const Login = () => {
+
+  const theme = useSelector<AppState, T.State>(state => state.themeType);
 
   const [userId, setUserId] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
@@ -44,7 +49,7 @@ const Login = () => {
   }, []);
 
   return (
-    <CommonBody>
+    <CommonBody theme={theme}>
       <Helmet>
         <title>YouBlog - 로그인</title>
       </Helmet>

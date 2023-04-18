@@ -10,11 +10,16 @@ import {
 } from "../../components/styled/common-styled";
 import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {AppState} from "../../store";
+import * as T from "../../store/theme";
 
 const FindPassword = () => {
 
+  const theme = useSelector<AppState, T.State>(state => state.themeType);
+
   return (
-    <CommonBody>
+    <CommonBody theme={theme}>
       <Helmet>
         <title>YouBlog - 비밀번호 찾기</title>
       </Helmet>

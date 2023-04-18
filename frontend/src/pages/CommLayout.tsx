@@ -11,7 +11,7 @@ const CommonLayout = () => {
   const theme = useSelector<AppState, T.State>(state => state.themeType);
 
   return (
-    <CommonStyled>
+    <CommonStyled theme={theme}>
       <Header theme={theme}/>
       <Outlet />
     </CommonStyled>

@@ -10,11 +10,16 @@ import {
 } from "../../components/styled/common-styled";
 import {Helmet} from "react-helmet";
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {AppState} from "../../store";
+import * as T from "../../store/theme";
 
 const SignUp = () => {
 
+  const theme = useSelector<AppState, T.State>(state => state.themeType);
+
   return (
-    <CommonBody>
+    <CommonBody theme={theme}>
       <Helmet>
         <title>YouBlog - 회원가입</title>
       </Helmet>
@@ -23,19 +28,19 @@ const SignUp = () => {
 
       <div className="mb-2">
         <InputLabelBlock htmlFor="userId">이메일</InputLabelBlock>
-        <InputTextBlock type="text" id="userId" />
+        <InputTextBlock theme={theme} type="text" id="userId" />
         <MessageBox className="error">이메일 형식으로 입력하세요</MessageBox>
       </div>
 
       <div  className="mb-2">
-        <InputLabelBlock htmlFor="userNick">닉네임</InputLabelBlock>
-        <InputTextBlock type="text" id="userNick" />
-        <MessageBox className="error">3 ~ 8자 내외로 띄어쓰기 없이 입력하세요</MessageBox>
+        <InputLabelBlock htmlFor="userPw">비밀번호</InputLabelBlock>
+        <InputTextBlock theme={theme} type="password" id="userPw" />
+        <MessageBox className="error">8 ~ 20자 내외로 입력하세요</MessageBox>
       </div>
 
       <div  className="mb-2">
-        <InputLabelBlock htmlFor="userPw">비밀번호</InputLabelBlock>
-        <InputTextBlock type="password" id="userPw" />
+        <InputLabelBlock htmlFor="pwConfirm">비밀번호 확인</InputLabelBlock>
+        <InputTextBlock theme={theme} type="password" id="pwConfirm" />
         <MessageBox className="error">8 ~ 20자 내외로 입력하세요</MessageBox>
       </div>
 

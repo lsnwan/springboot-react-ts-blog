@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const CommonStyled = styled.div`
-  background-color: #efefef;
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#0f0f0f")};
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   width: 100%;
   height: 100vh;
 `;
@@ -10,8 +11,10 @@ export const CommonBody = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 460px;
   transform: translate(-50%, -50%);
-  background-color: #fff;
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   padding: 50px 40px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
@@ -33,12 +36,16 @@ export const InputLabelBlock = styled.label`
 
 export const InputTextBlock = styled.input`
   display: block;
-  width: 400px;
+  width: 100%;
   height: 45px;
-  border-radius: 10px;
+  border-radius: ${(props) => props.theme === "light" ? "10px;" : "0"};
   outline: none;
-  border: 1px solid #dadada;
-  padding: 5px 15px;
+  ${( props ) => props.theme === 'light' ? `
+    border: 1px solid #dadada;
+  ` : 'border-bottom: 1px solid #dadada; border-top: 0; border-left: 0; border-right: 0;'}
+  padding: ${(props) => props.theme === "light" ? "5px 15px;" : "5px 5px;"};
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
 `;
 
 export const ButtonPrimary = styled.button`
@@ -212,13 +219,13 @@ export const MessageBox = styled.div`
   }
 
   &.error {
-    color: red;
+    color: #de2e2e;
   }
 
   &.desc {
     color: #a8a8a8;
   }
-  
+
   &.m-0 {
     margin: 0;
   }
