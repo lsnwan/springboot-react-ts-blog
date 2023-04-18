@@ -14,6 +14,16 @@ spring:
         format_sql: true
         show_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(BXsWBaf3j3Mt8TS7+3N9wxSqxsaqhLZwej6bsMxpVxc=)
+    password: ENC(hJIVz1MlhD5F5KKb0SoyXnZLTTH/KbaUXWYYbh7SZA4=)
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.timeout: 5000
+      mail.smtp.starttls.enable: true
+
 logging:
   level:
     com.example.backend: DEBUG
@@ -28,3 +38,6 @@ jasypt:
 
 aes256:
   key: 1234567890123456
+
+app:
+  host: http://localhost:8080

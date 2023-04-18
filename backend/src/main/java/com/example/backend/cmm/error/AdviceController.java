@@ -6,6 +6,8 @@ import com.example.backend.cmm.type.ErrorType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.UnsupportedEncodingException;
+
 @RestControllerAdvice
 public class AdviceController {
 
@@ -46,6 +48,22 @@ public class AdviceController {
     public ResponseDto differentPasswordException(DifferentPasswordException e) {
         return ResponseDto.builder()
                 .code(ErrorType.DIFFERENT_PASSWORD.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(SendMailException.class)
+    public ResponseDto sendMailException(SendMailException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.SEND_MAIL_ERROR.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(EncodingException.class)
+    public ResponseDto encodingException(EncodingException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.UN_SUPPORT_ENCODING.getErrorCode())
                 .message(e.getMessage())
                 .build();
     }

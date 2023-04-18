@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>스터디올레</title>
+</head>
+<body>
+<main>
+  <div style="display: flex; align-items: end; margin-bottom: 15px;">
+    <p>안녕하세요.</p>
+    <p>
+      <h2 style="margin: 0 10px;">YouBlog</h2> 입니다.
+    </p>
+  </div>
+
+  <div th:utext="${message}">메시지</div>
+
+  <div style="margin-bottom: 1rem; margin-top: 1rem;">
+    <a th:href="${host + link}" th:text="${linkName}" style="text-align: center; line-height: 34px; background-color: #127ed9; color: white; text-decoration: none; padding: 7px 13px; border-radius: 7px; font-size: 14px; cursor: pointer;">
+      Link
+    </a>
+  </div>
+</main>
+<footer>
+  <small>YouBlog &copy; 2023</small>
+</footer>
+</body>
+</html>

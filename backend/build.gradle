@@ -58,6 +58,10 @@ dependencies {
     implementation "com.querydsl:querydsl-core:${queryDslVersion}"
 
     implementation group: 'eu.bitwalker', name: 'UserAgentUtils', version: '1.17'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.7.1'
+
 }
 
 tasks.named('test') {

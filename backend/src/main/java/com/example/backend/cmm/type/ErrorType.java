@@ -20,6 +20,9 @@ public enum ErrorType {
 
     DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C-001", "복호화 에러"),
 
+    SEND_MAIL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "M-001", "메일 발송 에러"),
+
+    UN_SUPPORT_ENCODING(HttpStatus.INTERNAL_SERVER_ERROR, "E-001", "지원하지 않는 인코딩"),
 
     ; // 코드
 
