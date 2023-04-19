@@ -1,7 +1,9 @@
 import * as T from './types';
 import * as Utils from "../../utils";
 
-Utils.setCookie('theme', 'dark');
+if (Utils.getCookie('theme') === undefined || Utils.getCookie('theme') === null) {
+  Utils.setCookie('theme', 'dark');
+}
 
 const initialState: T.State = Utils.getCookie('theme');
 

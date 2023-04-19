@@ -58,10 +58,10 @@ const Login = () => {
 
       <form onSubmit={handleSubmit}>
         <InputLabelBlock htmlFor="userId" className="mt-3">이메일</InputLabelBlock>
-        <InputTextBlock type="text" id="userId" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserId(e.target.value)} ref={inputRef} />
+        <InputTextBlock theme={theme} type="text" id="userId" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserId(e.target.value)} ref={inputRef} />
 
         <InputLabelBlock htmlFor="userPw" className="mt-3">비밀번호</InputLabelBlock>
-        <InputTextBlock type="password" id="userPw" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserPassword(e.target.value)} />
+        <InputTextBlock theme={theme} type="password" id="userPw" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserPassword(e.target.value)} />
 
         {message !== '' && (
           <MessageBox className="center error">{message}</MessageBox>

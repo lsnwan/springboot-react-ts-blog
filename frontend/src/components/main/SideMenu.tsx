@@ -35,12 +35,6 @@ const SideMenu = (props :PropsType) => {
         </SingleMenuLI>
       </SingleMenuUL>
 
-      {!localStorage.getItem("userId") && (
-        <MessageBox className="desc center">
-          로그인 후 이용 가능합니다.
-        </MessageBox>
-      )}
-
       {localStorage.getItem("userId") && (
         <>
           <SingleMenuUL>
