@@ -1,13 +1,17 @@
 package com.example.backend.security.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class LoginDto implements Serializable {
@@ -34,6 +38,8 @@ public class LoginDto implements Serializable {
         private String userId;
         private String userEmail;
         private String userNickname;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+        private LocalDateTime emailVerifiedConfirmDate;
         private List<String> userRole;
     }
 

@@ -2,10 +2,16 @@ import {createContext, FC, PropsWithChildren, useCallback, useContext, useEffect
 import * as U from '../utils';
 import axios from "axios";
 
-export type LoggedUser = {userId: string; userEmail: string; userNickname: string; userRole: string[]}
+export type LoggedUser = {
+  userId: string;
+  userEmail: string;
+  userNickname: string;
+  emailVerifiedConfirmDate: string
+  userRole: string[]}
 type Callback = (message?: string) => void
 
 type ContextType = {
+
   loggedUser?: LoggedUser
   signup: (email: string, password: string, callback?: Callback) => void
   login: (email: string, password: string, callback?: Callback) => void

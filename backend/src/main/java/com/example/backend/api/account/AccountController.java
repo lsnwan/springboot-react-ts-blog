@@ -74,6 +74,7 @@ public class AccountController {
                 .userId(account.getId())
                 .userEmail(account.getEmail())
                 .userNickname(account.getNickname())
+                .emailVerifiedConfirmDate(account.getEmailVerifiedConfirmDate())
                 .userRole(account.getAuthorities().stream().filter(obj -> obj.getAuthority() != null).map(obj -> obj.getAuthority().getAuthCode()).collect(Collectors.toList()))
                 .build();
 

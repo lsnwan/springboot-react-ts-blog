@@ -42,6 +42,9 @@ public class ApplicationStartRunner implements ApplicationRunner {
                 .id(GeneratorUtils.uniqueId())
                 .password(passwordEncoder.encode("1234"))
                 .nickname("관리자")
+                .emailVerifiedCode(GeneratorUtils.token(6))
+                .emailVerifiedDate(LocalDateTime.now())
+                .emailVerifiedConfirmDate(LocalDateTime.now().plusSeconds(10))
                 .enabled(true)
                 .build();
 

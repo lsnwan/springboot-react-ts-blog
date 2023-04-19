@@ -8,6 +8,8 @@ import com.example.backend.repository.TokenManagerRepository;
 import com.example.backend.security.dto.LoginDto;
 import com.example.backend.security.provider.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -78,6 +80,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
                         .userId(account.getId())
                         .userEmail(account.getEmail())
                         .userNickname(account.getNickname())
+                        .emailVerifiedConfirmDate(account.getEmailVerifiedConfirmDate())
                         .userRole(
                                 account.getAuthorities().stream()
                                     .filter(obj -> obj.getAuthority() != null)
@@ -86,6 +89,8 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
                 .build());
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.writeValue(
                 response.getOutputStream(),
                 ResponseDataDto.builder()
