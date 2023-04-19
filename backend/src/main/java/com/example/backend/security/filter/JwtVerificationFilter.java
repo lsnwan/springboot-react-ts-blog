@@ -27,7 +27,6 @@ public class JwtVerificationFilter extends GenericFilter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        log.info("JWT 검증 필터 작동 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = tokenProvider.resolveToken(httpServletRequest);
 

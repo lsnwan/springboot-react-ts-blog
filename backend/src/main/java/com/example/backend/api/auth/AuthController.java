@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +59,7 @@ public class AuthController {
         return ResponseEntity.ok(ResponseDto.builder()
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("회원가입에 성공 했습니다.")
-                .path("/")
+                .path("/signup-complete")
                 .build());
     }
 

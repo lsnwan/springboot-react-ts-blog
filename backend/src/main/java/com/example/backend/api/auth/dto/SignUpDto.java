@@ -24,7 +24,6 @@ public class SignUpDto implements Serializable {
         @Pattern(regexp = "^.*(?=^.{8,20}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", message = "특수문자 포함 문자와 숫자 조합으로 8~20자 내외로 입력하세요")
         private String password;
 
-        @Pattern(regexp = "^.*(?=^.{8,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", message = "특수문자 포함 문자와 숫자 조합으로 8~20자 내외로 입력하세요")
         private String passwordConfirm;
 
     }

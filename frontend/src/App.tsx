@@ -10,6 +10,7 @@ import CommonLayout from "./pages/CommLayout";
 import SignUp from "./pages/cmm/SignUp";
 import FindPassword from "./pages/cmm/FindPassword";
 import {AuthProvider} from "./contexts";
+import SignUpComplete from "./pages/cmm/SignUpComplete";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             <Route element={<CommonLayout />}>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/signup-complete" element={<SignUpComplete />} />
               <Route path="/find-password" element={<FindPassword />} />
             </Route>
           </Routes>
