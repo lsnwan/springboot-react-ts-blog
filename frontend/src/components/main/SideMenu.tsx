@@ -47,9 +47,6 @@ const SideMenu = (props :PropsType) => {
           {!loggedUser?.emailVerifiedConfirmDate && (
             <div className="text-center mb-2">
               <small>이메일 인증을 하지 않았습니다.</small>
-              <div>
-
-              </div>
             </div>
           )}
 
