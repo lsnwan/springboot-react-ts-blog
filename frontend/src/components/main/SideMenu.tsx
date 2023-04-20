@@ -15,7 +15,6 @@ import {
   SubscribeProfileName
 } from "../styled/sidebar-styled";
 import {BsClockHistory, BsFillHouseFill, BsFillStarFill, GoLightBulb} from "react-icons/all";
-import {MessageBox} from "../styled/common-styled";
 import {useAuth} from "../../contexts";
 
 type PropsType = {

@@ -3,7 +3,6 @@ package com.example.backend.security.filter;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.type.JwtValidType;
-import com.example.backend.cmm.utils.CommonUtils;
 import com.example.backend.security.provider.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

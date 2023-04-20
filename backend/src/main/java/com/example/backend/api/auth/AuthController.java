@@ -6,7 +6,6 @@ import com.example.backend.api.auth.dto.VerifiedEmailDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.utils.CommonUtils;
-import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.FindAccount;
 import com.example.backend.repository.AccountRepository;

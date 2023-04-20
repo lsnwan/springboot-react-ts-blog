@@ -6,8 +6,6 @@ import com.example.backend.cmm.type.ErrorType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.io.UnsupportedEncodingException;
-
 @RestControllerAdvice
 public class AdviceController {
 

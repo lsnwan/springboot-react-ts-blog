@@ -1,5 +1,4 @@
-
-import React, {Component, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {ButtonPrimary, CommonBody, Title,} from "../../components/styled/common-styled";
 import {Helmet} from "react-helmet";
 import {useSelector} from "react-redux";

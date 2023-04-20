@@ -1,10 +1,7 @@
 package com.example.backend.service.auth;
 
-import com.example.backend.api.auth.dto.FindPasswordDto;
 import com.example.backend.api.auth.dto.SignUpDto;
-import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.DifferentPasswordException;
-import com.example.backend.cmm.utils.CommonUtils;
 import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.config.AppProperties;
 import com.example.backend.entity.Account;
@@ -20,7 +17,6 @@ import com.example.backend.repository.FindAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -74,7 +70,6 @@ public class AuthService {
                         .account(saveAccount)
                         .authority(roleUser)
                         .build());
-
 
         /*
          * 인증 메일 발송
