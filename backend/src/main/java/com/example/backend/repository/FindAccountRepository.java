@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FindAccountRepository extends JpaRepository<FindAccount, Long> {
 
-    FindAccount findFirstByEmailAndIsChangePasswordOrderByRegisteredDateDesc(String email, boolean isChangePassword);
+    FindAccount findFirstByEmailOrderByRegisteredDateDesc(String email);
 }

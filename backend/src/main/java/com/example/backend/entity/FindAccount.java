@@ -20,9 +20,6 @@ public class FindAccount extends RegisteredDateEntity {
     @Column(name = "fa_email")
     private String email;
 
-    @Column(name = "fa_change_at")
-    private boolean isChangePassword;
-
     @Column(name = "fa_request_ip")
     private String requestIP;
 

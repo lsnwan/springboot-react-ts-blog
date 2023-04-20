@@ -118,7 +118,7 @@ public class AuthController {
                             .build());
         }
 
-        FindAccount findAccount = findAccountRepository.findFirstByEmailAndIsChangePasswordOrderByRegisteredDateDesc(findPasswordForm.getEmail(), false);
+        FindAccount findAccount = findAccountRepository.findFirstByEmailOrderByRegisteredDateDesc(findPasswordForm.getEmail());
         if (findAccount != null) {
             if (findAccount.getRegisteredDate().plusHours(1L).isAfter(LocalDateTime.now())) {
                 return ResponseEntity.ok(ResponseDto.builder()

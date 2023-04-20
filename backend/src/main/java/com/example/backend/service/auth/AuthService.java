@@ -85,7 +85,6 @@ public class AuthService {
         findAccountRepository.save(FindAccount.builder()
                 .email(email)
                 .requestIP(clientIP)
-                .isChangePassword(false)
                 .build());
 
         /*
