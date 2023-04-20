@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 /**
  * T : 테스트
  * Q : Request 관련
- * S : Response 관련
+ * P : Response 관련
  * A : 인증 관련
  * C : 암호화 관련
  * M : 메일 관련
@@ -32,9 +32,11 @@ public enum ErrorType {
 
     UN_SUPPORT_ENCODING(HttpStatus.INTERNAL_SERVER_ERROR, "E-001", "지원하지 않는 인코딩"),
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "D-001", "데이터 없음"),
+    NOT_FOUND_DATA(HttpStatus.NOT_FOUND, "D-001", "데이터 없음"),
 
-    NO_RESPONSE_TIME(HttpStatus.INTERNAL_SERVER_ERROR, "S-001", "응답 시간이 되지 않음"),
+    NO_RESPONSE_TIME(HttpStatus.INTERNAL_SERVER_ERROR, "P-001", "응답 시간이 되지 않음"),
+
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S-001", "서버 에러"),
 
     ; // 코드
 

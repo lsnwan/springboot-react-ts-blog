@@ -24,6 +24,7 @@ spring:
       mail.smtp.timeout: 5000
       mail.smtp.starttls.enable: true
 
+
 logging:
   level:
     com.example.backend: DEBUG
@@ -41,3 +42,9 @@ aes256:
 
 app:
   host: http://localhost:8080
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 5000

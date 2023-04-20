@@ -3,6 +3,8 @@ package com.example.backend.cmm.error;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.*;
 import com.example.backend.cmm.type.ErrorType;
+import feign.FeignException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -64,5 +66,13 @@ public class AdviceController {
                 .code(ErrorType.UN_SUPPORT_ENCODING.getErrorCode())
                 .message(e.getMessage())
                 .build();
+    }
+
+    @ExceptionHandler(FeignException.class)
+    protected ResponseEntity<ResponseDto> handleException(FeignException e) {
+        return ResponseEntity.ok(ResponseDto.builder()
+                .code(ErrorType.SERVER_ERROR.getErrorCode())
+                .message(e.getMessage())
+                .build());
     }
 }

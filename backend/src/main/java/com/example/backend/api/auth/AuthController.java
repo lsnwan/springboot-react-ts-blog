@@ -113,7 +113,7 @@ public class AuthController {
         Optional<Account> optAccount = accountRepository.findOneWithAuthoritiesByEmail(findPasswordForm.getEmail());
         if (optAccount.isEmpty()) {
             return ResponseEntity.ok(ResponseDto.builder()
-                            .code(ErrorType.NOT_FOUND.getErrorCode())
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
                             .message("데이터를 찾을 수 없습니다.")
                             .build());
         }
