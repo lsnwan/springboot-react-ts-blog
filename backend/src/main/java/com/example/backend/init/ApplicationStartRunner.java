@@ -30,15 +30,18 @@ public class ApplicationStartRunner implements ApplicationRunner {
     private final AuthorityRepository authorityRepository;
     private final AccountRepository accountRepository;
     private final AccountAuthorityRepository accountAuthorityRepository;
-    private final TokenManagerRepository tokenManagerRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final String ADMIN_EMAIL = "admin@admin.admin";
+
+
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("==== Initialize ==================================================");
 
         Account account = Account.builder()
-                .email("admin")
+                .email(ADMIN_EMAIL)
                 .id(GeneratorUtils.uniqueId())
                 .password(passwordEncoder.encode("1234"))
                 .nickname("관리자")
@@ -80,8 +83,12 @@ public class ApplicationStartRunner implements ApplicationRunner {
             log.info(auth.toString());
         }
 
-        Optional<Account> optionalAccount = accountRepository.findOneWithAuthoritiesByEmail("admin");
-        log.info(optionalAccount.get().toString());
+        Optional<Account> optionalAccount = accountRepository.findOneWithAuthoritiesByEmail(ADMIN_EMAIL);
+        if (optionalAccount.isPresent()) {
+            log.info(optionalAccount.get().toString());
+        } else {
+            log.info("계정을 찾을 수 없음");
+        }
 
     }
 }

@@ -1,16 +1,23 @@
 package com.example.backend.api.auth;
 
+import com.example.backend.api.auth.dto.FindPasswordDto;
 import com.example.backend.api.auth.dto.SignUpDto;
 import com.example.backend.api.auth.dto.VerifiedEmailDto;
 import com.example.backend.cmm.dto.ResponseDto;
+import com.example.backend.cmm.type.ErrorType;
+import com.example.backend.cmm.utils.CommonUtils;
+import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.entity.Account;
+import com.example.backend.entity.FindAccount;
 import com.example.backend.repository.AccountRepository;
+import com.example.backend.repository.FindAccountRepository;
 import com.example.backend.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +36,8 @@ public class AuthController {
 
     private final AuthService authService;
     private final AccountRepository accountRepository;
+    private final FindAccountRepository findAccountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/logout")
     public ResponseDto logout(HttpServletResponse response) {
@@ -96,5 +105,42 @@ public class AuthController {
         out.println(String.format("<script>alert('%s');window.close();</script>", "인증을 완료하였습니다."));
         out.flush();
     }
+
+    @PostMapping("/find-password")
+    public ResponseEntity<?> findPassword(@RequestBody @Valid FindPasswordDto.Request findPasswordForm, BindingResult bindingResult) {
+
+        log.info("비밀번호 찾기");
+
+        Optional<Account> optAccount = accountRepository.findOneWithAuthoritiesByEmail(findPasswordForm.getEmail());
+        if (optAccount.isEmpty()) {
+            return ResponseEntity.ok(ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND.getErrorCode())
+                            .message("데이터를 찾을 수 없습니다.")
+                            .build());
+        }
+
+        FindAccount findAccount = findAccountRepository.findFirstByEmailAndIsChangePasswordOrderByRegisteredDateDesc(findPasswordForm.getEmail(), false);
+        if (findAccount != null) {
+            if (findAccount.getRegisteredDate().plusHours(1L).isAfter(LocalDateTime.now())) {
+                return ResponseEntity.ok(ResponseDto.builder()
+                                .code(ErrorType.NO_RESPONSE_TIME.getErrorCode())
+                                .message("재전송은 1시간 후에 가능 합니다.")
+                        .build());
+            }
+        }
+
+
+
+        authService.findPassword(findPasswordForm.getEmail(), optAccount.get(), CommonUtils.getClientIp());
+
+
+
+        return ResponseEntity.ok(ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("임시 비밀번호 발급이 완료되었습니다.")
+                        .path("/find-password-complete")
+                .build());
+    }
+
 
 }

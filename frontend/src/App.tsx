@@ -11,6 +11,7 @@ import SignUp from "./pages/cmm/SignUp";
 import FindPassword from "./pages/cmm/FindPassword";
 import {AuthProvider} from "./contexts";
 import SignUpComplete from "./pages/cmm/SignUpComplete";
+import FindPasswordComplete from "./pages/cmm/FindPasswordComplete";
 
 function App() {
 
@@ -21,20 +22,21 @@ function App() {
       <Router>
         <AuthProvider>
           <Routes>
-            <Route element={<MainLayout />}>
-              <Route index path="/" element={<Home />} />
+            <Route element={<MainLayout/>}>
+              <Route index path="/" element={<Home/>}/>
             </Route>
-            <Route element={<CommonLayout />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/signup-complete" element={<SignUpComplete />} />
-              <Route path="/find-password" element={<FindPassword />} />
+            <Route element={<CommonLayout/>}>
+              <Route path="/login" element={<Login/>}/>
+              <Route path="/signup" element={<SignUp/>}/>
+              <Route path="/signup-complete" element={<SignUpComplete/>}/>
+              <Route path="/find-password" element={<FindPassword/>}/>
+              <Route path="/find-password-complete" element={<FindPasswordComplete/>} />
             </Route>
           </Routes>
         </AuthProvider>
       </Router>
     </ReduxProvider>
-  )
+  );
 }
 
 export default App

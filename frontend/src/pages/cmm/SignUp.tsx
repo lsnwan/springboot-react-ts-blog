@@ -40,7 +40,7 @@ const SignUp = () => {
     passwordConfirm: ''
   });
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // 초기화
     setSignUpFormError({
@@ -94,7 +94,7 @@ const SignUp = () => {
 
       <Title className="mb-5">회원가입</Title>
 
-      <form onSubmit={handleFormSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="mb-2">
           <InputLabelBlock htmlFor="email">이메일</InputLabelBlock>
           <InputTextBlock theme={theme} type="text" id="email" name="email" onChange={handleChange} />

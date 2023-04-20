@@ -1,18 +1,22 @@
 package com.example.backend.service.auth;
 
+import com.example.backend.api.auth.dto.FindPasswordDto;
 import com.example.backend.api.auth.dto.SignUpDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.DifferentPasswordException;
+import com.example.backend.cmm.utils.CommonUtils;
 import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.config.AppProperties;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;
 import com.example.backend.entity.Authority;
+import com.example.backend.entity.FindAccount;
 import com.example.backend.mail.EmailDto;
 import com.example.backend.mail.EmailService;
 import com.example.backend.repository.AccountAuthorityRepository;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.repository.AuthorityRepository;
+import com.example.backend.repository.FindAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -37,6 +41,7 @@ public class AuthService {
     private final AppProperties appProperties;
     private final EmailService emailService;
     private final TemplateEngine templateEngine;
+    private final FindAccountRepository findAccountRepository;
 
     public void signUp(final SignUpDto.Request signUpForm) {
 
@@ -78,11 +83,31 @@ public class AuthService {
 
     }
 
+    public void findPassword(final String email, final Account account, final String clientIP) {
+        /*
+         * 이력 등록
+         */
+        findAccountRepository.save(FindAccount.builder()
+                .email(email)
+                .requestIP(clientIP)
+                .isChangePassword(false)
+                .build());
+
+        /*
+         * 사용자 비밀번호 변경
+         */
+        String tempPassword = GeneratorUtils.token(6);
+        account.setPassword(passwordEncoder.encode(tempPassword));
+        accountRepository.save(account);
+
+        findPasswordSendMail(email, tempPassword, clientIP);
+    }
+
     /**
      * 회원가입 인증 메일 보내기
      * @param account
      */
-    public void signUpSendMail(Account account) {
+    private void signUpSendMail(Account account) {
         Context context = new Context();
         context.setVariable("link", "/auth/verified-email-check?code=" + account.getEmailVerifiedCode() + "&uid=" + account.getId());
         context.setVariable("email", account.getEmail());
@@ -100,5 +125,24 @@ public class AuthService {
 
     }
 
+    /**
+     * 비밀번호 찾기
+     * @param email
+     * @param tempPassword
+     * @param clientIP
+     */
+    private void findPasswordSendMail(final String email, final String tempPassword, final String clientIP) {
+        Context context = new Context();
+        context.setVariable("ip", clientIP);
+        context.setVariable("tempPassword", tempPassword);
+
+        EmailDto emailMessage = EmailDto.builder()
+                .to(email)
+                .subject("임시 비밀번호 발급이 완료 되었습니다.")
+                .message(templateEngine.process("mail/find-password", context))
+                .build();
+
+        emailService.sendEmail(emailMessage);
+    }
 
 }
