@@ -1,6 +1,7 @@
 package com.example.backend.entity;
 
 import com.example.backend.entity.base.RegisteredDateEntity;
+import com.example.backend.entity.type.AccountType;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -27,6 +28,10 @@ public class Account extends RegisteredDateEntity implements Serializable {
     @Column(name = "acc_id", unique = true)
     private String id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "acc_type", nullable = false, length = 10)
+    private AccountType AccountType;
+
     @Column(name = "acc_email", unique = true)
     private String email;
 
@@ -39,6 +44,9 @@ public class Account extends RegisteredDateEntity implements Serializable {
     @Column(name = "enabled")
     @ColumnDefault("0")
     private boolean enabled;
+
+    @Column(name = "acc_profile_path")
+    private String profilePath;
 
     @Column(name = "mail_verified_send_date")
     private LocalDateTime emailVerifiedDate;

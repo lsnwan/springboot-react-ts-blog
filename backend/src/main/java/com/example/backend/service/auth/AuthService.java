@@ -1,5 +1,6 @@
 package com.example.backend.service.auth;
 
+import com.example.backend.api.auth.dto.OauthLoginDto;
 import com.example.backend.api.auth.dto.SignUpDto;
 import com.example.backend.cmm.error.exception.DifferentPasswordException;
 import com.example.backend.cmm.utils.GeneratorUtils;
@@ -19,10 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -39,6 +44,13 @@ public class AuthService {
     private final TemplateEngine templateEngine;
     private final FindAccountRepository findAccountRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    /**
+     * 웹 회원 가입
+     * @param signUpForm
+     */
     public void signUp(final SignUpDto.Request signUpForm) {
 
         if (!signUpForm.getPassword().equals(signUpForm.getPasswordConfirm())) {
@@ -67,9 +79,9 @@ public class AuthService {
          */
         Account saveAccount = accountRepository.save(newAccount);
         accountAuthorityRepository.save(AccountAuthority.builder()
-                        .account(saveAccount)
-                        .authority(roleUser)
-                        .build());
+                .account(saveAccount)
+                .authority(roleUser)
+                .build());
 
         /*
          * 인증 메일 발송
@@ -78,6 +90,38 @@ public class AuthService {
 
     }
 
+    @Transactional
+    public void createSocialAccount(final OauthLoginDto.Response oauthLoginDto) {
+        /*
+         * 유저 권한 가져오기
+         */
+        Account newAccount = modelMapper.map(oauthLoginDto, Account.class);
+        Account saveAccount = accountRepository.save(newAccount);
+
+        Authority roleUser = authorityRepository.findByAuthCode("ROLE_USER");
+        accountAuthorityRepository.save(AccountAuthority.builder()
+                .account(saveAccount)
+                .authority(roleUser)
+                .build());
+
+        if (entityManager.contains(saveAccount)) {
+            entityManager.detach(saveAccount);
+        }
+
+    }
+
+    @Transactional
+    public Account getAccountByEmail(final String email) {
+        Optional<Account> accountOpt = accountRepository.findOneWithAuthoritiesByEmail(email);
+        return accountOpt.orElse(null);
+    }
+
+    /**
+     * 비밀번호 찾기
+     * @param email
+     * @param account
+     * @param clientIP
+     */
     public void findPassword(final String email, final Account account, final String clientIP) {
         /*
          * 이력 등록
@@ -98,7 +142,7 @@ public class AuthService {
     }
 
     /**
-     * 회원가입 인증 메일 보내기
+     * 회원가입 인증 메일 발송
      * @param account
      */
     private void signUpSendMail(Account account) {
@@ -120,7 +164,7 @@ public class AuthService {
     }
 
     /**
-     * 비밀번호 찾기
+     * 변경된 비밀번호 메일 발송
      * @param email
      * @param tempPassword
      * @param clientIP

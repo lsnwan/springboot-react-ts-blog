@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +35,6 @@ public class AuthController {
     private final AuthService authService;
     private final AccountRepository accountRepository;
     private final FindAccountRepository findAccountRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/logout")
     public ResponseDto logout(HttpServletResponse response) {
@@ -140,6 +138,5 @@ public class AuthController {
                         .path("/find-password-complete")
                 .build());
     }
-
 
 }

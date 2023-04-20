@@ -89,6 +89,42 @@ public class TokenProvider implements InitializingBean {
     }
 
     /**
+     * Account 객체로 토큰 생성
+     * @param account
+     * @return
+     */
+    public Map<String, Object> createToken(Account account) {
+        Map<String, Object> result = new HashMap<>();
+        long now = (new Date()).getTime();
+        Date expiredDate = new Date(now + this.expiredTime);
+
+        String token = Jwts.builder()
+                .setSubject(account.getId())
+                .claim("roles", account.getAuthorities().stream()
+                                                    .filter(obj -> obj.getAuthority() != null)
+                                                    .map(obj -> obj.getAuthority().getAuthCode())
+                                                    .collect(Collectors.toList()))
+                .claim("email", account.getEmail())
+                .claim("nickname", account.getNickname())
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(expiredDate)
+                .compact();
+
+        String encToken = "";
+        try {
+            encToken = aes256.encrypt(token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        result.put("authToken", encToken);
+        result.put("tokenExpiredTime", expiredDate);
+
+        return result;
+    }
+
+
+    /**
      * 토큰 정보를 받아 Authentication 객체를 만듬
      * @param token
      * @return

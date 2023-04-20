@@ -68,6 +68,14 @@ public class AdviceController {
                 .build();
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseDto validationException(ValidationException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(FeignException.class)
     protected ResponseEntity<ResponseDto> handleException(FeignException e) {
         return ResponseEntity.ok(ResponseDto.builder()

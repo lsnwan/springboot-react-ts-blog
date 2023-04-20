@@ -1,0 +1,33 @@
+package com.example.backend.api.auth.dto.token;
+
+import lombok.*;
+
+public class KakaoTokenDto {
+
+    @Builder
+    @Data
+    public static class Request {
+        private String grant_type;
+        private String client_id;
+        private String redirect_uri;
+        private String code;
+        private String client_secret;
+    }
+
+    @Builder
+    @Data
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Response {
+
+        private String token_type;
+        private String access_token;
+        private Integer expires_in;
+        private String refresh_token;
+        private Integer refresh_token_expires_in;
+        private String scope;
+    }
+
+
+}

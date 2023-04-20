@@ -4,6 +4,7 @@ import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;
 import com.example.backend.entity.Authority;
+import com.example.backend.entity.type.AccountType;
 import com.example.backend.repository.AccountAuthorityRepository;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.repository.AuthorityRepository;
@@ -39,6 +40,7 @@ public class ApplicationStartRunner implements ApplicationRunner {
         log.info("==== Initialize ==================================================");
 
         Account account = Account.builder()
+                .AccountType(AccountType.WEB)
                 .email(ADMIN_EMAIL)
                 .id(GeneratorUtils.uniqueId())
                 .password(passwordEncoder.encode("1234"))
