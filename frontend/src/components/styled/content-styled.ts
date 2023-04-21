@@ -38,14 +38,16 @@ export const ContentContainer = styled.div<ContentWidthType>`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  width: ${(props) => (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1500px;" : props.width > 1770 ? "1500px;" : "1100px;")}
+  width: ${(props) => (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1500px;" : "1100px;")}
 `;
 
 export const TagBody = styled.div<ContentWidthType>`
-  width: ${(props) => (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1500px;" : props.width > 1770 ? "1500px;" : "1100px;")};
+  width: ${(props) => (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1430px;" : "1070px;")};
   height: 50px;
-  margin: 0 auto 10px auto;
-  padding: 2px 10px 55px 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  padding: 2px 0 55px 0;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: hidden;
