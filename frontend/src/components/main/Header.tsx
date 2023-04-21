@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SH from "../styled/header-styled";
+import * as SC from "../styled/common-styled";
 import ToggleMenu from "./ToggleMenu";
 import {useNavigate} from "react-router";
 import * as Utils from "../../utils";
@@ -10,7 +11,6 @@ import {AppState} from "../../store";
 import * as T from "../../store/theme";
 import {BsBrightnessHighFill, BsFillMoonFill} from "react-icons/all";
 import {useAuth} from "../../contexts";
-import * as url from "url";
 
 type PropsType = {
   theme: string | undefined;
@@ -99,8 +99,8 @@ const Header = (props: PropsType) => {
           <SH.ProfileButton onClick={handleOpen} ref={dropboxRef} profilePath={loggedUser?.profilePath}>
             <SH.ProfileDropBoxBody theme={theme} className={profileMenuOpen ? "active" : ""} >
               <SH.ProfileDropBoxList theme={theme}>내 블로그</SH.ProfileDropBoxList>
-              <SH.ProfileDropBoxList theme={theme}>개인정보</SH.ProfileDropBoxList>
-              <SH.ProfileDropBoxList theme={theme}>보안</SH.ProfileDropBoxList>
+              <SH.ProfileDropBoxList theme={theme}>설정</SH.ProfileDropBoxList>
+              <SC.Divider></SC.Divider>
               <SH.ProfileDropBoxList theme={theme} onClick={handleLogout}>로그아웃</SH.ProfileDropBoxList>
             </SH.ProfileDropBoxBody>
           </SH.ProfileButton>

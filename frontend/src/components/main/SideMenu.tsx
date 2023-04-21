@@ -16,6 +16,7 @@ import {
 } from "../styled/sidebar-styled";
 import {BsClockHistory, BsFillHouseFill, BsFillStarFill, GoLightBulb} from "react-icons/all";
 import {useAuth} from "../../contexts";
+import {ButtonPrimary, ButtonSecondary} from "../styled/common-styled";
 
 type PropsType = {
   isSideBar: boolean;
@@ -42,8 +43,9 @@ const SideMenu = (props :PropsType) => {
       {localStorage.getItem("userId") && (
         <>
           {!loggedUser?.emailVerifiedConfirmDate && (
-            <div className="text-center mb-2">
+            <div className="text-center mb-2 pb-1 border-bottom border-light border-opacity-50">
               <small>이메일 인증을 하지 않았습니다.</small>
+              <ButtonPrimary className="block my-2">이메일 인증하기</ButtonPrimary>
             </div>
           )}
 
