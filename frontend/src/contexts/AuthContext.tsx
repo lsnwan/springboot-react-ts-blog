@@ -7,6 +7,7 @@ export type LoggedUser = {
   userEmail: string;
   userNickname: string;
   emailVerifiedConfirmDate: string
+  profilePath: string;
   userRole: string[]}
 type Callback = (message?: string) => void
 
@@ -15,12 +16,14 @@ type ContextType = {
   loggedUser?: LoggedUser
   signup: (email: string, password: string, callback?: Callback) => void
   login: (email: string, password: string, callback?: Callback) => void
+  socialLogin: (code: string, platformName: string, callback?: Callback) => void
   logout: (callback?: Callback) => void
 }
 
 export const AuthContext = createContext<ContextType>({
   signup: (email: string, password: string, callback?: Callback) => {},
   login: (email: string, password: string, callback?: Callback) => {},
+  socialLogin: (code: string, platformName: string, callback?: Callback) => {},
   logout: (callback?: Callback) => {},
 })
 
@@ -51,7 +54,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
       .then(res => res.data)
       .then((result: {code: string; message: string; data?: any;}) => {
         if (result.code === '200') {
-          setLoggedUser(notUsed => result.data.userInfo)
+          setLoggedUser(notUsed => result.data.userInfo);
           localStorage.setItem("userId", result.data.userInfo.userId);
           callback && callback()
         } else {
@@ -61,6 +64,30 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
       })
 
   }, []);
+
+  /*
+   ! 소셜 로그인
+   */
+  const socialLogin = useCallback((code: string, platformName: string, callback?: Callback) => {
+    U.readStringP("userId")
+      .then(() => {
+        return axios.post(`/api/oauth/${platformName}/login`, {
+          accountType: platformName,
+          code: code
+        }).then(res => res.data)
+          .then((result: {code: string; message: string; data?: any;}) => {
+            console.log(result);
+            if (result.code === '200') {
+              setLoggedUser(notUsed => result.data.userInfo);
+              localStorage.setItem("userId", result.data.userInfo.userId);
+              callback && callback()
+            } else {
+              alert(result.message);
+              callback && callback()
+            }
+          })
+      })
+  }, [])
 
   /*
    ! 로그아웃
@@ -102,7 +129,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
 
 
   const value = {
-    loggedUser, signup, login, logout
+    loggedUser, signup, login, socialLogin, logout
   }
 
   return <AuthContext.Provider value={value} children={children} />

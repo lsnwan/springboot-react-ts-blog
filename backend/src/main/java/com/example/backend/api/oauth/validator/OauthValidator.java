@@ -1,15 +1,16 @@
-package com.example.backend.api.auth.validator;
+package com.example.backend.api.oauth.validator;
 
 import com.example.backend.cmm.error.exception.BadTokenException;
 import com.example.backend.cmm.error.exception.ValidationException;
 import com.example.backend.entity.type.AccountType;
+import org.bouncycastle.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Service
 public class OauthValidator {
 
-    public void validateAuthorization(String authorizationHeader) {
+    public void validateAuthorization(final String authorizationHeader) {
 
         if (!StringUtils.hasText(authorizationHeader)) {
             throw new BadTokenException("헤더가 존재하지 않습니다.");
@@ -21,7 +22,7 @@ public class OauthValidator {
         }
     }
 
-    public void validateAccountType(String accountType) {
+    public void validateAccountType(final String accountType) {
         if (!AccountType.isAccountType(accountType)) {
             throw new ValidationException("정의하지 않은 타입 입니다.");
         }

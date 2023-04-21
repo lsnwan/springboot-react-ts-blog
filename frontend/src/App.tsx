@@ -12,6 +12,7 @@ import FindPassword from "./pages/cmm/FindPassword";
 import {AuthProvider} from "./contexts";
 import SignUpComplete from "./pages/cmm/SignUpComplete";
 import FindPasswordComplete from "./pages/cmm/FindPasswordComplete";
+import KakaoLogin from "./pages/oauth/KakaoLogin";
 
 function App() {
 
@@ -31,7 +32,9 @@ function App() {
               <Route path="/signup-complete" element={<SignUpComplete/>}/>
               <Route path="/find-password" element={<FindPassword/>}/>
               <Route path="/find-password-complete" element={<FindPasswordComplete/>} />
+              <Route path="/oauth/kakao/callback" element={<KakaoLogin />}></Route>
             </Route>
+
           </Routes>
         </AuthProvider>
       </Router>

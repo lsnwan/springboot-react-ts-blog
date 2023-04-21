@@ -1,8 +1,7 @@
 package com.example.backend.service.oauth;
 
-import com.example.backend.api.auth.dto.OauthLoginDto;
+import com.example.backend.api.oauth.dto.OauthLoginDto;
 import com.example.backend.cmm.utils.GeneratorUtils;
-import com.example.backend.entity.Account;
 import com.example.backend.entity.type.AccountType;
 import com.example.backend.api.oauth.model.OauthAttributes;
 import com.example.backend.api.oauth.service.SocialLoginApiService;

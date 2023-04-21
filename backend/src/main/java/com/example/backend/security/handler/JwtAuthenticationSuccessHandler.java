@@ -83,6 +83,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
                         .userEmail(account.getEmail())
                         .userNickname(account.getNickname())
                         .emailVerifiedConfirmDate(account.getEmailVerifiedConfirmDate())
+                        .profilePath(account.getProfilePath())
                         .userRole(
                                 account.getAuthorities().stream()
                                     .filter(obj -> obj.getAuthority() != null)
@@ -99,7 +100,8 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
                         .status(HttpStatus.OK.value())
                         .code(String.valueOf(HttpStatus.OK.value()))
                         .message("로그인에 성공 했습니다.")
-                        .data(result).build()
+                        .data(result)
+                        .build()
         );
     }
 }

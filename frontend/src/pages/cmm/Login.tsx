@@ -17,6 +17,7 @@ import {useAuth} from "../../contexts";
 import {useSelector} from "react-redux";
 import {AppState} from "../../store";
 import * as T from "../../store/theme";
+import axios from "axios";
 
 const Login = () => {
 
@@ -89,7 +90,9 @@ const Login = () => {
 
       <FlexBetween>
         <div style={{width: "70px", height: "70px", backgroundColor: "#999", borderRadius: "100%", textAlign: "center", lineHeight: "70px", fontSize: "20px"}}>
-          K
+          <a href="https://kauth.kakao.com/oauth/authorize?client_id=8f7a0bdb3dafcf6fd332a067be4273c5&redirect_uri=http://localhost:5173/oauth/kakao/callback&response_type=code">
+            KAKAO
+          </a>
         </div>
         <div style={{width: "70px", height: "70px", backgroundColor: "#999", borderRadius: "100%", textAlign: "center", lineHeight: "70px", fontSize: "20px"}}>
           N

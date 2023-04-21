@@ -23,11 +23,11 @@ public class KakaoLoginApiServiceImpl implements SocialLoginApiService {
 
     @Override
     public OauthAttributes getUserInfo(String accessToken) {
+        // 카카오에서 유저정보 가져오기
         KakaoUserInfoResponseDto kakaoUserInfoDto = kakaoUserInfoClient.getKakaoUserInfo(CONTENT_TYPE, "Bearer " + accessToken);
         KakaoUserInfoResponseDto.KakaoAccount kakaoAccount = kakaoUserInfoDto.getKakaoAccount();
 
         String email = kakaoAccount.getEmail();
-
         return OauthAttributes.builder()
                 .email(!StringUtils.hasText(email) ? kakaoUserInfoDto.getId() : email)
                 .nickname(kakaoAccount.getProfile().getNickname())

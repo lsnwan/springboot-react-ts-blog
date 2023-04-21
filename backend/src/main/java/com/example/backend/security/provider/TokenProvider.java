@@ -7,6 +7,7 @@ import com.example.backend.cmm.utils.CommonUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.security.UserAccount;
+import com.example.backend.security.token.JwtAuthenticationToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -103,7 +104,7 @@ public class TokenProvider implements InitializingBean {
                 .claim("roles", account.getAuthorities().stream()
                                                     .filter(obj -> obj.getAuthority() != null)
                                                     .map(obj -> obj.getAuthority().getAuthCode())
-                                                    .collect(Collectors.toList()))
+                                                    .collect(Collectors.joining(",")))
                 .claim("email", account.getEmail())
                 .claim("nickname", account.getNickname())
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -156,7 +157,7 @@ public class TokenProvider implements InitializingBean {
             return null;
         }
         UserAccount principal = new UserAccount(optAccount.get(), authorities);
-        return new UsernamePasswordAuthenticationToken(principal, decToken, authorities);
+        return new JwtAuthenticationToken(principal, null, authorities);
     }
 
     /**

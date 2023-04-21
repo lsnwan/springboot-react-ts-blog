@@ -43,7 +43,6 @@ const FindPassword = () => {
     axios.post('/api/auth/find-password', findPasswordForm)
       .then(res => res.data)
       .then((result: {code: string; message: string; data?:any; path: string | Partial<Path>;}) => {
-        console.log(result);
         if (result.code === 'Q-001') {
           setFindPasswordError({
             email: result.data.email === undefined ? '' : result.data.email,

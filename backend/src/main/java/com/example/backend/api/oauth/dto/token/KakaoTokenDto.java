@@ -1,4 +1,4 @@
-package com.example.backend.api.auth.dto.token;
+package com.example.backend.api.oauth.dto.token;
 
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.example.backend.api.auth.dto;
+package com.example.backend.api.oauth.dto;
 
 import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;
@@ -31,6 +31,7 @@ public class OauthLoginDto {
         private String profilePath;
         private AccountType accountType;
         private String id;
+        private String password = "";
         private boolean enabled;
         private LocalDateTime emailVerifiedDate;
         private LocalDateTime emailVerifiedConfirmDate;

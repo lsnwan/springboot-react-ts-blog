@@ -26,8 +26,6 @@ const SideMenu = (props :PropsType) => {
   const auth = useAuth();
   const loggedUser = auth.loggedUser;
 
-  console.log(loggedUser);
-
   return (
     <SideMenuStyled>
       <SingleMenuUL>

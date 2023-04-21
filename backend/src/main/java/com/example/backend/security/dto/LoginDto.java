@@ -36,6 +36,7 @@ public class LoginDto implements Serializable {
         private String userId;
         private String userEmail;
         private String userNickname;
+        private String profilePath;
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime emailVerifiedConfirmDate;
         private List<String> userRole;

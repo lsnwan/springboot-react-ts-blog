@@ -1,6 +1,6 @@
 package com.example.backend.service.auth;
 
-import com.example.backend.api.auth.dto.OauthLoginDto;
+import com.example.backend.api.oauth.dto.OauthLoginDto;
 import com.example.backend.api.auth.dto.SignUpDto;
 import com.example.backend.cmm.error.exception.DifferentPasswordException;
 import com.example.backend.cmm.utils.GeneratorUtils;

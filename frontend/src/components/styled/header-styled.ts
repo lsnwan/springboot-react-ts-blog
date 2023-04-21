@@ -151,13 +151,21 @@ export const MobileSearchButtonBox = styled.div`
   }
 `
 
-export const ProfileButton = styled.div`
+type ProfileButtonPropsType = {
+  profilePath?: string
+}
+
+export const ProfileButton = styled.div<ProfileButtonPropsType>`
   width: 30px;
   height: 30px;
   background-color: white;
+  ${(props) => props.profilePath && `background-image: url(${props.profilePath})`};
   border-radius: 50%;
   cursor: pointer;
   position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 `
 
 export const NotificationButton = styled.div`

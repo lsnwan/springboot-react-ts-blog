@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class OauthAttributes {
-
     private String nickname;
     private String email;
     private String profilePath;

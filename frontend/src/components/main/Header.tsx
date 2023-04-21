@@ -10,6 +10,7 @@ import {AppState} from "../../store";
 import * as T from "../../store/theme";
 import {BsBrightnessHighFill, BsFillMoonFill} from "react-icons/all";
 import {useAuth} from "../../contexts";
+import * as url from "url";
 
 type PropsType = {
   theme: string | undefined;
@@ -21,12 +22,12 @@ const Header = (props: PropsType) => {
   const dispatch = useDispatch();
   const themeType = useSelector<AppState, T.State>(state => state.themeType);
   const [profileMenuOpen, setProfileMenuOpen] = useState<boolean>();
-  const dropboxRef = useRef<HTMLUListElement>(null);
+  const dropboxRef = useRef<HTMLDivElement>(null);
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const goLoginHandler = useCallback(() => {
     navigate('/login');
   }, [navigate])
-  const {logout} = useAuth();
+  const {logout, loggedUser} = useAuth();
 
   const changeThemeHandler = () => {
 
@@ -40,7 +41,7 @@ const Header = (props: PropsType) => {
   }
 
   const handleOpen = () => {
-    setProfileMenuOpen(true);
+    setProfileMenuOpen(!profileMenuOpen);
   }
 
   useEffect(() => {
@@ -95,8 +96,8 @@ const Header = (props: PropsType) => {
 
         {/*인증된 사용자*/}
         {localStorage.getItem("userId") && (
-          <SH.ProfileButton onClick={handleOpen}>
-            <SH.ProfileDropBoxBody theme={theme} className={profileMenuOpen ? "active" : ""} ref={dropboxRef}>
+          <SH.ProfileButton onClick={handleOpen} ref={dropboxRef} profilePath={loggedUser?.profilePath}>
+            <SH.ProfileDropBoxBody theme={theme} className={profileMenuOpen ? "active" : ""} >
               <SH.ProfileDropBoxList theme={theme}>내 블로그</SH.ProfileDropBoxList>
               <SH.ProfileDropBoxList theme={theme}>개인정보</SH.ProfileDropBoxList>
               <SH.ProfileDropBoxList theme={theme}>보안</SH.ProfileDropBoxList>
