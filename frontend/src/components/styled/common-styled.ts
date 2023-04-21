@@ -260,3 +260,42 @@ export const FlexCenter = styled.div`
   align-items: center;
 `;
 
+export const MyModal = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, .3);
+  z-index: 1;
+`;
+
+export const ModalBody = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+  min-width: 200px;
+  min-height: 300px;
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#343434")};
+  color: ${(props) => (props.theme === "light" ? "#333333" : "#f0f0f0")};;
+  padding: 15px 25px;
+  border-radius: 10px;
+`;
+
+export const ModalClose = styled.div`
+  cursor: pointer;
+`;
+
+export const ModalContentStyle = styled.div`
+  margin-top: 1.2rem;
+  p {
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+  }
+`;

@@ -1,5 +1,6 @@
 package com.example.backend.cmm.error;
 
+import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.*;
 import com.example.backend.cmm.type.ErrorType;
@@ -13,10 +14,11 @@ public class AdviceController {
 
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseDto badRequestException(BadRequestException e) {
-        return ResponseDto.builder()
+    public ResponseDataDto<?> badRequestException(BadRequestException e) {
+        return ResponseDataDto.builder()
                 .code(ErrorType.REQUEST_ERROR.getErrorCode())
                 .message(e.getMessage())
+                .data(e.getErrorMap())
                 .build();
     }
 

@@ -11,9 +11,26 @@ import {AppState} from "../../store";
 import * as T from "../../store/theme";
 import {BsBrightnessHighFill, BsFillMoonFill} from "react-icons/all";
 import {useAuth} from "../../contexts";
+import axios from "axios";
+import {Path} from "@remix-run/router/history";
+import * as path from "path";
+import {Modal, ModalContent} from "./Modal";
+import {
+  ButtonPrimary,
+  Divider,
+  InputLabelBlock,
+  InputTextBlock,
+  MessageBox,
+  ModalContentStyle
+} from "../styled/common-styled";
 
 type PropsType = {
   theme: string | undefined;
+}
+
+type CreateBlogFormType = {
+  blogPath: string;
+
 }
 
 const Header = (props: PropsType) => {
@@ -24,11 +41,38 @@ const Header = (props: PropsType) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState<boolean>();
   const dropboxRef = useRef<HTMLDivElement>(null);
   const theme = useSelector<AppState, T.State>(state => state.themeType);
+
+  const [showCreateBlogModal, setShowCreateBlogModal] = useState<boolean>();
+  const handleDelete = () => {
+    setShowCreateBlogModal(false);
+    setCreateBlogFormError({
+      blogPath: ''
+    });
+    setCreateBlogFormError({
+      blogPath: ''
+    });
+  };
+
+  const [createBlogForm, setCreateBlogForm] = useState<CreateBlogFormType>({
+    blogPath: '',
+  });
+
+  const [createBlogFormError, setCreateBlogFormError] = useState<CreateBlogFormType>({
+    blogPath: '',
+  });
+
+
+  /*
+   ! 시작하기 클릭
+   */
   const goLoginHandler = useCallback(() => {
     navigate('/login');
   }, [navigate])
   const {logout, loggedUser} = useAuth();
 
+  /*
+   ! 테마 변경 클릭
+   */
   const changeThemeHandler = () => {
 
     if (themeType === undefined || themeType === 'dark') {
@@ -40,10 +84,16 @@ const Header = (props: PropsType) => {
     dispatch({type: '@theme/setTheme', payload: Utils.getCookie('theme')});
   }
 
+  /*
+   ! 프로필 클릭 이벤트(드롭다운 토글)
+   */
   const handleOpen = () => {
     setProfileMenuOpen(!profileMenuOpen);
   }
 
+  /*
+   ! 드롭다운 외부 클릭 처리
+   */
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropboxRef.current && !dropboxRef.current.contains(e.target as Node)) {
@@ -56,10 +106,70 @@ const Header = (props: PropsType) => {
     };
   }, [dropboxRef]);
 
+
+  /*
+   ! 로그아웃
+   */
   const handleLogout = () => {
     logout(() => {
       navigate("/");
     });
+  }
+
+  /*
+   ! 내 블로그 클릭
+   */
+  const handleMyProfile = () => {
+    axios.get('/api/blogs/check')
+      .then(res => res.data)
+      .then((result: {code: string, message: string, path: string | Partial<Path>;}) => {
+        console.log(result);
+        if (result.code === 'D-001') {
+          setShowCreateBlogModal(true);
+          return;
+        }
+
+        navigate(result.path);
+      })
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setCreateBlogForm(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setCreateBlogForm({
+      blogPath: '',
+    });
+
+    setCreateBlogFormError({
+      blogPath: '',
+    });
+
+    axios.post('/api/blogs', createBlogForm)
+      .then(res => res.data)
+      .then((result : {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
+        console.log(result);
+        if (result.code === 'Q-001') {
+          setCreateBlogFormError({
+            blogPath: result.data.blogPath === undefined ? result.message : result.data.blogPath,
+          });
+          return;
+        }
+
+        if (result.code === '201') {
+          setShowCreateBlogModal(false);
+          navigate(result.path);
+        }
+
+      });
+
   }
 
   return (
@@ -98,16 +208,39 @@ const Header = (props: PropsType) => {
         {localStorage.getItem("userId") && (
           <SH.ProfileButton onClick={handleOpen} ref={dropboxRef} profilePath={loggedUser?.profilePath}>
             <SH.ProfileDropBoxBody theme={theme} className={profileMenuOpen ? "active" : ""} >
-              <SH.ProfileDropBoxList theme={theme}>내 블로그</SH.ProfileDropBoxList>
+              <SH.ProfileDropBoxList theme={theme} onClick={handleMyProfile}>내 블로그</SH.ProfileDropBoxList>
               <SH.ProfileDropBoxList theme={theme}>설정</SH.ProfileDropBoxList>
               <SC.Divider></SC.Divider>
               <SH.ProfileDropBoxList theme={theme} onClick={handleLogout}>로그아웃</SH.ProfileDropBoxList>
             </SH.ProfileDropBoxBody>
           </SH.ProfileButton>
         )}
-
-
       </SH.ProfileBox>
+
+      {showCreateBlogModal && (
+        <Modal title="블로그 시작하기" onDelete={handleDelete}>
+          <ModalContent>
+            <h5>아직 블로그를 생성하지 않았군요</h5>
+            <p>아래 블로그 아이디를 입력해 주세요</p>
+            <p>입력한 아이디는 블로그 주소로 사용됩니다.</p>
+            <p className="mt-2">ex) <span className="badge rounded-pill text-bg-secondary py-2 px-2">/@[블로그 아이디]</span></p>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-2 mt-4">
+                <InputLabelBlock htmlFor="blogPath">블로그 ID</InputLabelBlock>
+                <InputTextBlock theme={theme} type="text" id="blogPath" name="blogPath" onChange={handleChange} />
+                {createBlogFormError.blogPath && (
+                  <MessageBox className="error">{createBlogFormError.blogPath}</MessageBox>
+                )}
+              </div>
+              <div className="mt-3">
+                <ButtonPrimary className="block">생성하기</ButtonPrimary>
+              </div>
+            </form>
+
+          </ModalContent>
+        </Modal>
+      )}
+
     </SH.HeaderBox>
   );
 

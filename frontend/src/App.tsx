@@ -13,6 +13,7 @@ import {AuthProvider} from "./contexts";
 import SignUpComplete from "./pages/cmm/SignUpComplete";
 import FindPasswordComplete from "./pages/cmm/FindPasswordComplete";
 import KakaoLogin from "./pages/oauth/KakaoLogin";
+import BlogMain from "./pages/main/blog/BlogMain";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
           <Routes>
             <Route element={<MainLayout/>}>
               <Route index path="/" element={<Home/>}/>
+              <Route index path="/:blogPath" element={<BlogMain />}/>
             </Route>
             <Route element={<CommonLayout/>}>
               <Route path="/login" element={<Login/>}/>
