@@ -9,6 +9,7 @@ import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;
 import com.example.backend.entity.Authority;
 import com.example.backend.entity.FindAccount;
+import com.example.backend.entity.type.AccountType;
 import com.example.backend.mail.EmailDto;
 import com.example.backend.mail.EmailService;
 import com.example.backend.repository.AccountAuthorityRepository;
@@ -67,6 +68,7 @@ public class AuthService {
          */
         String emailCode = GeneratorUtils.token(6);
         Account newAccount = modelMapper.map(signUpForm, Account.class);
+        newAccount.setAccountType(AccountType.WEB);
         newAccount.setNickname(GeneratorUtils.token(8));
         newAccount.setId(GeneratorUtils.uniqueId());
         newAccount.setEnabled(true);
