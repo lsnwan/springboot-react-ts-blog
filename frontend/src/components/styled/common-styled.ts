@@ -57,7 +57,6 @@ export const ButtonPrimary = styled.button`
   background-color: #0984e3;
   color: white;
   cursor: pointer;
-  transition: all .3s;
 
   &.small {
     padding: 4px 20px;

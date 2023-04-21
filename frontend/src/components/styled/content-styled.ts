@@ -8,8 +8,6 @@ export const BodyBox = styled.div`
   display: flex;
   background-color: ${props => props.theme === 'light' ? '#f0f0f0' : '#0f0f0f'};
   color: ${props => props.theme === 'light' ? '#333' : '#fff'};
-  transition: all .3s;
-  
 `;
 
 export const ContentBody = styled.div`

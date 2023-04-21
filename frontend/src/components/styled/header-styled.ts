@@ -15,7 +15,6 @@ export const HeaderBox = styled.div`
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#0f0f0f")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   z-index: 1;
-  transition: all .3s;
   @media (max-width: 1366px) {
     width: 1348px;
   }
@@ -70,7 +69,6 @@ export const SearchButtonBox = styled.div`
   font-size: 1.2em;
   line-height: 35px;
   cursor: pointer;
-  transition: .3s ease;
 
   &:hover {
     background-color: #000;
