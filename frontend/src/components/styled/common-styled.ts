@@ -38,12 +38,13 @@ export const InputTextBlock = styled.input`
   display: block;
   width: 100%;
   height: 45px;
-  border-radius: ${(props) => props.theme === "light" ? "10px;" : "0"};
+  border-radius: ${(props) => props.theme === "light" ? "10px;" : "10px"};
   outline: none;
   ${( props ) => props.theme === 'light' ? `
     border: 1px solid #dadada;
-  ` : 'border-bottom: 1px solid #dadada; border-top: 0; border-left: 0; border-right: 0;'}
-  padding: ${(props) => props.theme === "light" ? "5px 15px;" : "5px 5px;"};
+  ` : 'border: 1px solid #333;'}
+  // padding: ${(props) => props.theme === "light" ? "5px 15px;" : "5px 5px;"};
+  padding: 5px 15px;
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
 `;
@@ -345,5 +346,41 @@ export const LinkTeg = styled.a`
   &:hover {
     color: ${(props) => (props.theme === "light" ? "#333333" : "#f0f0f0")};
     text-decoration: underline;
+  }
+`;
+
+export const RelativeDiv = styled.div`
+  position: relative;
+`;
+
+type AbsoluteDivType = {
+  top?: string;
+  left?: string;
+  bottom?: string;
+  right?: string;
+  width?: string;
+  height?: string;
+}
+export const AbsoluteDiv = styled.div<AbsoluteDivType>`
+  position: absolute;
+  ${(props) => props.top && (`top: ${props.top}`)};
+  ${(props) => props.left && (`left: ${props.left}`)};
+  ${(props) => props.bottom && (`bottom: ${props.bottom}`)};
+  ${(props) => props.right && (`right: ${props.right}`)};
+  ${(props) => props.width && (`width: ${props.width}`)};
+  ${(props) => props.height && (`height: ${props.height}`)};
+`;
+
+export const TextArea = styled.textarea`
+  width: 100%;
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  height: 200px;
+  border-radius: 5px;
+  border: none;
+  resize: none;
+  &:active, &:focus {
+    outline: none;
   }
 `;

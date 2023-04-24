@@ -74,6 +74,7 @@ export const BlogTabMenuDiv = styled.div`
     &:hover {
       background-color: #0682a6;
       border-radius: 7px 7px 0 0;
+      color: white;
     }
     
     &.active {

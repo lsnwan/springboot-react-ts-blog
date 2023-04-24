@@ -16,7 +16,6 @@ import KakaoLogin from "./pages/oauth/KakaoLogin";
 import BlogLayout from "./pages/BlogLayout";
 import BlogHome from "./pages/main/blog/menu/BlogHome";
 import Published from "./pages/main/blog/menu/Published";
-import Community from "./pages/main/blog/menu/Community";
 import BlogInst from "./pages/main/blog/menu/BlogInst";
 import Settings from "./pages/main/blog/menu/Settings";
 
@@ -34,7 +33,6 @@ function App() {
               <Route element={<BlogLayout />}>
                 <Route path="/:blogPath" element={<BlogHome/>} />
                 <Route path="/:blogPath/published" element={<Published />} />
-                <Route path="/:blogPath/community" element={<Community />} />
                 <Route path="/:blogPath/inst" element={<BlogInst />} />
                 <Route path="/:blogPath/settings" element={<Settings />} />
               </Route>

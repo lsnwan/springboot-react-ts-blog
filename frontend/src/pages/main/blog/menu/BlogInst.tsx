@@ -10,12 +10,6 @@ const BlogInst = (props: Props) => {
       <FlexStart>
         <TabMenuContentDiv>
           <div>
-            <h1>제목</h1>
-            <p>
-              블로그 제목 입니다. 블로그 제목 입니다.
-            </p>
-          </div>
-          <div className="mt-4">
             <h1>소개</h1>
             <p>
               탄핵결정은 공직으로부터 파면함에 그친다. 그러나, 이에 의하여 민사상이나 형사상의 책임이 면제되지는 아니한다.

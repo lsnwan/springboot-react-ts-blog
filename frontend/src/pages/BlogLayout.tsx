@@ -21,9 +21,8 @@ const BlogLayout = () => {
   const tabs = [
     {index: 0, title: '홈', path: `/${blogPath}`},
     {index: 1, title: '게시글', path: `/${blogPath}/published`},
-    {index: 2, title: '커뮤니티', path: `/${blogPath}/community`},
-    {index: 3, title: '정보', path: `/${blogPath}/inst`},
-    {index: 4, title: '설정', path: `/${blogPath}/settings`},
+    {index: 2, title: '정보', path: `/${blogPath}/inst`},
+    {index: 3, title: '설정', path: `/${blogPath}/settings`},
   ];
 
   useEffect(() => {
@@ -91,9 +90,6 @@ const BlogLayout = () => {
         {/*{tabs[activeTab].content}*/}
         <Outlet />
       </section>
-
-
-
 
     </ContentBody>
   );
