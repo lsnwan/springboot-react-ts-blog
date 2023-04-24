@@ -85,6 +85,10 @@ export const ButtonSecondary = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+  
   &.block {
     width: 100%;
   }
@@ -105,6 +109,10 @@ export const ButtonSuccess = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+  
   &.block {
     width: 100%;
   }
@@ -124,6 +132,10 @@ export const ButtonInfo = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+  
   &.block {
     width: 100%;
   }
@@ -143,6 +155,10 @@ export const ButtonWarning = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+  
   &.block {
     width: 100%;
   }
@@ -162,6 +178,10 @@ export const ButtonDanger = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+  
   &.block {
     width: 100%;
   }
@@ -181,6 +201,10 @@ export const ButtonLight = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+  
   &.block {
     width: 100%;
   }
@@ -200,12 +224,16 @@ export const ButtonDark = styled.button`
   cursor: pointer;
   transition: all .3s;
 
+  &.small {
+    padding: 4px 20px;
+  }
+
   &.block {
     width: 100%;
   }
 
   &:hover {
-    background-color: #d7d7d7;
+    background-color: #424242;
   }
 `;
 
@@ -248,10 +276,19 @@ export const Divider = styled.div`
   }
 `;
 
+export const FlexStart = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+`;
+
 export const FlexBetween = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  &.block {
+    flex: 1;
+  }
 `;
 
 export const FlexCenter = styled.div`
@@ -279,7 +316,7 @@ export const ModalBody = styled.div`
   min-width: 200px;
   min-height: 300px;
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#343434")};
-  color: ${(props) => (props.theme === "light" ? "#333333" : "#f0f0f0")};;
+  color: ${(props) => (props.theme === "light" ? "#333333" : "#f0f0f0")};
   padding: 15px 25px;
   border-radius: 10px;
 `;
@@ -297,5 +334,16 @@ export const ModalContentStyle = styled.div`
 
   h1, h2, h3, h4, h5, h6 {
     text-align: center;
+  }
+`;
+
+export const LinkTeg = styled.a`
+  font-size: 14px;
+  text-decoration: none;
+  color: ${(props) => (props.theme === "light" ? "#333333" : "#f0f0f0")};
+  
+  &:hover {
+    color: ${(props) => (props.theme === "light" ? "#333333" : "#f0f0f0")};
+    text-decoration: underline;
   }
 `;

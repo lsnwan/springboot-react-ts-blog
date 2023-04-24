@@ -13,7 +13,12 @@ import {AuthProvider} from "./contexts";
 import SignUpComplete from "./pages/cmm/SignUpComplete";
 import FindPasswordComplete from "./pages/cmm/FindPasswordComplete";
 import KakaoLogin from "./pages/oauth/KakaoLogin";
-import BlogMain from "./pages/main/blog/BlogMain";
+import BlogLayout from "./pages/BlogLayout";
+import BlogHome from "./pages/main/blog/menu/BlogHome";
+import Published from "./pages/main/blog/menu/Published";
+import Community from "./pages/main/blog/menu/Community";
+import BlogInst from "./pages/main/blog/menu/BlogInst";
+import Settings from "./pages/main/blog/menu/Settings";
 
 function App() {
 
@@ -26,7 +31,13 @@ function App() {
           <Routes>
             <Route element={<MainLayout/>}>
               <Route index path="/" element={<Home/>}/>
-              <Route index path="/:blogPath" element={<BlogMain />}/>
+              <Route element={<BlogLayout />}>
+                <Route path="/:blogPath" element={<BlogHome/>} />
+                <Route path="/:blogPath/published" element={<Published />} />
+                <Route path="/:blogPath/community" element={<Community />} />
+                <Route path="/:blogPath/inst" element={<BlogInst />} />
+                <Route path="/:blogPath/settings" element={<Settings />} />
+              </Route>
             </Route>
             <Route element={<CommonLayout/>}>
               <Route path="/login" element={<Login/>}/>
