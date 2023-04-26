@@ -37,16 +37,31 @@ export const InputLabelBlock = styled.label`
 export const InputTextBlock = styled.input`
   display: block;
   width: 100%;
-  height: 45px;
   border-radius: ${(props) => props.theme === "light" ? "10px;" : "10px"};
   outline: none;
   ${( props ) => props.theme === 'light' ? `
     border: 1px solid #dadada;
-  ` : 'border: 1px solid #333;'}
-  // padding: ${(props) => props.theme === "light" ? "5px 15px;" : "5px 5px;"};
+  ` : 'border: 1px solid #606060;'};
+  padding: 5px 35px 5px 15px;
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
+`;
+
+export const InputText = styled.input`
+  border-radius: ${(props) => props.theme === "light" ? "10px;" : "10px"};
+  outline: none;
+  ${( props ) => props.theme === 'light' ? `
+    border: 1px solid #dadada;
+  ` : 'border: 1px solid #606060;'};
   padding: 5px 15px;
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
+  
+  &.small {
+    padding: 15px 10px;
+    font-size: 12px;
+    height: 25px;
+  }
 `;
 
 export const ButtonPrimary = styled.button`
@@ -326,15 +341,15 @@ export const ModalClose = styled.div`
   cursor: pointer;
 `;
 
-export const ModalContentStyle = styled.div`
+type ModalContentType = {
+  width?: string
+}
+export const ModalContentStyle = styled.div<ModalContentType>`
+  ${(props) => props.width && (`width: ${props.width};`)};
   margin-top: 1.2rem;
   p {
     text-align: center;
     margin-bottom: 0;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    text-align: center;
   }
 `;
 
@@ -373,14 +388,34 @@ export const AbsoluteDiv = styled.div<AbsoluteDivType>`
 
 export const TextArea = styled.textarea`
   width: 100%;
-  background-color: #333;
-  color: white;
+  background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   padding: 5px 10px;
   height: 200px;
   border-radius: 5px;
-  border: none;
+  border: ${(props) => (props.theme === "light" ? "1px solid gray" : "none")};
   resize: none;
   &:active, &:focus {
     outline: none;
   }
+`;
+
+export const ItemTitle = styled.h1`
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 0;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+`;
+
+export const GroupInput = styled.input`
+  
+`;
+
+export const ButtonBlink = styled.button`
+  background: none;
+  border: none;
+  color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
 `;

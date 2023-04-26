@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
+import {useSelector} from "react-redux";
+import {AppState} from "../../store";
+import * as T from "../../store/theme";
 
 type Props = {};
 
@@ -9,8 +12,7 @@ const ToggleSwitchLabel = styled.label`
   display: block;
   position: relative;
   border-radius: 15px;
-  background-color: #383838;
-  box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+  background-color: ${(props) => (props.theme === 'light' ? "#a2a2a2" : "#383838")};
   cursor: pointer;
   margin: 30px;
   transition: all 0.2s ease-in;
@@ -23,7 +25,7 @@ const ToggleSwitchLabel = styled.label`
     left: 5px;
     transform: translateY(-50%);
     border-radius: 50%;
-    background: #5b5b5b;
+    background: ${(props) => (props.theme === 'light' ? "#c4c4c4" : "#5b5b5b")};
   }
 
   .toggleButton {
@@ -43,10 +45,11 @@ const ToggleInputCheck = styled.input`
 `;
 
 const ToggleSwitch = (props: Props) => {
+  const theme = useSelector<AppState, T.State>(state => state.themeType);
   return (
     <>
-      <ToggleInputCheck type="checkbox" id="toggle" hidden />
-      <ToggleSwitchLabel htmlFor="toggle" className="toggleSwitch">
+      <ToggleInputCheck theme={theme} type="checkbox" id="toggle" hidden />
+      <ToggleSwitchLabel theme={theme} htmlFor="toggle" className="toggleSwitch">
         <span className="toggleButton"></span>
       </ToggleSwitchLabel>
     </>

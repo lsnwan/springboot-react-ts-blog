@@ -27,11 +27,15 @@ const BlogLayout = () => {
 
   useEffect(() => {
     setCurrentUri(window.location.pathname);
-  })
+  });
 
   const handleMyInst = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     navigate(`/${blogPath}/inst`);
+  }
+
+  const handleMoveLink = (path: string) => {
+    navigate(path);
   }
 
   return (
@@ -64,7 +68,7 @@ const BlogLayout = () => {
             </p>
           </div>
           <BlogWrite>
-            <ButtonLight className="small">글쓰기</ButtonLight>
+            <ButtonLight className="small" onClick={() => navigate(`/${blogPath}/create`)}>글쓰기</ButtonLight>
             <ButtonDark className="small">구독</ButtonDark>
           </BlogWrite>
         </FlexBetween>
@@ -75,9 +79,7 @@ const BlogLayout = () => {
         <ul>
           {tabs.map((el, index) => {
               return (
-                <li key={el.index} className={el.path === currentUri ? 'active' : ''} onClick={() => {
-                  navigate(el.path);
-                }}>
+                <li key={el.index} className={el.path === currentUri ? 'active' : ''} onClick={() => handleMoveLink(el.path)}>
                   {el.title}
                 </li>
               )
@@ -87,7 +89,6 @@ const BlogLayout = () => {
       </BlogTabMenuDiv>
 
       <section className="py-3">
-        {/*{tabs[activeTab].content}*/}
         <Outlet />
       </section>
 

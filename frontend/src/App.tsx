@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import './App.css'
-import React from "react";
+import React, {useEffect} from "react";
 import Login from "./pages/cmm/Login";
 import {useStore} from "./store";
 import {Provider as ReduxProvider} from "react-redux";
@@ -18,6 +18,7 @@ import BlogHome from "./pages/main/blog/menu/BlogHome";
 import Published from "./pages/main/blog/menu/Published";
 import BlogInst from "./pages/main/blog/menu/BlogInst";
 import Settings from "./pages/main/blog/menu/Settings";
+import CreateBlog from "./pages/main/blog/CreateBlog";
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/:blogPath/inst" element={<BlogInst />} />
                 <Route path="/:blogPath/settings" element={<Settings />} />
               </Route>
+              <Route path="/:blogPath/create" element={<CreateBlog />} />
             </Route>
             <Route element={<CommonLayout/>}>
               <Route path="/login" element={<Login/>}/>

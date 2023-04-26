@@ -31,6 +31,12 @@ export const ContentBody = styled.div`
   }
 `;
 
+export const Container = styled.div`
+  width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
 export const ContentContainer = styled.div<ContentWidthType>`
   margin: 0 auto;
   display: flex;

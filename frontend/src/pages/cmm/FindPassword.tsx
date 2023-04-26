@@ -80,7 +80,7 @@ const FindPassword = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
           <InputLabelBlock htmlFor="email">이메일</InputLabelBlock>
-          <InputTextBlock type="text" id="email" name="email" onChange={handleChange}/>
+          <InputTextBlock theme={theme} type="text" id="email" name="email" onChange={handleChange}/>
           {findPasswordError.email && (
             <MessageBox className="error">{findPasswordError.email}</MessageBox>
           )}

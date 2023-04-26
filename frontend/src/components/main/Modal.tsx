@@ -36,13 +36,22 @@ export const Modal: FC<ModalProps> = ({open, onDelete, children, ...props}) => {
 }
 
 type ModalContentProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> & {
-
+  width?: string;
 }
-
-export const ModalContent: FC<ModalContentProps> = ({children}) => {
+export const ModalContent: FC<ModalContentProps> = ({width, children}) => {
   return (
-    <ModalContentStyle>
-      {children}
-    </ModalContentStyle>
+    <>
+      {width && (
+        <ModalContentStyle width={width}>
+          {children}
+        </ModalContentStyle>
+      )}
+
+      {!width && (
+        <ModalContentStyle>
+          {children}
+        </ModalContentStyle>
+      )}
+    </>
   );
 }

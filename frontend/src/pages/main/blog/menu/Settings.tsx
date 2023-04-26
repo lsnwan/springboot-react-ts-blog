@@ -20,7 +20,7 @@ const Settings = (props: Props) => {
         <div style={{flex: 1}}>
           <div>
             <InputLabelBlock htmlFor="blogTitle" className="visually-hidden">이메일</InputLabelBlock>
-            <TextArea>
+            <TextArea theme={theme}>
 
             </TextArea>
             <div style={{textAlign: 'right', marginTop: '10px'}}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {BlogContainer} from "../../../../components/styled/myblog-styled";
+import {BlogContainer, BlogStatCard} from "../../../../components/styled/myblog-styled";
 import GitHubCalendar from "react-github-contribution-calendar";
 import {AbsoluteDiv, RelativeDiv} from "../../../../components/styled/common-styled";
 import {
@@ -10,6 +10,9 @@ import {
   BlogThumb, BlogTitle,
   UserProfile, UserProfileMoreButton, UserProfileName
 } from "../../../../components/styled/content-styled";
+import {useSelector} from "react-redux";
+import {AppState} from "../../../../store";
+import * as T from "../../../../store/theme";
 
 type Props = {};
 
@@ -45,14 +48,15 @@ const panelColors = [
 
 const monthLabelAttributes = {
   'style': {
-    'text-decoration': 'underline',
-    'font-size': 12,
-    'alignment-baseline': 'central',
+    'textDecoration': 'underline',
+    'fontSize': 12,
+    'alignmentBaseline': 'central',
     'fill': '#AAA'
   }
 };
 
 const BlogHome = (props: Props) => {
+  const theme = useSelector<AppState, T.State>(state => state.themeType);
 
   return (
     <BlogContainer>
@@ -65,15 +69,16 @@ const BlogHome = (props: Props) => {
                         monthNames={monthNames}
                         weekNames={weekNames}
                         panelColors={panelColors}/>
-        <AbsoluteDiv top="0" right="0" width="380px" height="105px" style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>
-          <div style={{width: '180px', height: '100px', borderRadius: '10px', backgroundColor: '#252525', padding: '15px 10px'}}>
-            <h5 style={{fontSize: '16px', fontWeight: 'bold'}}>전일 방문자</h5>
-            <p style={{fontSize: '30px'}}>500,000</p>
-          </div>
-          <div style={{width: '180px', height: '100px', borderRadius: '10px', backgroundColor: '#252525', padding: '15px 10px', marginLeft: '10px'}}>
-            <h5 style={{fontSize: '16px', fontWeight: 'bold'}}>누적 방문자</h5>
-            <p style={{fontSize: '30px'}}>500</p>
-          </div>
+        <AbsoluteDiv top="9px" right="-10px" width="380px" height="105px" style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>
+          <BlogStatCard theme={theme}>
+            <h5>전일 방문자</h5>
+            <p>50,000</p>
+          </BlogStatCard>
+
+          <BlogStatCard theme={theme} style={{marginLeft: '5px'}}>
+            <h5>누적 방문자</h5>
+            <p>500,000</p>
+          </BlogStatCard>
         </AbsoluteDiv>
       </RelativeDiv>
 
