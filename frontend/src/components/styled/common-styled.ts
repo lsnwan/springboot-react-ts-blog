@@ -393,7 +393,7 @@ export const TextArea = styled.textarea`
   padding: 5px 10px;
   height: 200px;
   border-radius: 5px;
-  border: ${(props) => (props.theme === "light" ? "1px solid gray" : "none")};
+  border: ${(props) => (props.theme === "light" ? "1px solid #bcbcbc" : "none")};
   resize: none;
   &:active, &:focus {
     outline: none;

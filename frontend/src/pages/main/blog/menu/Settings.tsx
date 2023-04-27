@@ -13,16 +13,14 @@ const Settings = (props: Props) => {
 
   return (
     <BlogContainer>
-      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid gray', paddingBottom: '15px'}}>
+      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
         <div style={{width: '250px', padding: '10px 15px'}}>
           <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>소개</h1>
         </div>
         <div style={{flex: 1}}>
           <div>
             <InputLabelBlock htmlFor="blogTitle" className="visually-hidden">이메일</InputLabelBlock>
-            <TextArea theme={theme}>
-
-            </TextArea>
+            <TextArea theme={theme} />
             <div style={{textAlign: 'right', marginTop: '10px'}}>
               <ButtonPrimary className="small">저장하기</ButtonPrimary>
             </div>
@@ -30,7 +28,16 @@ const Settings = (props: Props) => {
         </div>
       </div>
 
-      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid gray', paddingBottom: '15px'}}>
+      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
+        <div style={{width: '250px', padding: '10px 15px'}}>
+          <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>배너 이미지</h1>
+        </div>
+        <div style={{flex: 1}}>
+
+        </div>
+      </div>
+
+      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
         <div style={{width: '250px', padding: '10px 15px'}}>
           <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>블로그 공개</h1>
         </div>
@@ -38,6 +45,7 @@ const Settings = (props: Props) => {
           <ToggleSwitch />
         </div>
       </div>
+
     </BlogContainer>
   );
 };
