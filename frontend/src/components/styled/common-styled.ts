@@ -319,7 +319,7 @@ export const FlexCenter = styled.div`
 `;
 
 export const MyModal = styled.div`
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
