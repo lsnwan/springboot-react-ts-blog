@@ -13,6 +13,8 @@ import {
 import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
+import {useOutletContext} from "react-router";
+import {BlogInfoType} from "../../../BlogLayout";
 
 type Props = {};
 
@@ -55,122 +57,142 @@ const monthLabelAttributes = {
   }
 };
 
+type ChildProps = {
+  blogInfo: BlogInfoType
+}
+
 const BlogHome = (props: Props) => {
   const theme = useSelector<AppState, T.State>(state => state.themeType);
+  const {blogInfo} = useOutletContext<ChildProps>();
+
+  console.log(blogInfo);
 
   return (
     <BlogContainer>
-      <RelativeDiv>
-        <GitHubCalendar monthLabelAttributes={monthLabelAttributes}
-                        panelAttributes={undefined}
-                        weekLabelAttributes={undefined}
-                        values={values}
-                        until={until}
-                        monthNames={monthNames}
-                        weekNames={weekNames}
-                        panelColors={panelColors}/>
-        <AbsoluteDiv top="9px" right="-10px" width="380px" height="105px" style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>
-          <BlogStatCard theme={theme}>
-            <h5>전일 방문자</h5>
-            <p>50,000</p>
-          </BlogStatCard>
 
-          <BlogStatCard theme={theme} style={{marginLeft: '5px'}}>
-            <h5>누적 방문자</h5>
-            <p>500,000</p>
-          </BlogStatCard>
-        </AbsoluteDiv>
-      </RelativeDiv>
+      {!blogInfo.enabled && (
+        <>
+          <AbsoluteDiv>
+            <h5>비공개 블로그 입니다.</h5>
+          </AbsoluteDiv>
+        </>
+      )}
 
-      <div style={{marginTop: '10px'}}>
-        <h5>최신 게시글</h5>
-        <div style={{display: 'flex'}}>
-          <BlogCard>
-            <BlogThumb></BlogThumb>
-            <BlogCardBody>
-              <UserProfile></UserProfile>
-              <BlogInfo>
-                <BlogInfoHeader>
-                  <UserProfileName>사용자닉네임</UserProfileName>
-                  <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                </BlogInfoHeader>
-                <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-              </BlogInfo>
-            </BlogCardBody>
-          </BlogCard>
-          <BlogCard>
-            <BlogThumb></BlogThumb>
-            <BlogCardBody>
-              <UserProfile></UserProfile>
-              <BlogInfo>
-                <BlogInfoHeader>
-                  <UserProfileName>사용자닉네임</UserProfileName>
-                  <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                </BlogInfoHeader>
-                <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-              </BlogInfo>
-            </BlogCardBody>
-          </BlogCard>
-          <BlogCard>
-            <BlogThumb></BlogThumb>
-            <BlogCardBody>
-              <UserProfile></UserProfile>
-              <BlogInfo>
-                <BlogInfoHeader>
-                  <UserProfileName>사용자닉네임</UserProfileName>
-                  <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                </BlogInfoHeader>
-                <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-              </BlogInfo>
-            </BlogCardBody>
-          </BlogCard>
-        </div>
-      </div>
+      {blogInfo.enabled && (
+        <>
+          <RelativeDiv>
+            <GitHubCalendar monthLabelAttributes={monthLabelAttributes}
+                            panelAttributes={undefined}
+                            weekLabelAttributes={undefined}
+                            values={values}
+                            until={until}
+                            monthNames={monthNames}
+                            weekNames={weekNames}
+                            panelColors={panelColors}/>
+            <AbsoluteDiv top="9px" right="-10px" width="380px" height="105px" style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>
+              <BlogStatCard theme={theme}>
+                <h5>전일 방문자</h5>
+                <p>50,000</p>
+              </BlogStatCard>
 
-      <div style={{marginTop: '10px'}}>
-        <h5>인기 게시글</h5>
-        <div style={{display: 'flex'}}>
-          <BlogCard>
-            <BlogThumb></BlogThumb>
-            <BlogCardBody>
-              <UserProfile></UserProfile>
-              <BlogInfo>
-                <BlogInfoHeader>
-                  <UserProfileName>사용자닉네임</UserProfileName>
-                  <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                </BlogInfoHeader>
-                <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-              </BlogInfo>
-            </BlogCardBody>
-          </BlogCard>
-          <BlogCard>
-            <BlogThumb></BlogThumb>
-            <BlogCardBody>
-              <UserProfile></UserProfile>
-              <BlogInfo>
-                <BlogInfoHeader>
-                  <UserProfileName>사용자닉네임</UserProfileName>
-                  <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                </BlogInfoHeader>
-                <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-              </BlogInfo>
-            </BlogCardBody>
-          </BlogCard>
-          <BlogCard>
-            <BlogThumb></BlogThumb>
-            <BlogCardBody>
-              <UserProfile></UserProfile>
-              <BlogInfo>
-                <BlogInfoHeader>
-                  <UserProfileName>사용자닉네임</UserProfileName>
-                  <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                </BlogInfoHeader>
-                <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-              </BlogInfo>
-            </BlogCardBody>
-          </BlogCard>
-        </div>
-      </div>
+              <BlogStatCard theme={theme} style={{marginLeft: '5px'}}>
+                <h5>누적 방문자</h5>
+                <p>500,000</p>
+              </BlogStatCard>
+            </AbsoluteDiv>
+          </RelativeDiv>
+
+          <div style={{marginTop: '10px'}}>
+            <h5>최신 게시글</h5>
+            <div style={{display: 'flex'}}>
+              <BlogCard>
+                <BlogThumb></BlogThumb>
+                <BlogCardBody>
+                  <UserProfile></UserProfile>
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>사용자닉네임</UserProfileName>
+                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+              <BlogCard>
+                <BlogThumb></BlogThumb>
+                <BlogCardBody>
+                  <UserProfile></UserProfile>
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>사용자닉네임</UserProfileName>
+                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+              <BlogCard>
+                <BlogThumb></BlogThumb>
+                <BlogCardBody>
+                  <UserProfile></UserProfile>
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>사용자닉네임</UserProfileName>
+                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+            </div>
+          </div>
+
+          <div style={{marginTop: '10px'}}>
+            <h5>인기 게시글</h5>
+            <div style={{display: 'flex'}}>
+              <BlogCard>
+                <BlogThumb></BlogThumb>
+                <BlogCardBody>
+                  <UserProfile></UserProfile>
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>사용자닉네임</UserProfileName>
+                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+              <BlogCard>
+                <BlogThumb></BlogThumb>
+                <BlogCardBody>
+                  <UserProfile></UserProfile>
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>사용자닉네임</UserProfileName>
+                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+              <BlogCard>
+                <BlogThumb></BlogThumb>
+                <BlogCardBody>
+                  <UserProfile></UserProfile>
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>사용자닉네임</UserProfileName>
+                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+            </div>
+          </div>
+        </>
+      )}
     </BlogContainer>
   );
 };

@@ -17,6 +17,7 @@ import * as T from "../../../store/theme";
 import {Modal, ModalContent} from "../../../components/main/Modal";
 import {BadgeBox, ImageUploadDiv} from "../../../components/styled/myblog-styled";
 import {AiFillSave, AiOutlineEnter, BsSendPlusFill, IoIosArrowBack, MdOutlineClose} from "react-icons/all";
+import {useNavigate} from "react-router";
 
 type Props = {};
 
@@ -33,6 +34,7 @@ const CreateBlog = (props: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(document.createElement('input'));
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [dragging, setDragging] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const modules = {
     toolbar: [
@@ -159,10 +161,9 @@ const CreateBlog = (props: Props) => {
 
         <div className="d-flex justify-content-between align-items-center">
           <div>
-            <ButtonSecondary className="small"><IoIosArrowBack/> 돌아가기</ButtonSecondary>
+            <ButtonSecondary className="small" onClick={() => navigate(-1)}><IoIosArrowBack/> 돌아가기</ButtonSecondary>
           </div>
           <div>
-            <ButtonInfo className="small"><AiFillSave/> 임시저장</ButtonInfo>
             <ButtonPrimary className="small ms-1" onClick={handleShowModal}><BsSendPlusFill /> 보내기</ButtonPrimary>
           </div>
         </div>

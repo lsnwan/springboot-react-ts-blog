@@ -24,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -107,6 +109,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .mvcMatchers("/h2-console/**", "/favicon.ico")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+
+        web.httpFirewall(defaultHttpFirewall());
+    }
+
+    @Bean
+    public HttpFirewall defaultHttpFirewall() {
+        return new DefaultHttpFirewall();
     }
 
     @Override

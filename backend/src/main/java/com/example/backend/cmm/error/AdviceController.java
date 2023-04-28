@@ -6,6 +6,7 @@ import com.example.backend.cmm.error.exception.*;
 import com.example.backend.cmm.type.ErrorType;
 import feign.FeignException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -85,4 +86,5 @@ public class AdviceController {
                 .message(e.getMessage())
                 .build());
     }
+
 }

@@ -91,6 +91,16 @@ public class BlogInfoController {
     @GetMapping("/{blogId}/info")
     public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogId) {
 
+        if (blogId == null || !blogId.startsWith("@")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("블로그 주소가 잘못 되었습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
         BlogInfoDto blogInfo = blogInfoService.getBlogInfo(blogId.substring(1));
         if (Objects.isNull(blogInfo)) {
             return ResponseEntity.ok().body(
