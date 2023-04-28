@@ -299,7 +299,7 @@ export const Divider = styled.div`
 
 export const FlexStart = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: start;
 `;
 

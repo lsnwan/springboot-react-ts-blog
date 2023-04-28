@@ -1,6 +1,6 @@
 import React from 'react';
-import {BlogContainer} from "../../../../components/styled/myblog-styled";
-import {ButtonPrimary, InputLabelBlock, TextArea} from "../../../../components/styled/common-styled";
+import {BannerImagePreview, BlogContainer} from "../../../../components/styled/myblog-styled";
+import {ButtonPrimary, FlexStart, InputLabelBlock, TextArea} from "../../../../components/styled/common-styled";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
@@ -28,12 +28,27 @@ const Settings = (props: Props) => {
         </div>
       </div>
 
-      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
+      <div style={{display: 'flex', alignItems: 'center', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
         <div style={{width: '250px', padding: '10px 15px'}}>
           <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>배너 이미지</h1>
         </div>
         <div style={{flex: 1}}>
-
+          <FlexStart>
+            <BannerImagePreview image="">
+              <span className="visually-hidden">배너 이미지</span>
+            </BannerImagePreview>
+            <div className="ms-2" style={{width: '100%'}}>
+              <div>
+                <input type="file" />
+              </div>
+              <div>
+                <small className="text-secondary">파일은 10MB 이하, 확장자는 jpg, png파일만 가능합니다.</small>
+              </div>
+              <div className="text-end">
+                <ButtonPrimary className="small">저장하기</ButtonPrimary>
+              </div>
+            </div>
+          </FlexStart>
         </div>
       </div>
 

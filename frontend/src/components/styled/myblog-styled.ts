@@ -178,3 +178,16 @@ export const BlogStatCard = styled.div`
     font-size: 30px;
   }
 `;
+
+type BannerImagePreviewType = {
+  image: string
+}
+export const BannerImagePreview = styled.div<BannerImagePreviewType>`
+  width: 100px;
+  height: 56.25px;
+  background-color: gray;
+  ${props => props.image && (`background-image: url(${props.image})`)}
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
