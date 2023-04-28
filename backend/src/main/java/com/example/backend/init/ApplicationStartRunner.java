@@ -4,10 +4,12 @@ import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;
 import com.example.backend.entity.Authority;
+import com.example.backend.entity.BlogInfo;
 import com.example.backend.entity.type.AccountType;
 import com.example.backend.repository.AccountAuthorityRepository;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.repository.AuthorityRepository;
+import com.example.backend.repository.BlogInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -30,6 +32,7 @@ public class ApplicationStartRunner implements ApplicationRunner {
     private final AccountRepository accountRepository;
     private final AccountAuthorityRepository accountAuthorityRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BlogInfoRepository blogInfoRepository;
 
     private final String ADMIN_EMAIL = "admin@admin.admin";
 
@@ -89,6 +92,16 @@ public class ApplicationStartRunner implements ApplicationRunner {
         } else {
             log.info("계정을 찾을 수 없음");
         }
+
+        blogInfoRepository.save(BlogInfo.builder()
+                        .idx(1L)
+                        .account(account)
+                        .blogPath("test")
+                        .title(null)
+                        .introduction(null)
+                        .imagePath(null)
+                        .enabled(true)
+                .build());
 
     }
 }

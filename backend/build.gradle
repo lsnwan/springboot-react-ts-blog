@@ -2,6 +2,10 @@ buildscript {
     ext {
         queryDslVersion = "5.0.0"
     }
+
+    dependencies {
+        classpath 'com.github.mowedgrass:jasypt-gradle-boot-plugin:0.1.33'
+    }
 }
 
 plugins {

@@ -1,6 +1,7 @@
 package com.example.backend.api.blog;
 
 import com.example.backend.api.blog.dto.CreateBlogDto;
+import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.BadRequestException;
 import com.example.backend.cmm.type.ErrorType;
@@ -9,23 +10,26 @@ import com.example.backend.entity.BlogInfo;
 import com.example.backend.repository.BlogInfoRepository;
 import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.blog.BlogInfoService;
+import com.example.backend.service.blog.dto.BlogInfoDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/blogs")
 @RequiredArgsConstructor
+@Slf4j
 public class BlogInfoController {
 
     private final BlogInfoRepository blogInfoRepository;
@@ -84,5 +88,36 @@ public class BlogInfoController {
         );
     }
 
+    @GetMapping("/{blogId}/info")
+    public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogId) {
+
+        BlogInfoDto blogInfo = blogInfoService.getBlogInfo(blogId.substring(1));
+        if (Objects.isNull(blogInfo)) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("데이터가 존재하지 않습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        /*
+         ! 로그인 사용자 본인 블로그인지 체크
+         */
+        if (account != null) {
+            if (account.getId().equals(blogInfo.getAccountId())) {
+                blogInfo.setBlogOwner(true);
+            }
+        }
+
+        return ResponseEntity.ok().body(
+                ResponseDataDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .data(blogInfo)
+                        .build()
+        );
+    }
 
 }

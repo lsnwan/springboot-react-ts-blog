@@ -34,7 +34,7 @@ public class BlogInfo extends RegisteredDateEntity implements Serializable {
     @Column(name = "blog_title")
     private String title;
 
-    @Column(name = "blog_intro")
+    @Column(name = "blog_intro", length = 2000)
     private String introduction;
 
     @Column(name = "blog_image_path")

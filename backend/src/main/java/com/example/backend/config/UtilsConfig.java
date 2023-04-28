@@ -11,7 +11,6 @@ public class UtilsConfig {
     @Value("${aes256.key}")
     private String key;
 
-
     @Bean
     public AES256 aes256() {
         return new AES256(key);

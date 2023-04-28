@@ -5,10 +5,14 @@ type SizeType = {
   height?: string;
 }
 
-export const BlogBgDiv = styled.div`
+type ImagePropsType = {
+  imagePath?: string
+}
+export const BlogBgDiv = styled.div<ImagePropsType>`
   width: 100%;
   height: 400px;
   background-color: darkgreen;
+  ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
   position: relative;
 `;
 
