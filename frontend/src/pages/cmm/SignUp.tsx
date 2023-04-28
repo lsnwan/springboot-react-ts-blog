@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {
   ButtonPrimary,
-  CommonBody,
+  CommonBody, CommonCardSection,
   FlexBetween,
   InputLabelBlock,
   InputTextBlock,
@@ -92,48 +92,49 @@ const SignUp = () => {
         <title>YouBlog - 회원가입</title>
       </Helmet>
 
-      <Title className="mb-5">회원가입</Title>
+      <CommonCardSection theme={theme}>
+        <Title className="mb-5">회원가입</Title>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-2">
-          <InputLabelBlock htmlFor="email">이메일</InputLabelBlock>
-          <InputTextBlock theme={theme} type="text" id="email" name="email" onChange={handleChange} />
-          {signUpFormError.email && (
-            <MessageBox className="error">{signUpFormError.email}</MessageBox>
-          )}
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-2">
+            <InputLabelBlock htmlFor="email">이메일</InputLabelBlock>
+            <InputTextBlock theme={theme} type="text" id="email" name="email" onChange={handleChange} />
+            {signUpFormError.email && (
+              <MessageBox className="error">{signUpFormError.email}</MessageBox>
+            )}
+          </div>
 
-        <div  className="mb-2">
-          <InputLabelBlock htmlFor="password">비밀번호</InputLabelBlock>
-          <InputTextBlock theme={theme} type="password" id="password" name="password" onChange={handleChange} />
-          {signUpFormError.password && (
-            <MessageBox className="error">{signUpFormError.password}</MessageBox>
-          )}
-        </div>
+          <div  className="mb-2">
+            <InputLabelBlock htmlFor="password">비밀번호</InputLabelBlock>
+            <InputTextBlock theme={theme} type="password" id="password" name="password" onChange={handleChange} />
+            {signUpFormError.password && (
+              <MessageBox className="error">{signUpFormError.password}</MessageBox>
+            )}
+          </div>
 
-        <div  className="mb-2">
-          <InputLabelBlock htmlFor="passwordConfirm">비밀번호 확인</InputLabelBlock>
-          <InputTextBlock theme={theme} type="password" id="passwordConfirm" name="passwordConfirm" onChange={handleChange} />
-          {signUpFormError.passwordConfirm && (
-            <MessageBox className="error">{signUpFormError.passwordConfirm}</MessageBox>
-          )}
-        </div>
+          <div  className="mb-2">
+            <InputLabelBlock htmlFor="passwordConfirm">비밀번호 확인</InputLabelBlock>
+            <InputTextBlock theme={theme} type="password" id="passwordConfirm" name="passwordConfirm" onChange={handleChange} />
+            {signUpFormError.passwordConfirm && (
+              <MessageBox className="error">{signUpFormError.passwordConfirm}</MessageBox>
+            )}
+          </div>
 
-        <div className="mt-3">
-          <ButtonPrimary className="block" type="submit">회원가입</ButtonPrimary>
-        </div>
-      </form>
+          <div className="mt-3">
+            <ButtonPrimary className="block" type="submit">회원가입</ButtonPrimary>
+          </div>
+        </form>
 
-      <FlexBetween className="mt-3">
-        <MessageBox className="desc m-0">이미 회원이신가요?</MessageBox>
-        <Link style={{fontSize: "13px"}} to="/login">로그인</Link>
-      </FlexBetween>
+        <FlexBetween className="mt-3">
+          <MessageBox className="desc m-0">이미 회원이신가요?</MessageBox>
+          <Link style={{fontSize: "13px"}} to="/login">로그인</Link>
+        </FlexBetween>
 
-      <FlexBetween className="mt-1">
-        <MessageBox className="desc m-0">비밀번호를 잊어버렸나요?</MessageBox>
-        <Link style={{fontSize: "13px"}} to="/find-password">비밀번호 찾기</Link>
-      </FlexBetween>
-
+        <FlexBetween className="mt-1">
+          <MessageBox className="desc m-0">비밀번호를 잊어버렸나요?</MessageBox>
+          <Link style={{fontSize: "13px"}} to="/find-password">비밀번호 찾기</Link>
+        </FlexBetween>
+      </CommonCardSection>
     </CommonBody>
   );
 };

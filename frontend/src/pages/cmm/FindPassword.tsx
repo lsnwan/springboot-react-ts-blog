@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {
   ButtonPrimary,
-  CommonBody,
+  CommonBody, CommonCardSection,
   FlexBetween,
   InputLabelBlock,
   InputTextBlock,
@@ -76,32 +76,33 @@ const FindPassword = () => {
         <title>YouBlog - 비밀번호 찾기</title>
       </Helmet>
 
-      <Title className="mb-5">비밀번호 찾기</Title>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-2">
-          <InputLabelBlock htmlFor="email">이메일</InputLabelBlock>
-          <InputTextBlock theme={theme} type="text" id="email" name="email" onChange={handleChange}/>
-          {findPasswordError.email && (
-            <MessageBox className="error">{findPasswordError.email}</MessageBox>
-          )}
-        </div>
+      <CommonCardSection theme={theme}>
+        <Title className="mb-5">비밀번호 찾기</Title>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-2">
+            <InputLabelBlock htmlFor="email">이메일</InputLabelBlock>
+            <InputTextBlock theme={theme} type="text" id="email" name="email" onChange={handleChange}/>
+            {findPasswordError.email && (
+              <MessageBox className="error">{findPasswordError.email}</MessageBox>
+            )}
+          </div>
 
-        <div className="mt-3">
-          <ButtonPrimary className="block" type="submit">비밀번호 찾기</ButtonPrimary>
-        </div>
-      </form>
+          <div className="mt-3">
+            <ButtonPrimary className="block" type="submit">비밀번호 찾기</ButtonPrimary>
+          </div>
+        </form>
 
-      <FlexBetween className="mt-3">
-        <MessageBox className="desc m-0">이미 회원이신가요?</MessageBox>
-        <Link style={{fontSize: "13px"}} to="/login">로그인</Link>
-      </FlexBetween>
+        <FlexBetween className="mt-3">
+          <MessageBox className="desc m-0">이미 회원이신가요?</MessageBox>
+          <Link style={{fontSize: "13px"}} to="/login">로그인</Link>
+        </FlexBetween>
 
-      <FlexBetween>
-        <MessageBox className="desc m-0">회원이 아니신가요?</MessageBox>
-        <Link style={{fontSize: "13px"}} to="/signup">회원가입</Link>
-      </FlexBetween>
-      
-      
+        <FlexBetween>
+          <MessageBox className="desc m-0">회원이 아니신가요?</MessageBox>
+          <Link style={{fontSize: "13px"}} to="/signup">회원가입</Link>
+        </FlexBetween>
+      </CommonCardSection>
+
     </CommonBody>
   );
 };

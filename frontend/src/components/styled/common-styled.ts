@@ -4,15 +4,20 @@ export const CommonStyled = styled.div`
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#0f0f0f")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   width: 100%;
-  height: 100vh;
+  height: calc(100vh + 300px);
+  box-sizing: border-box;
 `;
 
 export const CommonBody = styled.div`
+  
+`;
+
+export const CommonCardSection = styled.div`
   position: absolute;
-  top: 50%;
+  top: 100px;
   left: 50%;
   width: 460px;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
   padding: 50px 40px;
@@ -364,8 +369,14 @@ export const LinkTeg = styled.a`
   }
 `;
 
-export const RelativeDiv = styled.div`
+type RelativeDivType = {
+  width?: string;
+  height?: string;
+}
+export const RelativeDiv = styled.div<RelativeDivType>`
   position: relative;
+  ${props => props.width && (`width: ${props.width}`)};
+  ${props => props.height && (`height: ${props.height}`)};
 `;
 
 type AbsoluteDivType = {
@@ -375,6 +386,7 @@ type AbsoluteDivType = {
   right?: string;
   width?: string;
   height?: string;
+  isCenter?: boolean;
 }
 export const AbsoluteDiv = styled.div<AbsoluteDivType>`
   position: absolute;
@@ -384,6 +396,7 @@ export const AbsoluteDiv = styled.div<AbsoluteDivType>`
   ${(props) => props.right && (`right: ${props.right}`)};
   ${(props) => props.width && (`width: ${props.width}`)};
   ${(props) => props.height && (`height: ${props.height}`)};
+  ${(props) => props.isCenter && (`transform: translate(-50%, -50%)`)};
 `;
 
 export const TextArea = styled.textarea`
