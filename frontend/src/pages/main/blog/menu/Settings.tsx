@@ -1,15 +1,57 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {BannerImagePreview, BlogContainer} from "../../../../components/styled/myblog-styled";
 import {ButtonPrimary, FlexStart, InputLabelBlock, TextArea} from "../../../../components/styled/common-styled";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
+import * as MB from "../../../../store/myblog";
 import ToggleSwitch from "../../../../components/cmm/ToggleSwitch";
+import axios from "axios";
+import {useOutletContext, useParams} from "react-router";
+import {Path} from "@remix-run/router/history";
+import {composeWithDevTools} from "@reduxjs/toolkit/dist/devtoolsExtension";
 
 type Props = {};
 
+type UpdateIntroFormType = {
+  intro: string
+};
+
 const Settings = (props: Props) => {
+  const {blogPath} = useParams<string>();
+  const dispatch = useDispatch();
   const theme = useSelector<AppState, T.State>(state => state.themeType);
+  const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
+  const [introForm, setIntroForm] = useState<UpdateIntroFormType>({
+    intro: ''
+  });
+
+  useEffect(() => {
+    setIntroForm({
+      intro: blogInfo.blogIntro,
+    });
+  }, []);
+
+  const handleChangeIntro = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+
+    setIntroForm(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
+  const handleSubmitIntro = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    axios.post(`/api/blogs/${blogPath}/intro`, introForm)
+      .then(res => res.data)
+      .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
+        console.log(result);
+        alert(result.message);
+        if (result.code === '200') {
+          dispatch(MB.updateMyBlogIntro(introForm.intro));
+        }
+      });
+  }
 
   return (
     <BlogContainer>
@@ -19,11 +61,12 @@ const Settings = (props: Props) => {
         </div>
         <div style={{flex: 1}}>
           <div>
-            <InputLabelBlock htmlFor="blogTitle" className="visually-hidden">이메일</InputLabelBlock>
-            <TextArea theme={theme} />
-            <div style={{textAlign: 'right', marginTop: '10px'}}>
-              <ButtonPrimary className="small">저장하기</ButtonPrimary>
-            </div>
+            <form onSubmit={handleSubmitIntro}>
+              <TextArea theme={theme} id="blogIntro" name="intro" onChange={handleChangeIntro} value={introForm.intro} />
+              <div style={{textAlign: 'right', marginTop: '10px'}}>
+                <ButtonPrimary type="submit" className="small">저장하기</ButtonPrimary>
+              </div>
+            </form>
           </div>
         </div>
       </div>

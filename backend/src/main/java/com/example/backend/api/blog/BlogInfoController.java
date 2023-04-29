@@ -1,9 +1,11 @@
 package com.example.backend.api.blog;
 
 import com.example.backend.api.blog.dto.CreateBlogDto;
+import com.example.backend.api.blog.dto.UpdateIntroDto;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.BadRequestException;
+import com.example.backend.cmm.error.exception.NotFoundDataException;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.BlogInfo;
@@ -126,6 +128,53 @@ public class BlogInfoController {
                         .code(String.valueOf(HttpStatus.OK.value()))
                         .message("정상 처리 되었습니다.")
                         .data(blogInfo)
+                        .build()
+        );
+    }
+
+    @PostMapping("/{blogId}/intro")
+    public ResponseEntity<?> updateIntroduction(@CurrentAccount Account account, @PathVariable String blogId, @RequestBody @Valid UpdateIntroDto.Request request, BindingResult bindingResult) {
+
+        log.info(blogId);
+        log.info(request.toString());
+
+        if (blogId == null || !blogId.startsWith("@")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("블로그 주소가 잘못 되었습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        if (account == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.UNAUTHORIZED.getErrorCode())
+                            .message("로그인이 필요한 서비스 입니다.")
+                            .path("/login")
+                            .build()
+            );
+        }
+
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1)).orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
+        if (!blogInfo.getAccount().getId().equals(account.getId())) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("본인 블로그만 수정할 수 있습니다.")
+                            .build()
+            );
+        }
+
+        blogInfo.setIntroduction(request.getIntro());
+        blogInfoRepository.save(blogInfo);
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
                         .build()
         );
     }

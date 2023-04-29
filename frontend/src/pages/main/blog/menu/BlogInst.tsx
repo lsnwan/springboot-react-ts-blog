@@ -2,30 +2,25 @@ import React from 'react';
 import {BlogContainer, BlogInfoDiv, TabMenuContentDiv} from "../../../../components/styled/myblog-styled";
 import {FlexBetween, FlexCenter, FlexStart} from "../../../../components/styled/common-styled";
 import {useOutletContext} from "react-router";
-import {BlogInfoType} from "../../../BlogLayout";
+import {useSelector} from "react-redux";
+import {AppState} from "../../../../store";
+import * as MB from "../../../../store/myblog";
 
 type Props = {};
 
-type ChildProps = {
-  blogInfo: BlogInfoType
-}
-
 
 const BlogInst = (props: Props) => {
-
-  const {blogInfo} = useOutletContext<ChildProps>();
+  const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
   const registeredDate = new Date(blogInfo.registeredDate);
 
 
   return (
     <BlogContainer>
-      <FlexStart>
+      <div className="d-flex justify-content-between">
         <TabMenuContentDiv>
           <div>
             <h1>소개</h1>
-            <p>
-              {blogInfo.blogIntro}
-            </p>
+            <div dangerouslySetInnerHTML={{__html: blogInfo.blogIntro.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br/>')}} />
           </div>
         </TabMenuContentDiv>
         <BlogInfoDiv>
@@ -34,7 +29,7 @@ const BlogInst = (props: Props) => {
             <p>{registeredDate.getFullYear() + '-' + (registeredDate.getMonth() + 1).toString().padStart(2, '0') + '-' + registeredDate.getDate().toString().padStart(2, '0') + ' ' + registeredDate.getHours().toString().padStart(2, '0') + ':' + registeredDate.getMinutes().toString().padStart(2, '0') + ':' + registeredDate.getSeconds().toString().padStart(2, '0')}</p>
           </div>
         </BlogInfoDiv>
-      </FlexStart>
+      </div>
     </BlogContainer>
   );
 };

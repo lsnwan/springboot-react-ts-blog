@@ -39,6 +39,14 @@ public class AdviceController {
                 .build();
     }
 
+    @ExceptionHandler(NotFoundDataException.class)
+    public ResponseDto notFoundDataException(NotFoundDataException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(DecryptionErrorException.class)
     public ResponseDto decryptionErrorException(DecryptionErrorException e) {
         return ResponseDto.builder()

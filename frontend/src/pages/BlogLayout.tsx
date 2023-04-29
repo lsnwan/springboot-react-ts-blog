@@ -3,76 +3,40 @@ import {BlogAuthorDiv, BlogAvatar, BlogBgDiv, BlogTabMenuDiv, BlogWrite,} from "
 import {Helmet} from "react-helmet";
 import {useAuth} from "../contexts";
 import {useNavigate, useParams} from "react-router";
-import {
-  AbsoluteDiv,
-  ButtonDark,
-  ButtonLight, ButtonPrimary, ButtonSecondary,
-  FlexBetween,
-  LinkTeg,
-  RelativeDiv
-} from "../components/styled/common-styled";
-import {useSelector} from "react-redux";
+import {AbsoluteDiv, ButtonDark, ButtonLight, FlexBetween, LinkTeg} from "../components/styled/common-styled";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../store";
 import * as T from "../store/theme";
+import * as MB from "../store/myblog";
 import {ContentBody} from "../components/styled/content-styled";
 import {Outlet} from "react-router-dom";
 import axios from "axios";
 import {Path} from "@remix-run/router/history";
-import * as path from "path";
-
-export type BlogInfoType = {
-  accountId: string;
-  accountName: string;
-  accountProfilePath: string;
-  blogBannerImagePath: string;
-  blogInfoIdx: number;
-  blogIntro: string;
-  blogOwner: boolean;
-  blogPath: string;
-  blogTitle: string;
-  enabled: boolean;
-  registeredDate: string;
-  totalContentCount: number;
-  totalSubscribeCount: number
-
-}
+import {MyBlogInfoState} from "../store/CommonTypes";
 
 const BlogLayout = () => {
 
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const [currentUri, setCurrentUri] = useState<string>('');
-  const {loggedUser} = useAuth();
   const {blogPath} = useParams<string>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const tabs = [
     {index: 1, title: '게시글', path: `/${blogPath}/published`},
     {index: 2, title: '정보', path: `/${blogPath}/inst`},
   ];
-
-  const [blogInfo, setBlogInfo] = useState<BlogInfoType>({
-    accountId: '',
-    accountName: '',
-    accountProfilePath: '',
-    blogBannerImagePath: '',
-    blogInfoIdx: 0,
-    blogIntro: '',
-    blogOwner: false,
-    blogPath: '',
-    blogTitle: '',
-    enabled: false,
-    registeredDate: '',
-    totalContentCount: 0,
-    totalSubscribeCount: 0
-  });
+  const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
 
   useEffect(() => {
     setCurrentUri(window.location.pathname);
+    console.log(blogInfo);
   });
 
   useEffect(() => {
+    console.log('BlogLayout 실행');
     axios.get(`/api/blogs/${blogPath}/info`)
       .then(res => res.data)
-      .then((result: {code: string; message: string; path: string | Partial<Path>; data: BlogInfoType;}) => {
+      .then((result: {code: string; message: string; path: string | Partial<Path>; data: MyBlogInfoState;}) => {
         console.log(result);
         if (result.code !== '200') {
           alert(result.message);
@@ -80,7 +44,8 @@ const BlogLayout = () => {
           return;
         }
 
-        setBlogInfo(result.data);
+        // setBlogInfo(result.data);
+        dispatch({type: '@myBlogInfo/setMyBlogInfo', payload: result.data});
       })
   }, [])
 
@@ -126,7 +91,16 @@ const BlogLayout = () => {
            </p>
            <p className="mb-0">
              <LinkTeg theme={theme} href='#' onClick={handleMyInst}>
-               {blogInfo.blogIntro}
+               {blogInfo.blogIntro.split('\n').length > 1 && (
+                 <>
+                   {blogInfo.blogIntro.substring(0, blogInfo.blogIntro.indexOf('\n'))} ...
+                 </>
+               )}
+               {blogInfo.blogIntro.split('\n').length < 2 && (
+                 <>
+                   {blogInfo.blogIntro}
+                 </>
+               )}
              </LinkTeg>
            </p>
          </div>

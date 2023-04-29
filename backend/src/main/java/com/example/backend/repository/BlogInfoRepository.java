@@ -12,4 +12,6 @@ public interface BlogInfoRepository extends JpaRepository<BlogInfo, Long> {
     Optional<BlogInfo> findByAccount(Account account);
 
     boolean existsByBlogPath(String blogPath);
+
+    Optional<BlogInfo> findByBlogPath(String blogPath);
 }

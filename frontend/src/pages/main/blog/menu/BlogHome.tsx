@@ -13,8 +13,7 @@ import {
 import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
-import {useOutletContext} from "react-router";
-import {BlogInfoType} from "../../../BlogLayout";
+import * as MB from "../../../../store/myblog";
 
 type Props = {};
 
@@ -57,14 +56,10 @@ const monthLabelAttributes = {
   }
 };
 
-type ChildProps = {
-  blogInfo: BlogInfoType
-}
 
 const BlogHome = (props: Props) => {
   const theme = useSelector<AppState, T.State>(state => state.themeType);
-  const {blogInfo} = useOutletContext<ChildProps>();
-
+  const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
   console.log(blogInfo);
 
   return (

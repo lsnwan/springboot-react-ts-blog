@@ -115,7 +115,7 @@ export const TabMenuContentDiv = styled.div`
 `;
 
 export const BlogInfoDiv = styled.div`
-  width: 500px;
+  width: 250px;
   height: 500px;
   padding-left: 10px;
   
