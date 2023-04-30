@@ -2,10 +2,15 @@ import React, {useState} from 'react';
 import {BlogContainer} from "../../../../components/styled/myblog-styled";
 import {
   BlogCard,
-  BlogCardBody, BlogInfo, BlogInfoHeader,
-  BlogThumb, BlogTitle,
+  BlogCardBody,
+  BlogInfo,
+  BlogInfoHeader,
+  BlogThumb,
+  BlogTitle,
   ContentContainer,
-  UserProfile, UserProfileMoreButton, UserProfileName
+  UserProfile,
+  UserProfileMoreButton,
+  UserProfileName
 } from "../../../../components/styled/content-styled";
 
 type Props = {};

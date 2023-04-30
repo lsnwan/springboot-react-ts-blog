@@ -1,7 +1,8 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {
   ButtonPrimary,
-  CommonBody, CommonCardSection,
+  CommonBody,
+  CommonCardSection,
   Divider,
   DividerText,
   FlexBetween,
@@ -17,7 +18,6 @@ import {useAuth} from "../../contexts";
 import {useSelector} from "react-redux";
 import {AppState} from "../../store";
 import * as T from "../../store/theme";
-import axios from "axios";
 
 const Login = () => {
 
@@ -92,7 +92,7 @@ const Login = () => {
         <FlexBetween>
           <div>
             <a href="https://kauth.kakao.com/oauth/authorize?client_id=8f7a0bdb3dafcf6fd332a067be4273c5&redirect_uri=http://localhost:5173/oauth/kakao/callback&response_type=code">
-              <img src="/assets/kakao.jpg" alt="카카오 간편 로그인" style={{width: '70px', height: '70px', borderRadius: '50%'}}/>
+              <img src="/icon/kakao.jpg" alt="카카오 간편 로그인" style={{width: '70px', height: '70px', borderRadius: '50%'}}/>
             </a>
           </div>
           <div style={{width: "70px", height: "70px", backgroundColor: "#999", borderRadius: "100%", textAlign: "center", lineHeight: "70px", fontSize: "20px"}}>

@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import './App.css'
-import React, {useEffect} from "react";
+import React from "react";
 import Login from "./pages/cmm/Login";
 import {useStore} from "./store";
 import {Provider as ReduxProvider} from "react-redux";

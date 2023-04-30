@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {BlogAuthorDiv, BlogAvatar, BlogBgDiv, BlogTabMenuDiv, BlogWrite,} from "../components/styled/myblog-styled";
 import {Helmet} from "react-helmet";
-import {useAuth} from "../contexts";
 import {useNavigate, useParams} from "react-router";
 import {AbsoluteDiv, ButtonDark, ButtonLight, FlexBetween, LinkTeg} from "../components/styled/common-styled";
 import {useDispatch, useSelector} from "react-redux";
@@ -22,22 +21,21 @@ const BlogLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tabs = [
+    {index: 0, title: '홈', path: `/${blogPath}`},
     {index: 1, title: '게시글', path: `/${blogPath}/published`},
     {index: 2, title: '정보', path: `/${blogPath}/inst`},
+    {index: 3, title: '설정', path: `/${blogPath}/settings`},
   ];
   const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
 
   useEffect(() => {
     setCurrentUri(window.location.pathname);
-    console.log(blogInfo);
   });
 
   useEffect(() => {
-    console.log('BlogLayout 실행');
     axios.get(`/api/blogs/${blogPath}/info`)
       .then(res => res.data)
       .then((result: {code: string; message: string; path: string | Partial<Path>; data: MyBlogInfoState;}) => {
-        console.log(result);
         if (result.code !== '200') {
           alert(result.message);
           navigate(result.path);
@@ -122,24 +120,14 @@ const BlogLayout = () => {
 
      <BlogTabMenuDiv>
        <ul>
-         <li className={currentUri === `/${blogPath}` ? 'active' : ''} onClick={() => handleMoveLink(`/${blogPath}`)}>
-           홈
-         </li>
-         {blogInfo.enabled && (
-          <>
-            {tabs.map((el, index) => {
-                return (
-                  <li key={el.index} className={el.path === currentUri ? 'active' : ''} onClick={() => handleMoveLink(el.path)}>
-                    {el.title}
-                  </li>
-                )
-              }
-            )}
-          </>
-         )}
-         <li className={currentUri === `/${blogPath}/settings` ? 'active' : ''} onClick={() => handleMoveLink(`/${blogPath}/settings`)}>
-           설정
-         </li>
+          {tabs.map((el, index) => {
+              return (
+                <li key={el.index} className={el.path === currentUri ? 'active' : ''} onClick={() => handleMoveLink(el.path)}>
+                  {el.title}
+                </li>
+              )
+            }
+          )}
        </ul>
      </BlogTabMenuDiv>
 

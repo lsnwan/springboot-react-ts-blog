@@ -7,8 +7,11 @@ import {
   BlogCardBody,
   BlogInfo,
   BlogInfoHeader,
-  BlogThumb, BlogTitle,
-  UserProfile, UserProfileMoreButton, UserProfileName
+  BlogThumb,
+  BlogTitle,
+  UserProfile,
+  UserProfileMoreButton,
+  UserProfileName
 } from "../../../../components/styled/content-styled";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
@@ -60,7 +63,6 @@ const monthLabelAttributes = {
 const BlogHome = (props: Props) => {
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
-  console.log(blogInfo);
 
   return (
     <BlogContainer>

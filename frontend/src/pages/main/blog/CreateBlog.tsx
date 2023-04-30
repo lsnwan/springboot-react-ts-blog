@@ -1,22 +1,24 @@
-import React, {ChangeEvent, useMemo, useRef, useState} from 'react';
+import React, {ChangeEvent, useRef, useState} from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {Container, ContentBody} from "../../../components/styled/content-styled";
 import {
-  AbsoluteDiv, ButtonBlink,
-  ButtonGroup, ButtonInfo,
-  ButtonPrimary, ButtonSecondary,
-  FlexBetween, GroupInput,
-  InputLabelBlock, InputText,
-  InputTextBlock, ItemTitle, LinkTeg,
-  MessageBox, RelativeDiv
+  AbsoluteDiv,
+  ButtonBlink,
+  ButtonPrimary,
+  ButtonSecondary,
+  FlexBetween,
+  InputLabelBlock,
+  InputTextBlock,
+  ItemTitle,
+  RelativeDiv
 } from "../../../components/styled/common-styled";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../store";
 import * as T from "../../../store/theme";
 import {Modal, ModalContent} from "../../../components/main/Modal";
 import {BadgeBox, ImageUploadDiv} from "../../../components/styled/myblog-styled";
-import {AiFillSave, AiOutlineEnter, BsSendPlusFill, IoIosArrowBack, MdOutlineClose} from "react-icons/all";
+import {AiOutlineEnter, BsSendPlusFill, IoIosArrowBack, MdOutlineClose} from "react-icons/all";
 import {useNavigate} from "react-router";
 
 type Props = {};

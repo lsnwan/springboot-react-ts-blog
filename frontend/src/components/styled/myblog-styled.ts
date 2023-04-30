@@ -14,6 +14,9 @@ export const BlogBgDiv = styled.div<ImagePropsType>`
   background-color: darkgreen;
   ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
   position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 `;
 
 export const BlogBgChange = styled.div`
@@ -180,14 +183,15 @@ export const BlogStatCard = styled.div`
 `;
 
 type BannerImagePreviewType = {
-  image: string
+  imagePath: string
 }
 export const BannerImagePreview = styled.div<BannerImagePreviewType>`
   width: 100px;
   height: 56.25px;
-  background-color: gray;
-  ${props => props.image && (`background-image: url(${props.image})`)}
+  background-color: white;
+  ${props => props.imagePath !== '' ? `background-image: url(${props.imagePath});` : 'background-image: url(/images/no-image.png);'}
+  ${props => props.imagePath !== '' ? `background-size: contain;` : 'background-size: 40px 40px;'}
   background-position: center;
   background-repeat: no-repeat;
-  background-size: contain;
+  border-radius: 8px;
 `;

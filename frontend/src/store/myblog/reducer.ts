@@ -22,7 +22,10 @@ export const reducer = (state: T.State = initialState, action: T.Actions) => {
       return action.payload;
 
     case '@UpdateBlogIntro/setUpdateBlogIntro':
-      return {...state, blogIntro: action.payload}
+      return {...state, blogIntro: action.payload};
+
+    case '@UpdateBlogBanner/setUpdateBlogBanner':
+      return {...state, blogBannerImagePath: action.payload}
   }
   return state
 }

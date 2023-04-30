@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SH from "../styled/header-styled";
 import * as SC from "../styled/common-styled";
+import {ButtonPrimary, InputLabelBlock, InputTextBlock, MessageBox} from "../styled/common-styled";
 import ToggleMenu from "./ToggleMenu";
 import {useNavigate} from "react-router";
 import * as Utils from "../../utils";
@@ -13,16 +14,7 @@ import {BsBrightnessHighFill, BsFillMoonFill} from "react-icons/all";
 import {useAuth} from "../../contexts";
 import axios from "axios";
 import {Path} from "@remix-run/router/history";
-import * as path from "path";
 import {Modal, ModalContent} from "./Modal";
-import {
-  ButtonPrimary,
-  Divider,
-  InputLabelBlock,
-  InputTextBlock,
-  MessageBox,
-  ModalContentStyle
-} from "../styled/common-styled";
 
 type PropsType = {
   theme: string | undefined;
@@ -106,7 +98,6 @@ const Header = (props: PropsType) => {
     };
   }, [dropboxRef]);
 
-
   /*
    ! 로그아웃
    */
@@ -123,7 +114,6 @@ const Header = (props: PropsType) => {
     axios.get('/api/blogs/check')
       .then(res => res.data)
       .then((result: {code: string, message: string, path: string | Partial<Path>;}) => {
-        console.log(result);
         if (result.code === 'D-001') {
           setShowCreateBlogModal(true);
           return;
@@ -155,7 +145,6 @@ const Header = (props: PropsType) => {
     axios.post('/api/blogs', createBlogForm)
       .then(res => res.data)
       .then((result : {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
-        console.log(result);
         if (result.code === 'Q-001') {
           setCreateBlogFormError({
             blogPath: result.data.blogPath === undefined ? result.message : result.data.blogPath,
@@ -223,11 +212,14 @@ const Header = (props: PropsType) => {
             <h5>아직 블로그를 생성하지 않았군요</h5>
             <p>아래 블로그 아이디를 입력해 주세요</p>
             <p>입력한 아이디는 블로그 주소로 사용됩니다.</p>
-            <p className="mt-2">ex) <span className="badge rounded-pill text-bg-secondary py-2 px-2">/@[블로그 아이디]</span></p>
+            <p className="mt-2">ex) <span className="badge rounded-pill text-bg-secondary py-2 px-2">/@[블로그 ID]</span></p>
             <form onSubmit={handleSubmit}>
               <div className="mb-2 mt-4">
                 <InputLabelBlock htmlFor="blogPath">블로그 ID</InputLabelBlock>
-                <InputTextBlock theme={theme} type="text" id="blogPath" name="blogPath" onChange={handleChange} />
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>@</div>
+                  <InputTextBlock theme={theme} type="text" className="ms-2" id="blogPath" name="blogPath" onChange={handleChange} />
+                </div>
                 {createBlogFormError.blogPath && (
                   <MessageBox className="error">{createBlogFormError.blogPath}</MessageBox>
                 )}

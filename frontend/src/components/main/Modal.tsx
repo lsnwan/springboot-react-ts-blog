@@ -1,4 +1,4 @@
-import React, {DetailedHTMLProps, FC, HTMLAttributes, useEffect} from 'react';
+import React, {DetailedHTMLProps, FC, HTMLAttributes} from 'react';
 import {createPortal} from "react-dom";
 import {FlexBetween, ModalBody, ModalClose, ModalContentStyle, MyModal} from "../styled/common-styled";
 import {IoIosClose} from "react-icons/all";

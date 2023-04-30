@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {
   ButtonPrimary,
-  CommonBody, CommonCardSection,
+  CommonBody,
+  CommonCardSection,
   FlexBetween,
   InputLabelBlock,
   InputTextBlock,

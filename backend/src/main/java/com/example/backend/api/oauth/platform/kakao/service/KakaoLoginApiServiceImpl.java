@@ -1,10 +1,10 @@
 package com.example.backend.api.oauth.platform.kakao.service;
 
+import com.example.backend.api.oauth.model.OauthAttributes;
 import com.example.backend.api.oauth.platform.kakao.client.KakaoUserInfoClient;
 import com.example.backend.api.oauth.platform.kakao.dto.KakaoUserInfoResponseDto;
-import com.example.backend.entity.type.AccountType;
-import com.example.backend.api.oauth.model.OauthAttributes;
 import com.example.backend.api.oauth.service.SocialLoginApiService;
+import com.example.backend.entity.type.AccountType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,5 @@
 import React from 'react';
 import {BlogContainer, BlogInfoDiv, TabMenuContentDiv} from "../../../../components/styled/myblog-styled";
-import {FlexBetween, FlexCenter, FlexStart} from "../../../../components/styled/common-styled";
-import {useOutletContext} from "react-router";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as MB from "../../../../store/myblog";

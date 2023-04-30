@@ -6,7 +6,6 @@ import com.example.backend.cmm.error.exception.*;
 import com.example.backend.cmm.type.ErrorType;
 import feign.FeignException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -88,11 +87,27 @@ public class AdviceController {
     }
 
     @ExceptionHandler(FeignException.class)
-    protected ResponseEntity<ResponseDto> handleException(FeignException e) {
+    public ResponseEntity<ResponseDto> handleException(FeignException e) {
         return ResponseEntity.ok(ResponseDto.builder()
                 .code(ErrorType.SERVER_ERROR.getErrorCode())
                 .message(e.getMessage())
                 .build());
+    }
+
+    @ExceptionHandler(NotCreateDirectoryException.class)
+    public ResponseDto notCreateDirectoryException(NotCreateDirectoryException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.NOT_CREATE_DIRECTORY.getErrorCode())
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(NotStoreFileException.class)
+    public ResponseDto notStoreFileException(NotStoreFileException e) {
+        return ResponseDto.builder()
+                .code(ErrorType.NOT_STORE_FILE.getErrorCode())
+                .message(e.getMessage())
+                .build();
     }
 
 }

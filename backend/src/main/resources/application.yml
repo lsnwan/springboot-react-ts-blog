@@ -42,6 +42,7 @@ aes256:
 
 app:
   host: http://localhost:8080
+  files: D:/web/blog/files/
 
 feign:
   client:

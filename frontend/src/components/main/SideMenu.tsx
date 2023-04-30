@@ -16,7 +16,7 @@ import {
 } from "../styled/sidebar-styled";
 import {BsClockHistory, BsFillHouseFill, BsFillStarFill, GoLightBulb} from "react-icons/all";
 import {useAuth} from "../../contexts";
-import {ButtonPrimary, ButtonSecondary} from "../styled/common-styled";
+import {ButtonPrimary} from "../styled/common-styled";
 
 type PropsType = {
   isSideBar: boolean;
@@ -134,7 +134,7 @@ const SideMenu = (props :PropsType) => {
 
       {props.isSideBar && (
         <Footer>
-          본 사이트는 포트폴리오 용도로 제작 되었습니다. 언제 사라질지 몰라요
+          본 사이트는 포트폴리오 용도로 제작 되었습니다.
         </Footer>
       )}
 

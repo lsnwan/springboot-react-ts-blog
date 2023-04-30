@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
  * C : 암호화 관련
  * M : 메일 관련
  * E : 인코딩 관련
+ * F : 파일 관련
  */
 @Getter
 @AllArgsConstructor
@@ -38,6 +39,8 @@ public enum ErrorType {
 
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S-001", "서버 에러"),
 
+    NOT_CREATE_DIRECTORY(HttpStatus.INTERNAL_SERVER_ERROR, "F-001", "디렉토리 생성 실패"),
+    NOT_STORE_FILE(HttpStatus.INTERNAL_SERVER_ERROR, "F-002", "파일 저장 실패"),
     ; // 코드
 
     private final HttpStatus httpStatus;

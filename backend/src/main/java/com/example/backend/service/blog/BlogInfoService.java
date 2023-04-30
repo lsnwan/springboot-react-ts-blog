@@ -3,19 +3,12 @@ package com.example.backend.service.blog;
 import com.example.backend.entity.BlogInfo;
 import com.example.backend.repository.BlogInfoRepository;
 import com.example.backend.service.blog.dto.BlogInfoDto;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManager;
-import java.util.List;
 
 import static com.example.backend.entity.QAccount.account;
 import static com.example.backend.entity.QBlogContent.blogContent;

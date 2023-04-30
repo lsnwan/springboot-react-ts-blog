@@ -3,7 +3,6 @@ package com.example.backend.api.oauth.validator;
 import com.example.backend.cmm.error.exception.BadTokenException;
 import com.example.backend.cmm.error.exception.ValidationException;
 import com.example.backend.entity.type.AccountType;
-import org.bouncycastle.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

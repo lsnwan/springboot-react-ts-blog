@@ -4,8 +4,6 @@ import {useSelector} from "react-redux";
 import {AppState} from "../../store";
 import * as T from "../../store/theme";
 
-type Props = {};
-
 const ToggleSwitchLabel = styled.label`
   width: 50px;
   height: 30px;
@@ -22,7 +20,7 @@ const ToggleSwitchLabel = styled.label`
     height: 23px;
     position: absolute;
     top: 50%;
-    left: 5px;
+    left: 4px;
     transform: translateY(-50%);
     border-radius: 50%;
     background: ${(props) => (props.theme === 'light' ? "#c4c4c4" : "#5b5b5b")};
@@ -44,11 +42,16 @@ const ToggleInputCheck = styled.input`
   }
 `;
 
+type Props = {
+  enabledForm: {enabled: boolean};
+  changeEnabled: () => void;
+}
+
 const ToggleSwitch = (props: Props) => {
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   return (
     <>
-      <ToggleInputCheck theme={theme} type="checkbox" id="toggle" hidden />
+      <ToggleInputCheck theme={theme} type="checkbox" id="toggle" checked={props.enabledForm.enabled} onChange={props.changeEnabled} hidden />
       <ToggleSwitchLabel theme={theme} htmlFor="toggle" className="toggleSwitch">
         <span className="toggleButton"></span>
       </ToggleSwitchLabel>

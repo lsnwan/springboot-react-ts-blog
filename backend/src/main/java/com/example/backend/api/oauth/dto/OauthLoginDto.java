@@ -1,13 +1,10 @@
 package com.example.backend.api.oauth.dto;
 
-import com.example.backend.entity.Account;
 import com.example.backend.entity.AccountAuthority;
 import com.example.backend.entity.type.AccountType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class OauthLoginDto {

@@ -1,11 +1,11 @@
 package com.example.backend.service.oauth;
 
 import com.example.backend.api.oauth.dto.OauthLoginDto;
-import com.example.backend.cmm.utils.GeneratorUtils;
-import com.example.backend.entity.type.AccountType;
 import com.example.backend.api.oauth.model.OauthAttributes;
 import com.example.backend.api.oauth.service.SocialLoginApiService;
 import com.example.backend.api.oauth.service.SocialLoginApiServiceFactory;
+import com.example.backend.cmm.utils.GeneratorUtils;
+import com.example.backend.entity.type.AccountType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

@@ -76,7 +76,6 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
           code: code
         }).then(res => res.data)
           .then((result: {code: string; message: string; data?: any;}) => {
-            console.log(result);
             if (result.code === '200') {
               setLoggedUser(notUsed => result.data.userInfo);
               localStorage.setItem("userId", result.data.userInfo.userId);

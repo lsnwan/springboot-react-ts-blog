@@ -1,5 +1,3 @@
-import * as string_decoder from "string_decoder";
-
 export type MyBlogInfoState = {
   accountId: string;
   accountName: string;
@@ -17,3 +15,5 @@ export type MyBlogInfoState = {
 }
 
 export type MyBlogIntro = string;
+
+export type MyBlogBannerImagePath = string | null;
