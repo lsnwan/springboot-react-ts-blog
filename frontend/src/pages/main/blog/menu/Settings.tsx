@@ -27,9 +27,11 @@ const Settings = (props: Props) => {
   });
 
   useEffect(() => {
-    setIntroForm({
-      intro: blogInfo.blogIntro,
-    });
+    if (blogInfo.blogIntro !== null) {
+      setIntroForm({
+        intro: blogInfo.blogIntro,
+      });
+    }
   }, []);
 
   const handleChangeIntro = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

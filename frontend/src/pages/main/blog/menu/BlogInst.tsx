@@ -20,7 +20,11 @@ const BlogInst = (props: Props) => {
         <TabMenuContentDiv>
           <div>
             <h1>소개</h1>
-            <div dangerouslySetInnerHTML={{__html: blogInfo.blogIntro.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br/>')}} />
+            {blogInfo.blogIntro && (
+              <>
+                <div dangerouslySetInnerHTML={{__html: blogInfo.blogIntro.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br/>')}} />
+              </>
+            )}
           </div>
         </TabMenuContentDiv>
         <BlogInfoDiv>

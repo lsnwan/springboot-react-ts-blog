@@ -91,14 +91,18 @@ const BlogLayout = () => {
            </p>
            <p className="mb-0">
              <LinkTeg theme={theme} href='#' onClick={handleMyInst}>
-               {blogInfo.blogIntro.split('\n').length > 1 && (
+               {blogInfo.blogIntro && (
                  <>
-                   {blogInfo.blogIntro.substring(0, blogInfo.blogIntro.indexOf('\n'))} ...
-                 </>
-               )}
-               {blogInfo.blogIntro.split('\n').length < 2 && (
-                 <>
-                   {blogInfo.blogIntro}
+                   {blogInfo.blogIntro.split('\n').length > 1 && (
+                     <>
+                       {blogInfo.blogIntro.substring(0, blogInfo.blogIntro.indexOf('\n'))} ...
+                     </>
+                   )}
+                   {blogInfo.blogIntro.split('\n').length < 2 && (
+                     <>
+                       {blogInfo.blogIntro}
+                     </>
+                   )}
                  </>
                )}
              </LinkTeg>
