@@ -46,7 +46,6 @@ const CreateBlog = (props: Props) => {
   const contentImages: Array<number> = [];
 
   const handleImageUpload = () => {
-    console.log('이미지 업로드');
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -64,8 +63,6 @@ const CreateBlog = (props: Props) => {
         })
           .then(res => res.data)
           .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
-            console.log(result);
-
             if (result.code === '201') {
               const editor = quillRef.current?.getEditor();
               const range = editor?.getSelection();
