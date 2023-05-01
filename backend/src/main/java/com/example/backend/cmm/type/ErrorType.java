@@ -41,6 +41,8 @@ public enum ErrorType {
 
     NOT_CREATE_DIRECTORY(HttpStatus.INTERNAL_SERVER_ERROR, "F-001", "디렉토리 생성 실패"),
     NOT_STORE_FILE(HttpStatus.INTERNAL_SERVER_ERROR, "F-002", "파일 저장 실패"),
+    FILE_CONTENT(HttpStatus.BAD_REQUEST, "F-003", "파일 타입 오류"),
+
     ; // 코드
 
     private final HttpStatus httpStatus;

@@ -11,7 +11,9 @@ import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.utils.FileStorageService;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.BlogInfo;
+import com.example.backend.entity.FileManager;
 import com.example.backend.repository.BlogInfoRepository;
+import com.example.backend.repository.FileManagerRepository;
 import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.blog.BlogInfoService;
 import com.example.backend.service.blog.dto.BlogInfoDto;
@@ -27,10 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/blogs")
@@ -42,6 +41,7 @@ public class BlogInfoController {
     private final BlogInfoService blogInfoService;
     private final ModelMapper modelMapper;
     private final Environment environment;
+    private final FileManagerRepository fileManagerRepository;
 
     @GetMapping("/check")
     @PreAuthorize("isAuthenticated()")
@@ -276,6 +276,15 @@ public class BlogInfoController {
             );
         }
 
+        if (!file.getContentType().startsWith("image")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.FILE_CONTENT.getErrorCode())
+                            .message("이미지 파일만 업로드 가능 합니다.")
+                            .build()
+            );
+        }
+
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
 
@@ -289,13 +298,9 @@ public class BlogInfoController {
             );
         }
 
-        log.info("=================================================");
-        log.info(file.getContentType());
-        log.info(file.getName());
-        log.info(file.getOriginalFilename());
-        log.info(String.valueOf(file.getSize()));
-        log.info("=================================================");
-
+        /*
+         ! 파일 저장
+         */
         String fileDirPath = environment.getProperty("app.files");
         FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/banners/" + blogInfo.getBlogPath());
         String saveFileName = fileStorageService.storeFile(file);
@@ -353,4 +358,61 @@ public class BlogInfoController {
         );
     }
 
+
+    @PostMapping("/{blogId}/create/image")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> uploadImageFile(@CurrentAccount Account account, @PathVariable String blogId, MultipartFile file) {
+
+        if (file.isEmpty()) {
+            log.info("파일이 존재하지 않습니다.");
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(String.valueOf(ErrorType.REQUEST_ERROR.getErrorCode()))
+                            .message("파일이 존재하지 않습니다.")
+                            .build());
+        }
+
+        if (blogId == null || !blogId.startsWith("@")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("블로그 주소가 잘못 되었습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        if (!file.getContentType().startsWith("image")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.FILE_CONTENT.getErrorCode())
+                            .message("이미지 파일만 업로드 가능 합니다.")
+                            .build()
+            );
+        }
+
+        String fileDirPath = environment.getProperty("app.files");
+        FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/blog-images/" + blogId.substring(1));
+        String saveFileName = fileStorageService.storeFile(file);
+
+
+        FileManager saveFileManager = fileManagerRepository.save(FileManager.builder()
+                .savedName(saveFileName)
+                .originName(file.getOriginalFilename())
+                .size(file.getSize())
+                .type(file.getContentType().substring(0, file.getContentType().indexOf("/")))
+                .registeredId(account.getId())
+                .build());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("fileIdx", saveFileManager.getIdx());
+        result.put("imageUrl", environment.getProperty("app.host") + "/files/blog-images/" + blogId.substring(1) + "/" + saveFileName);
+
+        return ResponseEntity.ok().body(
+                ResponseDataDto.builder()
+                        .code(String.valueOf(HttpStatus.CREATED.value()))
+                        .message("정상 처리 되었습니다.")
+                        .data(result)
+                        .build());
+    }
 }

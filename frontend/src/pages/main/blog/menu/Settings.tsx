@@ -198,7 +198,8 @@ const Settings = (props: Props) => {
                   <input type="file" accept="image/*" ref={fileInputRef} onChange={handleBannerImageChange} />
                 </div>
                 <div>
-                  <small className="text-secondary">파일은 10MB 이하, 확장자는 jpg, png파일만 가능합니다.</small>
+                  <p className="text-secondary small mb-0">파일은 10MB 이하, 확장자는 jpg, png파일만 가능합니다.</p>
+                  <p className="text-secondary small">최적 해상도는 너비 1080px, 높이 400px 입니다.</p>
                 </div>
                 <div className="text-end">
                   <ButtonDanger type="button" className="small" onClick={handleDeleteBannerImage}>초기화</ButtonDanger>

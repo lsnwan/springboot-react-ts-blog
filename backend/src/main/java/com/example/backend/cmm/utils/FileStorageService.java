@@ -33,8 +33,8 @@ public class FileStorageService {
             return null;
         }
 
-        String ext = contentType.substring(contentType.indexOf("/")+1);
-        String fileName = UUID.randomUUID() + "." + ext;
+        String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+        String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "." + ext;
         try {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation);

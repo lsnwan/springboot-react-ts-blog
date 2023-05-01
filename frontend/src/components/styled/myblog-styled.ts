@@ -9,7 +9,8 @@ type ImagePropsType = {
   imagePath?: string
 }
 export const BlogBgDiv = styled.div<ImagePropsType>`
-  width: 100%;
+  margin: 0 auto;
+  width: 1080px;
   height: 400px;
   background-color: darkgreen;
   ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};

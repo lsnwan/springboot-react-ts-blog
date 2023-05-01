@@ -1,5 +1,5 @@
-import React, {ChangeEvent, useRef, useState} from 'react';
-import ReactQuill from 'react-quill';
+import React, {ChangeEvent, LegacyRef, useMemo, useRef, useState} from 'react';
+import ReactQuill, {Quill} from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {Container, ContentBody} from "../../../components/styled/content-styled";
 import {
@@ -19,7 +19,11 @@ import * as T from "../../../store/theme";
 import {Modal, ModalContent} from "../../../components/main/Modal";
 import {BadgeBox, ImageUploadDiv} from "../../../components/styled/myblog-styled";
 import {AiOutlineEnter, BsSendPlusFill, IoIosArrowBack, MdOutlineClose} from "react-icons/all";
-import {useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
+import axios from "axios";
+import {Path} from "@remix-run/router/history";
+import {produce} from "immer";
+
 
 type Props = {};
 
@@ -28,37 +32,84 @@ const CreateBlog = (props: Props) => {
   const container = document.getElementById('editor');
   const [value, setValue] = useState('');
   const theme = useSelector<AppState, T.State>(state => state.themeType);
+  const {blogPath} = useParams<string>();
   const [showPublishedBlogModal, setShowPublishedBlogModal] = useState<boolean>();
   const [title, setTitle] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagText, setTagText] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(document.createElement('input'));
+  const quillRef = useRef<ReactQuill>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [dragging, setDragging] = useState<boolean>(false);
   const navigate = useNavigate();
+  const contentImages: Array<number> = [];
 
-  const modules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-      ['blockquote', 'code-block'],
+  const handleImageUpload = () => {
+    console.log('이미지 업로드');
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
 
-      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-      [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-      [{ 'direction': 'rtl' }],                         // text direction
+    input.addEventListener('change', async () => {
+      const file = input.files?.[0];
+      const formData = new FormData();
+      if (file) {
+        formData.append('file', file);
+        axios.post(`/api/blogs/${blogPath}/create/image`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        })
+          .then(res => res.data)
+          .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
+            console.log(result);
 
-      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            if (result.code === '201') {
+              const editor = quillRef.current?.getEditor();
+              const range = editor?.getSelection();
+              if (editor && range) {
+                editor.insertEmbed(range.index, 'image', result.data.imageUrl);
+                editor.setSelection(range.index + 1, range.length);
+              }
 
-      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-      [{ 'font': [] }],
-      [{ 'align': [] }],
+              return;
+            }
 
-      ['clean']                                         // remove formatting button
-    ]
-  }
+            alert(result.message);
+
+          });
+      } // & if(file)
+    }); // & input.addEventListener
+  } // & imageUploadHandler
+
+  const modules = useMemo(() => {
+    return {
+        toolbar: {
+          container: [
+            [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+            [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+            ['blockquote'],
+
+            [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+
+            [{'align': []}],
+
+            [{'list': 'ordered'}, {'list': 'bullet'}],
+            [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+            [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+
+            ['image', 'link', 'video', 'code-block'],
+          ],
+          handlers: {
+            image: handleImageUpload,
+          }
+        }
+    }
+  }, []);
 
   const handleShowModal = () => {
     setShowPublishedBlogModal(true);
@@ -68,10 +119,9 @@ const CreateBlog = (props: Props) => {
     setShowPublishedBlogModal(false);
   };
 
-  const handleThumbnailImageUpload = () => {
-    fileInputRef.current.click();
-  }
-
+  /**********************************************
+   **** 테그 관련  *******************************
+   **********************************************/
   const handleTagSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -97,6 +147,13 @@ const CreateBlog = (props: Props) => {
 
   const handleTagDelete = (tagName : string) => {
     setTags(tags.filter((tag) => tag !== tagName));
+  }
+
+  /**********************************************
+   **** 대표 이미지 관련  *************************
+   **********************************************/
+  const handleThumbnailImageUpload = () => {
+    fileInputRef.current.click();
   }
 
   const handleFileInputChange = () => {
@@ -171,7 +228,7 @@ const CreateBlog = (props: Props) => {
         </div>
 
         <div className="mt-2">
-          <ReactQuill theme="snow" value={value} modules={modules} onChange={setValue} />
+          <ReactQuill theme="snow" value={value} modules={modules} onChange={setValue} ref={quillRef} />
         </div>
 
 
