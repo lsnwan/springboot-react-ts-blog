@@ -1,4 +1,4 @@
-import React, {ChangeEvent, LegacyRef, useMemo, useRef, useState} from 'react';
+import React, {ChangeEvent, LegacyRef, useEffect, useMemo, useRef, useState} from 'react';
 import ReactQuill, {Quill} from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {Container, ContentBody} from "../../../components/styled/content-styled";
@@ -46,6 +46,14 @@ const CreateBlog = (props: Props) => {
   const [enabled, setEnabled] = useState<boolean>(false);
   const [tagsMessage, setTagsMessage] = useState<string>('');
   const [titleMessage, setTitleMessage] = useState<string>('');
+
+  useEffect(() => {
+    const authenticated = localStorage.getItem("userId");
+    if (authenticated == null) {
+      navigate("/login");
+    }
+
+  }, []);
 
   const handleImageUpload = () => {
     const input = document.createElement('input');
@@ -252,6 +260,10 @@ const CreateBlog = (props: Props) => {
     const file = thumbnailImageRef.current?.files?.[0];
     if (file) {
       formData.append('file', file);
+    }
+
+    if (!confirm('게시글을 등록하시겠습니까?')) {
+      return;
     }
 
     axios.post(`/api/blogs/${blogPath}/create`, formData, {

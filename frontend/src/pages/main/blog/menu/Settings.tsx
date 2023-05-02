@@ -1,14 +1,21 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {BannerImagePreview, BlogContainer} from "../../../../components/styled/myblog-styled";
-import {ButtonDanger, ButtonPrimary, FlexStart, TextArea} from "../../../../components/styled/common-styled";
+import {
+  ButtonDanger,
+  ButtonPrimary,
+  FlexStart,
+  HtmlDiv,
+  TextArea
+} from "../../../../components/styled/common-styled";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
 import * as MB from "../../../../store/myblog";
 import ToggleSwitch from "../../../../components/cmm/ToggleSwitch";
 import axios from "axios";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {Path} from "@remix-run/router/history";
+import * as U from '../../../../utils';
 
 type Props = {};
 
@@ -31,10 +38,19 @@ const Settings = (props: Props) => {
   const [enabled, setEnabled] = useState<boolean>(false);
   const [bannerImagePathForm, setBannerImagePathForm] = useState<ChangeBannerImageFormType>({
     bannerImagePath: ''
-  })
+  });
+  const navigate = useNavigate();
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    const authenticated = localStorage.getItem("userId");
+    if (authenticated == null) {
+      navigate("/login");
+    }
 
+  }, []);
+
+  useEffect(() => {
     axios.get(`/api/blogs/${blogPath}/settings`)
       .then(res => res.data)
       .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
@@ -48,10 +64,10 @@ const Settings = (props: Props) => {
           setBannerImagePathForm({
             bannerImagePath: result.data.bannerImagePath ?? '',
           });
+
+          setPageLoading(false);
         }
       });
-
-
   }, []);
 
   const handleChangeIntro = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -157,59 +173,69 @@ const Settings = (props: Props) => {
 
   return (
     <BlogContainer>
-      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
-        <div style={{width: '250px', padding: '10px 15px'}}>
-          <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>소개</h1>
-        </div>
-        <div style={{flex: 1}}>
-          <div>
-            <form onSubmit={handleSubmitIntro}>
-              <TextArea theme={theme} id="blogIntro" name="intro" onChange={handleChangeIntro} value={introForm.intro} />
-              <div style={{textAlign: 'right', marginTop: '10px'}}>
-                <ButtonPrimary type="submit" className="small">저장하기</ButtonPrimary>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
 
-      <div style={{display: 'flex', alignItems: 'center', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
-        <div style={{width: '250px', padding: '10px 15px'}}>
-          <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>배너 이미지</h1>
-        </div>
-        <div style={{flex: 1}}>
-          <FlexStart>
-            <BannerImagePreview imagePath={bannerImagePathForm.bannerImagePath}>
-              <span className="visually-hidden">배너 이미지</span>
-            </BannerImagePreview>
-            <div className="ms-2" style={{width: '100%'}}>
-              <form onSubmit={handleSubmitBanner}>
-                <div>
-                  <input type="file" accept="image/*" ref={fileInputRef} onChange={handleBannerImageChange} />
-                </div>
-                <div>
-                  <p className="text-secondary small mb-0">파일은 10MB 이하, 확장자는 jpg, png파일만 가능합니다.</p>
-                  <p className="text-secondary small">최적 해상도는 너비 1080px, 높이 400px 입니다.</p>
-                </div>
-                <div className="text-end">
-                  <ButtonDanger type="button" className="small" onClick={handleDeleteBannerImage}>초기화</ButtonDanger>
-                  <ButtonPrimary type="submit" className="small ms-2">저장하기</ButtonPrimary>
-                </div>
-              </form>
+      {pageLoading && (
+        <HtmlDiv className="text-center">
+          <img src="/images/loading.gif"/>
+        </HtmlDiv>
+      )}
+
+      {!pageLoading && (
+        <>
+          <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
+            <div style={{width: '250px', padding: '10px 15px'}}>
+              <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>소개</h1>
             </div>
-          </FlexStart>
-        </div>
-      </div>
+            <div style={{flex: 1}}>
+              <div>
+                <form onSubmit={handleSubmitIntro}>
+                  <TextArea theme={theme} id="blogIntro" name="intro" onChange={handleChangeIntro} value={introForm.intro} />
+                  <div style={{textAlign: 'right', marginTop: '10px'}}>
+                    <ButtonPrimary type="submit" className="small">저장하기</ButtonPrimary>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
 
-      <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
-        <div style={{width: '250px', padding: '10px 15px'}}>
-          <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>블로그 공개</h1>
-        </div>
-        <div style={{flex: 1}}>
-          <ToggleSwitch enabled={enabled} changeEnabled={handleChangeEnabled} />
-        </div>
-      </div>
+          <div style={{display: 'flex', alignItems: 'center', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
+            <div style={{width: '250px', padding: '10px 15px'}}>
+              <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>배너 이미지</h1>
+            </div>
+            <div style={{flex: 1}}>
+              <FlexStart>
+                <BannerImagePreview imagePath={bannerImagePathForm.bannerImagePath}>
+                  <span className="visually-hidden">배너 이미지</span>
+                </BannerImagePreview>
+                <div className="ms-2" style={{width: '100%'}}>
+                  <form onSubmit={handleSubmitBanner}>
+                    <div>
+                      <input type="file" accept="image/*" ref={fileInputRef} onChange={handleBannerImageChange} />
+                    </div>
+                    <div>
+                      <p className="text-secondary small mb-0">파일은 10MB 이하, 확장자는 jpg, png파일만 가능합니다.</p>
+                      <p className="text-secondary small">최적 해상도는 너비 1080px, 높이 400px 입니다.</p>
+                    </div>
+                    <div className="text-end">
+                      <ButtonDanger type="button" className="small" onClick={handleDeleteBannerImage}>초기화</ButtonDanger>
+                      <ButtonPrimary type="submit" className="small ms-2">저장하기</ButtonPrimary>
+                    </div>
+                  </form>
+                </div>
+              </FlexStart>
+            </div>
+          </div>
 
+          <div style={{display: 'flex', marginTop: '8px', borderBottom: '1px solid #dadada', paddingBottom: '15px'}}>
+            <div style={{width: '250px', padding: '10px 15px'}}>
+              <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>블로그 공개</h1>
+            </div>
+            <div style={{flex: 1}}>
+              <ToggleSwitch enabled={enabled} changeEnabled={handleChangeEnabled} />
+            </div>
+          </div>
+        </>
+      )}
     </BlogContainer>
   );
 };

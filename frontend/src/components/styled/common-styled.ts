@@ -399,6 +399,11 @@ export const AbsoluteDiv = styled.div<AbsoluteDivType>`
   ${(props) => props.isCenter && (`transform: translate(-50%, -50%)`)};
 `;
 
+export const HtmlDiv = styled.div`
+  width: 100%;
+  z-index: 1;
+`;
+
 export const TextArea = styled.textarea`
   width: 100%;
   background-color: ${(props) => (props.theme === "light" ? "#f0f0f0" : "#333333")};
