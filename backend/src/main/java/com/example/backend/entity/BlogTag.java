@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "blog_tag")
 @Getter @Setter @EqualsAndHashCode(of = "idx", callSuper = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlogTag extends RegisteredDateEntity implements Serializable {

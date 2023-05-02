@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "blog_content")
 @Getter @Setter @EqualsAndHashCode(of = "idx", callSuper = false)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlogContent extends AllDateEntity implements Serializable {
@@ -26,6 +27,9 @@ public class BlogContent extends AllDateEntity implements Serializable {
     @Column(name = "blog_content")
     @Lob
     private String content;
+
+    @Column(name = "blog_thumbnail")
+    private String thumbnail;
 
     @Column(name = "enabled")
     private boolean enabled;

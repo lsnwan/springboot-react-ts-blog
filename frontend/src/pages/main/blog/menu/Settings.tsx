@@ -16,10 +16,6 @@ type UpdateIntroFormType = {
   intro: string
 };
 
-type ChangeEnabledFormType = {
-  enabled: boolean
-};
-
 type ChangeBannerImageFormType = {
   bannerImagePath: string
 };
@@ -32,9 +28,7 @@ const Settings = (props: Props) => {
   const [introForm, setIntroForm] = useState<UpdateIntroFormType>({
     intro: ''
   });
-  const [enabledForm, setEnabledForm] = useState<ChangeEnabledFormType>({
-    enabled: false,
-  });
+  const [enabled, setEnabled] = useState<boolean>(false);
   const [bannerImagePathForm, setBannerImagePathForm] = useState<ChangeBannerImageFormType>({
     bannerImagePath: ''
   })
@@ -49,9 +43,7 @@ const Settings = (props: Props) => {
             intro: result.data.intro ?? '',
           });
 
-          setEnabledForm({
-            enabled: result.data.enabled ?? false,
-          });
+          setEnabled(result.data.enabled ?? false);
 
           setBannerImagePathForm({
             bannerImagePath: result.data.bannerImagePath ?? '',
@@ -87,11 +79,9 @@ const Settings = (props: Props) => {
 
   const handleChangeEnabled = () => {
 
-    setEnabledForm({
-      enabled: !enabledForm.enabled
-    });
+    setEnabled(!enabled);
 
-    axios.post(`/api/blogs/${blogPath}/settings/enabled`, {enabled: !enabledForm.enabled})
+    axios.post(`/api/blogs/${blogPath}/settings/enabled`, {enabled: !enabled})
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
         alert(result.message);
@@ -216,7 +206,7 @@ const Settings = (props: Props) => {
           <h1 style={{fontSize: '18px', fontWeight: 'bold', marginTop: '10px'}}>블로그 공개</h1>
         </div>
         <div style={{flex: 1}}>
-          <ToggleSwitch enabledForm={enabledForm} changeEnabled={handleChangeEnabled} />
+          <ToggleSwitch enabled={enabled} changeEnabled={handleChangeEnabled} />
         </div>
       </div>
 

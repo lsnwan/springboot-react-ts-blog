@@ -12,7 +12,6 @@ const ToggleSwitchLabel = styled.label`
   border-radius: 15px;
   background-color: ${(props) => (props.theme === 'light' ? "#a2a2a2" : "#383838")};
   cursor: pointer;
-  margin: 30px;
   transition: all 0.2s ease-in;
 
   .toggleButton {
@@ -43,7 +42,7 @@ const ToggleInputCheck = styled.input`
 `;
 
 type Props = {
-  enabledForm: {enabled: boolean};
+  enabled: boolean;
   changeEnabled: () => void;
 }
 
@@ -51,7 +50,7 @@ const ToggleSwitch = (props: Props) => {
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   return (
     <>
-      <ToggleInputCheck theme={theme} type="checkbox" id="toggle" checked={props.enabledForm.enabled} onChange={props.changeEnabled} hidden />
+      <ToggleInputCheck theme={theme} type="checkbox" id="toggle" checked={props.enabled} onChange={props.changeEnabled} hidden />
       <ToggleSwitchLabel theme={theme} htmlFor="toggle" className="toggleSwitch">
         <span className="toggleButton"></span>
       </ToggleSwitchLabel>

@@ -10,7 +10,7 @@ import {
   FlexBetween,
   InputLabelBlock,
   InputTextBlock,
-  ItemTitle,
+  ItemTitle, MessageBox,
   RelativeDiv
 } from "../../../components/styled/common-styled";
 import {useSelector} from "react-redux";
@@ -23,14 +23,14 @@ import {useNavigate, useParams} from "react-router";
 import axios from "axios";
 import {Path} from "@remix-run/router/history";
 import {produce} from "immer";
+import ToggleSwitch from "../../../components/cmm/ToggleSwitch";
 
 
 type Props = {};
 
 const CreateBlog = (props: Props) => {
 
-  const container = document.getElementById('editor');
-  const [value, setValue] = useState('');
+  const [editorContent, setEditorContent] = useState('');
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const {blogPath} = useParams<string>();
   const [showPublishedBlogModal, setShowPublishedBlogModal] = useState<boolean>();
@@ -38,12 +38,14 @@ const CreateBlog = (props: Props) => {
   const [tags, setTags] = useState<string[]>([]);
   const [tagText, setTagText] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(document.createElement('input'));
+  const thumbnailImageRef = useRef<HTMLInputElement>(document.createElement('input'));
   const quillRef = useRef<ReactQuill>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null);
   const [dragging, setDragging] = useState<boolean>(false);
   const navigate = useNavigate();
-  const contentImages: Array<number> = [];
+  const [enabled, setEnabled] = useState<boolean>(false);
+  const [tagsMessage, setTagsMessage] = useState<string>('');
+  const [titleMessage, setTitleMessage] = useState<string>('');
 
   const handleImageUpload = () => {
     const input = document.createElement('input');
@@ -109,6 +111,11 @@ const CreateBlog = (props: Props) => {
   }, []);
 
   const handleShowModal = () => {
+    const contentText = quillRef.current?.getEditor().getText();
+    if (contentText?.trim().length === 0) {
+      alert('컨텐츠를 작성하세요');
+      return;
+    }
     setShowPublishedBlogModal(true);
   }
 
@@ -131,6 +138,22 @@ const CreateBlog = (props: Props) => {
       return;
     }
 
+    if (tags) {
+      let duplicated = false;
+      tags.map((tag) => {
+        if (tagText === tag) {
+          duplicated = true;
+          return;
+        }
+      });
+
+      if (duplicated) {
+        alert('이미 등록한 태그 입니다.');
+        return;
+      }
+    }
+
+    
     const tagRegex = /^[a-zA-Z가-힣.-]*$/;
     if (!tagRegex.exec(tagText)) {
       alert('한글 및 영어와 \'.\', \'-\'만 입력하세요');
@@ -147,14 +170,14 @@ const CreateBlog = (props: Props) => {
   }
 
   /**********************************************
-   **** 대표 이미지 관련  *************************
+   **** 썸네일 관련  ******************************
    **********************************************/
   const handleThumbnailImageUpload = () => {
-    fileInputRef.current.click();
+    thumbnailImageRef.current.click();
   }
 
   const handleFileInputChange = () => {
-    const file = fileInputRef.current?.files?.[0];
+    const file = thumbnailImageRef.current?.files?.[0];
     if (file) {
       const fileExt = file.type.substring(file.type.indexOf("/")+1, file.type.length);
       const permitExt = ['png', 'jpg', 'jpeg'];
@@ -166,15 +189,15 @@ const CreateBlog = (props: Props) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        setImageUrl(reader.result as string);
+        setThumbnailImageUrl(reader.result as string);
       };
     } else {
-      setImageUrl(null);
+      setThumbnailImageUrl(null);
     }
   }
 
   const handleDeleteImage = () => {
-    setImageUrl(null);
+    setThumbnailImageUrl(null);
   }
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
@@ -206,10 +229,57 @@ const CreateBlog = (props: Props) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        setImageUrl(reader.result as string);
+        setThumbnailImageUrl(reader.result as string);
       };
     }
   };
+
+  const handleChangeEnabled = () => {
+    setEnabled(!enabled);
+  }
+
+  const handleBlogSubmit = () => {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', editorContent);
+    formData.append("enabled", enabled ? "1" : "0");
+    if (tags) {
+      tags.map((tag) => {
+        formData.append('tags', tag);
+      });
+    }
+
+    const file = thumbnailImageRef.current?.files?.[0];
+    if (file) {
+      formData.append('file', file);
+    }
+
+    axios.post(`/api/blogs/${blogPath}/create`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      responseEncoding: "utf-8"
+    })
+      .then(res => res.data)
+      .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
+        console.log(result);
+
+        if (result.code === 'Q-001') {
+          if (result.data.title) {
+            setTitleMessage(result.data.title);
+          }
+          if (result.data.tags) {
+            setTagsMessage(result.data.tags);
+          }
+        }
+
+        if (result.code === '201') {
+          navigate(result.path);
+        }
+
+      });
+
+  }
 
   return (
     <ContentBody>
@@ -225,7 +295,7 @@ const CreateBlog = (props: Props) => {
         </div>
 
         <div className="mt-2">
-          <ReactQuill theme="snow" value={value} modules={modules} onChange={setValue} ref={quillRef} />
+          <ReactQuill theme="snow" value={editorContent} modules={modules} onChange={setEditorContent} ref={quillRef} />
         </div>
 
 
@@ -235,7 +305,7 @@ const CreateBlog = (props: Props) => {
               <div>
                 <FlexBetween>
                   <ItemTitle className="mb-1">썸네일</ItemTitle>
-                  {imageUrl && <ButtonBlink theme={theme} style={{fontSize: '13px'}} onClick={handleDeleteImage}>삭제</ButtonBlink>}
+                  {thumbnailImageUrl && <ButtonBlink theme={theme} style={{fontSize: '13px'}} onClick={handleDeleteImage}>삭제</ButtonBlink>}
                 </FlexBetween>
                 
                 <ImageUploadDiv height="180px"
@@ -245,16 +315,19 @@ const CreateBlog = (props: Props) => {
                                 onDragOver={handleDragOver}
                                 onDrop={handleDrop}
                                 onClick={handleThumbnailImageUpload}>
-                  {imageUrl && <img src={imageUrl} style={{width: '100%', height: '100%', objectFit: 'cover'}} alt="thumbnail image"/>}
-                  {!imageUrl && <p>여기를 클릭 하거나 이미지를 끌어서 놓으세요</p>}
+                  {thumbnailImageUrl && <img src={thumbnailImageUrl} style={{width: '100%', height: '100%', objectFit: 'cover'}} alt="thumbnail image"/>}
+                  {!thumbnailImageUrl && <p>여기를 클릭 하거나 이미지를 끌어서 놓으세요</p>}
                 </ImageUploadDiv>
-                <input type="file" name="thumbnail" ref={fileInputRef} onChange={handleFileInputChange} hidden/>
+                <input type="file" name="thumbnail" ref={thumbnailImageRef} onChange={handleFileInputChange} hidden/>
               </div>
 
               <div className="mt-3">
                 <ItemTitle className="mb-1">제목</ItemTitle>
                 <InputLabelBlock htmlFor="blogTitle" className="mt-3 visually-hidden">제목</InputLabelBlock>
-                <InputTextBlock theme={theme} type="text" id="blogTitle" onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)} ref={inputRef} />
+                <InputTextBlock theme={theme} type="text" id="blogTitle" onChange={(e: ChangeEvent<HTMLInputElement>) => {setTitle(e.target.value); setTitleMessage('')}} ref={inputRef} />
+                {titleMessage && (
+                  <MessageBox className="error">{titleMessage}</MessageBox>
+                )}
               </div>
 
               <div className="mt-3">
@@ -262,7 +335,7 @@ const CreateBlog = (props: Props) => {
                   <ItemTitle className="mb-1">태그</ItemTitle>
                   <InputLabelBlock htmlFor="blogTag" className="mt-3 visually-hidden">태그</InputLabelBlock>
                   <form id="tagsForm" onSubmit={handleTagSubmit}>
-                    <InputTextBlock theme={theme} type="text" id="blogTag" onChange={(e: ChangeEvent<HTMLInputElement>) => setTagText(e.target.value)} value={tagText} />
+                    <InputTextBlock theme={theme} type="text" id="blogTag" onChange={(e: ChangeEvent<HTMLInputElement>) => {setTagText(e.target.value); setTagsMessage('')}} value={tagText} />
                     {tagText.trim() != '' && (
                       <AbsoluteDiv top="27px" right="15px">
                         <ButtonBlink type="submit" theme={theme}>
@@ -272,6 +345,9 @@ const CreateBlog = (props: Props) => {
                     )}
                   </form>
                 </RelativeDiv>
+                {tagsMessage && (
+                  <MessageBox className="error">{tagsMessage}</MessageBox>
+                )}
                 <BadgeBox className="mt-2">
                   {tags.map((tagName, index) => (
                     <span key={index} className="badge bg-secondary">{tagName} <MdOutlineClose style={{cursor: 'pointer'}} onClick={() => handleTagDelete(tagName)} /></span>
@@ -279,9 +355,15 @@ const CreateBlog = (props: Props) => {
                 </BadgeBox>
               </div>
 
+              <div className="mt-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <ItemTitle className="mb-1">공개여부</ItemTitle>
+                  <ToggleSwitch enabled={enabled} changeEnabled={handleChangeEnabled} />
+                </div>
+              </div>
 
               <div className="mt-3 text-end">
-                <ButtonPrimary className="block">발행하기</ButtonPrimary>
+                <ButtonPrimary className="block" onClick={handleBlogSubmit}>발행하기</ButtonPrimary>
               </div>
             </ModalContent>
           </Modal>

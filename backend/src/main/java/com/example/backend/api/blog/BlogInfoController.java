@@ -1,6 +1,7 @@
 package com.example.backend.api.blog;
 
 import com.example.backend.api.blog.dto.CreateBlogDto;
+import com.example.backend.api.blog.dto.CreateBlogPostDto;
 import com.example.backend.api.blog.dto.UpdateEnabledDto;
 import com.example.backend.api.blog.dto.UpdateIntroDto;
 import com.example.backend.cmm.dto.ResponseDataDto;
@@ -9,10 +10,10 @@ import com.example.backend.cmm.error.exception.BadRequestException;
 import com.example.backend.cmm.error.exception.NotFoundDataException;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.utils.FileStorageService;
-import com.example.backend.entity.Account;
-import com.example.backend.entity.BlogInfo;
-import com.example.backend.entity.FileManager;
+import com.example.backend.entity.*;
+import com.example.backend.repository.BlogContentRepository;
 import com.example.backend.repository.BlogInfoRepository;
+import com.example.backend.repository.BlogTagRepository;
 import com.example.backend.repository.FileManagerRepository;
 import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.blog.BlogInfoService;
@@ -28,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -42,6 +44,8 @@ public class BlogInfoController {
     private final ModelMapper modelMapper;
     private final Environment environment;
     private final FileManagerRepository fileManagerRepository;
+    private final BlogContentRepository blogContentRepository;
+    private final BlogTagRepository blogTagRepository;
 
     @GetMapping("/check")
     @PreAuthorize("isAuthenticated()")
@@ -415,4 +419,56 @@ public class BlogInfoController {
                         .data(result)
                         .build());
     }
+
+    @PostMapping(value = "/{blogId}/create")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @PathVariable String blogId, MultipartFile file, @Valid CreateBlogPostDto.Request request, BindingResult bindingResult) {
+
+        String thumbnailUrl = null;
+
+        if (file != null) {
+            if (!file.getContentType().startsWith("image")) {
+                return ResponseEntity.ok().body(
+                        ResponseDto.builder()
+                                .code(ErrorType.FILE_CONTENT.getErrorCode())
+                                .message("이미지 파일만 업로드 가능 합니다.")
+                                .build()
+                );
+            }
+
+            String fileDirPath = environment.getProperty("app.files");
+            FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/blog-thumbnail/" + blogId.substring(1));
+            String saveFileName = fileStorageService.storeFile(file);
+            thumbnailUrl = environment.getProperty("app.host") + "/files/blog-thumbnail/" + blogId.substring(1) + "/" + saveFileName;
+        }
+
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1))
+                .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
+
+        BlogContent savedBlogContent = blogContentRepository.save(BlogContent.builder()
+                .blogInfo(blogInfo)
+                .content(request.getContent())
+                .thumbnail(thumbnailUrl)
+                .enabled(request.isEnabled())
+                .build());
+
+        List<BlogTag> blogTags = new ArrayList<>();
+        request.getTags().forEach((tag) ->
+                blogTags.add(BlogTag.builder()
+                    .blogContent(savedBlogContent)
+                    .tagName(tag)
+                    .build())
+        );
+
+        blogTagRepository.saveAll(blogTags);
+
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.CREATED.value()))
+                        .message("정상 처리 되었습니다.")
+                        .path("/" + blogId)
+                        .build());
+    }
+
 }
