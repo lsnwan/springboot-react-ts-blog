@@ -1,12 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {BannerImagePreview, BlogContainer} from "../../../../components/styled/myblog-styled";
-import {
-  ButtonDanger,
-  ButtonPrimary,
-  FlexStart,
-  HtmlDiv,
-  TextArea
-} from "../../../../components/styled/common-styled";
+import {ButtonDanger, ButtonPrimary, FlexStart, HtmlDiv, TextArea} from "../../../../components/styled/common-styled";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
@@ -15,7 +9,6 @@ import ToggleSwitch from "../../../../components/cmm/ToggleSwitch";
 import axios from "axios";
 import {useNavigate, useParams} from "react-router";
 import {Path} from "@remix-run/router/history";
-import * as U from '../../../../utils';
 
 type Props = {};
 
