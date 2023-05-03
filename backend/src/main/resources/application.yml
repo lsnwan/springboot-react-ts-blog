@@ -28,6 +28,9 @@ spring:
 logging:
   level:
     com.example.backend: DEBUG
+    org.hibernate:
+      type:
+        descriptor.sql: trace
 
 jwt:
   header: Authorization

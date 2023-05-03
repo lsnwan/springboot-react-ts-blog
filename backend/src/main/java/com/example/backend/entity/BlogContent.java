@@ -24,6 +24,9 @@ public class BlogContent extends AllDateEntity implements Serializable {
     @JoinColumn(name = "blog_path_name", referencedColumnName = "blog_path_name")
     private BlogInfo blogInfo;
 
+    @Column(name = "blog_title", length = 50)
+    private String title;
+
     @Column(name = "blog_content")
     @Lob
     private String content;

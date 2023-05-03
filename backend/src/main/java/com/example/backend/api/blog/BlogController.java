@@ -2,8 +2,6 @@ package com.example.backend.api.blog;
 
 import com.example.backend.api.blog.dto.CreateBlogDto;
 import com.example.backend.api.blog.dto.CreateBlogPostDto;
-import com.example.backend.api.blog.dto.UpdateEnabledDto;
-import com.example.backend.api.blog.dto.UpdateIntroDto;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.BadRequestException;
@@ -16,7 +14,7 @@ import com.example.backend.repository.BlogInfoRepository;
 import com.example.backend.repository.BlogTagRepository;
 import com.example.backend.repository.FileManagerRepository;
 import com.example.backend.security.CurrentAccount;
-import com.example.backend.service.blog.BlogInfoService;
+import com.example.backend.service.blog.BlogService;
 import com.example.backend.service.blog.dto.BlogInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +37,7 @@ import java.util.*;
 public class BlogController {
 
     private final BlogInfoRepository blogInfoRepository;
-    private final BlogInfoService blogInfoService;
+    private final BlogService blogService;
     private final ModelMapper modelMapper;
     private final Environment environment;
     private final FileManagerRepository fileManagerRepository;
@@ -88,7 +86,7 @@ public class BlogController {
         BlogInfo blogInfo = modelMapper.map(createBlogForm, BlogInfo.class);
         blogInfo.setAccount(account);
 
-        BlogInfo saveBlogInfo = blogInfoService.createBlogInfo(blogInfo);
+        BlogInfo saveBlogInfo = blogService.createBlogInfo(blogInfo);
         return ResponseEntity.ok().body(
                 ResponseDto.builder()
                         .code(String.valueOf(HttpStatus.CREATED.value()))
@@ -111,7 +109,7 @@ public class BlogController {
             );
         }
 
-        BlogInfoDto blogInfo = blogInfoService.getBlogInfo(blogId.substring(1));
+        BlogInfoDto blogInfo = blogService.getBlogInfo(blogId.substring(1));
         if (Objects.isNull(blogInfo)) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
@@ -225,6 +223,7 @@ public class BlogController {
         BlogContent savedBlogContent = blogContentRepository.save(BlogContent.builder()
                 .blogInfo(blogInfo)
                 .content(request.getContent())
+                .title(request.getTitle())
                 .thumbnail(thumbnailUrl)
                 .enabled(request.isEnabled())
                 .build());

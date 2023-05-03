@@ -25,7 +25,8 @@ public enum ErrorType {
 
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "A-001", "로그인 필요"),
     AUTHENTICATION_FAILURE(HttpStatus.BAD_REQUEST, "A-002", "로그인 실패"),
-    ACCESS_DENIED(HttpStatus.FORBIDDEN, "A-002", "접근 권한 없음"),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "A-003", "접근 권한 없음"),
+    PRIVATE_DATA(HttpStatus.FORBIDDEN, "A-004", "비공개 데이터"),
 
     DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C-001", "복호화 에러"),
 
@@ -42,6 +43,7 @@ public enum ErrorType {
     NOT_CREATE_DIRECTORY(HttpStatus.INTERNAL_SERVER_ERROR, "F-001", "디렉토리 생성 실패"),
     NOT_STORE_FILE(HttpStatus.INTERNAL_SERVER_ERROR, "F-002", "파일 저장 실패"),
     FILE_CONTENT(HttpStatus.BAD_REQUEST, "F-003", "파일 타입 오류"),
+
 
     ; // 코드
 

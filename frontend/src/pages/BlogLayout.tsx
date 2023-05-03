@@ -24,7 +24,6 @@ const BlogLayout = () => {
     {index: 0, title: '홈', path: `/${blogPath}`},
     {index: 1, title: '게시글', path: `/${blogPath}/published`},
     {index: 2, title: '정보', path: `/${blogPath}/inst`},
-    {index: 3, title: '설정', path: `/${blogPath}/settings`},
   ];
   const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
 
@@ -128,6 +127,11 @@ const BlogLayout = () => {
               )
             }
           )}
+         {blogInfo.blogOwner && (
+           <li className={`/${blogPath}/settings` === currentUri ? 'active' : ''} onClick={() => handleMoveLink(`/${blogPath}/settings`)}>
+             설정
+           </li>
+         )}
        </ul>
      </BlogTabMenuDiv>
 

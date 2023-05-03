@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BlogContainer, BlogStatCard} from "../../../../components/styled/myblog-styled";
 import GitHubCalendar from "react-github-contribution-calendar";
 import {AbsoluteDiv, RelativeDiv} from "../../../../components/styled/common-styled";
@@ -17,22 +17,20 @@ import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
 import * as MB from "../../../../store/myblog";
+import axios from "axios";
+import {useParams} from "react-router";
+import {Path} from "@remix-run/router/history";
+import * as U from "../../../../utils";
+
+
 
 type Props = {};
 
-const values = {
-  '2023-03-21': 1,
-  '2023-03-22': 3,
-  '2023-03-23': 2,
-  '2023-03-24': 6,
-  '2023-03-25': 5,
-  '2023-03-26': 4,
-  '2023-03-27': 9,
-  '2023-03-28': 8,
-  '2023-03-29': 7,
-}
-
-const until = '2023-4-25';
+const date = new Date();
+const year = date.getFullYear();
+const month = (date.getMonth() + 1).toString().padStart(2, '0');
+const day = date.getDate().toString().padStart(2, '0');
+const today = `${year}-${month}-${day}`;
 
 const monthNames = ['1','2','3','4','5','6','7','8','9','10','11','12',];
 const weekNames = ['일','월','화','수','목','금','토',];
@@ -60,11 +58,59 @@ const monthLabelAttributes = {
 };
 
 
+type RecentBlogType = {
+  blogContentIdx: number;
+  blogPathName: string;
+  blogThumbnailUrl: string;
+  registeredDate: string;
+  modifiedDate: string;
+  blogTitle: string;
+  contentEnabled: boolean;
+  blogEnabled: boolean;
+  accountNickname: string;
+  accountProfileUrl: string;
+}
+
+type CalendarType = {
+  [date: string]: number;
+}
+
 const BlogHome = (props: Props) => {
 
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const {blogPath} = useParams<string>();
+
+  const [recentBlog, setRecentBlog] = useState<Array<RecentBlogType>>([]);
+  const [registeredCalendar, setRegisteredCalendar] = useState<CalendarType>({});
+
+  useEffect(() => {
+
+    axios.post(`/api/blogs/${blogPath}`, {
+      pageIndex: 1,
+      pageNum: 1,
+      pageUnit: 3
+    })
+      .then(res => res.data)
+      .then((result: {code: string; message: string; data?:any; path: string | Partial<Path>;}) => {
+        console.log(result);
+
+        if (result.code == '200') {
+          const calendar: CalendarType = {};
+          result.data.calendar.forEach((item: { registeredDate: string; blogCnt: number }) => {
+            calendar[item.registeredDate] = item.blogCnt;
+          });
+          setRecentBlog(result.data.blogContents);
+          setRegisteredCalendar(calendar);
+        }
+
+        setIsLoading(false);
+      });
+
+
+
+  }, []);
 
   return (
     <BlogContainer>
@@ -79,117 +125,43 @@ const BlogHome = (props: Props) => {
 
       {blogInfo.enabled && (
         <>
-          <RelativeDiv>
-            <GitHubCalendar monthLabelAttributes={monthLabelAttributes}
-                            panelAttributes={undefined}
-                            weekLabelAttributes={undefined}
-                            values={values}
-                            until={until}
-                            monthNames={monthNames}
-                            weekNames={weekNames}
-                            panelColors={panelColors}/>
-            <AbsoluteDiv top="9px" right="-10px" width="380px" height="105px" style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>
-              <BlogStatCard theme={theme}>
-                <h5>전일 방문자</h5>
-                <p>50,000</p>
-              </BlogStatCard>
+          <GitHubCalendar monthLabelAttributes={monthLabelAttributes}
+                          panelAttributes={undefined}
+                          weekLabelAttributes={undefined}
+                          values={registeredCalendar}
+                          until={today}
+                          monthNames={monthNames}
+                          weekNames={weekNames}
+                          panelColors={panelColors}/>
 
-              <BlogStatCard theme={theme} style={{marginLeft: '5px'}}>
-                <h5>누적 방문자</h5>
-                <p>500,000</p>
-              </BlogStatCard>
-            </AbsoluteDiv>
-          </RelativeDiv>
 
           <div style={{marginTop: '10px'}}>
             <h5>최신 게시글</h5>
             <div style={{display: 'flex'}}>
-              <BlogCard>
-                <BlogThumb></BlogThumb>
-                <BlogCardBody>
-                  <UserProfile></UserProfile>
-                  <BlogInfo>
-                    <BlogInfoHeader>
-                      <UserProfileName>사용자닉네임</UserProfileName>
-                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                    </BlogInfoHeader>
-                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-                  </BlogInfo>
-                </BlogCardBody>
-              </BlogCard>
-              <BlogCard>
-                <BlogThumb></BlogThumb>
-                <BlogCardBody>
-                  <UserProfile></UserProfile>
-                  <BlogInfo>
-                    <BlogInfoHeader>
-                      <UserProfileName>사용자닉네임</UserProfileName>
-                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                    </BlogInfoHeader>
-                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-                  </BlogInfo>
-                </BlogCardBody>
-              </BlogCard>
-              <BlogCard>
-                <BlogThumb></BlogThumb>
-                <BlogCardBody>
-                  <UserProfile></UserProfile>
-                  <BlogInfo>
-                    <BlogInfoHeader>
-                      <UserProfileName>사용자닉네임</UserProfileName>
-                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                    </BlogInfoHeader>
-                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-                  </BlogInfo>
-                </BlogCardBody>
-              </BlogCard>
+              {recentBlog.length === 0 && (
+                <>
+                  등록한 글이 없습니다.
+                </>
+              )}
+
+              {recentBlog.map((item) => (
+                <BlogCard key={item.blogContentIdx}>
+                  <BlogThumb imagePath={item.blogThumbnailUrl === null ? '/images/no-image.png' : item.blogThumbnailUrl}></BlogThumb>
+                  <BlogCardBody>
+                    <UserProfile imagePath={item.accountProfileUrl === null ? '/images/no-image.png' : item.accountProfileUrl}></UserProfile>
+                    <BlogInfo>
+                      <BlogInfoHeader>
+                        <UserProfileName>{item.accountNickname}</UserProfileName>
+                        <UserProfileMoreButton>{U.formatDate(item.registeredDate)}</UserProfileMoreButton>
+                      </BlogInfoHeader>
+                      <BlogTitle>{item.blogTitle}</BlogTitle>
+                    </BlogInfo>
+                  </BlogCardBody>
+                </BlogCard>
+              ))}
             </div>
           </div>
 
-          <div style={{marginTop: '10px'}}>
-            <h5>인기 게시글</h5>
-            <div style={{display: 'flex'}}>
-              <BlogCard>
-                <BlogThumb></BlogThumb>
-                <BlogCardBody>
-                  <UserProfile></UserProfile>
-                  <BlogInfo>
-                    <BlogInfoHeader>
-                      <UserProfileName>사용자닉네임</UserProfileName>
-                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                    </BlogInfoHeader>
-                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-                  </BlogInfo>
-                </BlogCardBody>
-              </BlogCard>
-              <BlogCard>
-                <BlogThumb></BlogThumb>
-                <BlogCardBody>
-                  <UserProfile></UserProfile>
-                  <BlogInfo>
-                    <BlogInfoHeader>
-                      <UserProfileName>사용자닉네임</UserProfileName>
-                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                    </BlogInfoHeader>
-                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-                  </BlogInfo>
-                </BlogCardBody>
-              </BlogCard>
-              <BlogCard>
-                <BlogThumb></BlogThumb>
-                <BlogCardBody>
-                  <UserProfile></UserProfile>
-                  <BlogInfo>
-                    <BlogInfoHeader>
-                      <UserProfileName>사용자닉네임</UserProfileName>
-                      <UserProfileMoreButton>1일 전</UserProfileMoreButton>
-                    </BlogInfoHeader>
-                    <BlogTitle>블로그 제목을 입력하면 그 제목이 출력되는 영역 입니다. 그러므로 게시글을 아주 자세히 잘 입력해야 겠지요?</BlogTitle>
-                  </BlogInfo>
-                </BlogCardBody>
-              </BlogCard>
-            </div>
-          </div>
         </>
       )}
     </BlogContainer>

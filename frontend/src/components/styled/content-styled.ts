@@ -110,10 +110,17 @@ export const BlogCard = styled.div<ContentWidthType>`
   }
 `;
 
-export const BlogThumb = styled.div`
+type ImagePropsType = {
+  imagePath?: string
+}
+export const BlogThumb = styled.div<ImagePropsType>`
   width: 350px;
   height: 197px;
-  background-color: darkgreen;
+  background-color: white;
+  ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: auto;
   overflow: hidden;
   border-radius: inherit;
 `;
@@ -124,10 +131,14 @@ export const BlogCardBody = styled.div`
   margin-top: 5px;
 `;
 
-export const UserProfile = styled.div`
+export const UserProfile = styled.div<ImagePropsType>`
   width: 35px; 
   height: 35px;
-  background-color: red;
+  background-color: white;
+  ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 100%;
   line-height: 35px;
   text-align: center;

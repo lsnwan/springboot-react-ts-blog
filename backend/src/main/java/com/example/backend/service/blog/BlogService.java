@@ -2,13 +2,18 @@ package com.example.backend.service.blog;
 
 import com.example.backend.entity.BlogInfo;
 import com.example.backend.repository.BlogInfoRepository;
+import com.example.backend.service.blog.dto.BlogContentDto;
+import com.example.backend.service.blog.dto.BlogContentRegisteredDto;
 import com.example.backend.service.blog.dto.BlogInfoDto;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.example.backend.entity.QAccount.account;
 import static com.example.backend.entity.QBlogContent.blogContent;
@@ -17,7 +22,7 @@ import static com.example.backend.entity.QSubscribe.subscribe;
 
 @Service
 @RequiredArgsConstructor
-public class BlogInfoService {
+public class BlogService {
 
     private final BlogInfoRepository blogInfoRepository;
     private final JPAQueryFactory queryFactory;
@@ -59,6 +64,55 @@ public class BlogInfoService {
                 .on(blogInfo.account.id.eq(account.id))
                 .where(blogInfo.blogPath.eq(blogId))
                 .fetchOne();
+    }
+
+    public List<BlogContentDto> getBlogContent(String blogId, int pageIndex, int pageUnit) {
+        return queryFactory
+                .select(
+                        Projections.fields(
+                                BlogContentDto.class,
+                                blogContent.idx.as("blogContentIdx"),
+                                blogContent.blogInfo.blogPath.as("blogPathName"),
+                                blogContent.thumbnail.as("blogThumbnailUrl"),
+                                blogContent.registeredDate,
+                                blogContent.modifiedDate,
+                                blogContent.title.as("blogTitle"),
+                                blogContent.enabled.as("contentEnabled"),
+                                blogInfo.enabled.as("blogEnabled"),
+                                account.nickname.as("accountNickname"),
+                                account.profilePath.as("accountProfileUrl")
+                        )
+                )
+                .from(blogContent)
+                .leftJoin(blogInfo).on(blogContent.blogInfo.blogPath.eq(blogInfo.blogPath))
+                .leftJoin(account).on(blogInfo.account.id.eq(account.id))
+                .where(blogInfo.blogPath.eq(blogId))
+                .orderBy(blogContent.registeredDate.desc())
+                .offset(pageIndex - 1).limit(pageUnit)
+                .fetch();
+    }
+
+    public List<BlogContentRegisteredDto> getBlogRegisteredCalendar(String blogId) {
+        return queryFactory
+                .select(
+                    Projections.fields(
+                        BlogContentRegisteredDto.class,
+                        Expressions.stringTemplate(
+                            "DATE_FORMAT({0}, {1})",
+                            blogContent.registeredDate,
+                            ConstantImpl.create("%Y-%m-%d")).as("registeredDate"),
+                        blogContent.count().as("blogCnt")
+                    )
+                ).from(blogContent)
+                .leftJoin(blogInfo)
+                .on(blogContent.blogInfo.blogPath.eq(blogInfo.blogPath))
+                .where(blogContent.blogInfo.blogPath.eq(blogId))
+                .groupBy(Expressions.stringTemplate(
+                        "DATE_FORMAT({0}, {1})",
+                        blogContent.registeredDate,
+                        ConstantImpl.create("%Y-%m-%d")
+                ))
+                .fetch();
     }
 
 }

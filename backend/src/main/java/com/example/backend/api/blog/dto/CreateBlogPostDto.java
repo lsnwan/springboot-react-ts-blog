@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CreateBlogPostDto implements Serializable {
         private String content;
 
         @Valid
+        @NotNull(message = "1개 이상의 태그를 등록하세요")
         @Size(min = 1, message = "1개 이상의 태그를 등록하세요")
         private List<String> tags;
 
