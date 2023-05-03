@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {BlogContainer, BlogStatCard} from "../../../../components/styled/myblog-styled";
 import GitHubCalendar from "react-github-contribution-calendar";
 import {AbsoluteDiv, RelativeDiv} from "../../../../components/styled/common-styled";
@@ -61,8 +61,10 @@ const monthLabelAttributes = {
 
 
 const BlogHome = (props: Props) => {
+
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   return (
     <BlogContainer>

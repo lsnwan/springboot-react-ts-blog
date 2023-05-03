@@ -59,7 +59,14 @@ const Settings = (props: Props) => {
           });
 
           setPageLoading(false);
+          return;
         }
+
+        if (result.code === 'A-001') {
+          alert(result.message);
+          navigate("/");
+        }
+
       });
   }, []);
 

@@ -158,7 +158,7 @@ public class BlogInfoController {
         if (!blogInfo.getAccount().getId().equals(account.getId())) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .code(ErrorType.UNAUTHORIZED.getErrorCode())
                             .message("본인 블로그만 수정할 수 있습니다.")
                             .build()
             );
