@@ -41,7 +41,6 @@ const BlogLayout = () => {
           return;
         }
 
-        // setBlogInfo(result.data);
         dispatch({type: '@myBlogInfo/setMyBlogInfo', payload: result.data});
       })
   }, [])
