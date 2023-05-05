@@ -195,7 +195,7 @@ const Header = (props: PropsType) => {
 
         {/*인증된 사용자*/}
         {localStorage.getItem("userId") && (
-          <SH.ProfileButton onClick={handleOpen} ref={dropboxRef} profilePath={loggedUser?.profilePath}>
+          <SH.ProfileButton onClick={handleOpen} ref={dropboxRef} profilePath={loggedUser?.profilePath === null ? '/images/no-profile.png' : loggedUser?.profilePath}>
             <SH.ProfileDropBoxBody theme={theme} className={profileMenuOpen ? "active" : ""} >
               <SH.ProfileDropBoxList theme={theme} onClick={handleMyProfile}>내 블로그</SH.ProfileDropBoxList>
               <SH.ProfileDropBoxList theme={theme}>설정</SH.ProfileDropBoxList>

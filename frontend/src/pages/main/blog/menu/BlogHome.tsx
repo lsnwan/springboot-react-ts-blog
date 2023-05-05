@@ -87,10 +87,9 @@ const BlogHome = (props: Props) => {
 
   useEffect(() => {
 
-    axios.post(`/api/blogs/${blogPath}`, {
+    axios.post(`/api/blogs/${blogPath}/recent`, {
       pageIndex: 1,
-      pageNum: 1,
-      pageUnit: 3
+      pageUnit: 3,
     })
       .then(res => res.data)
       .then((result: {code: string; message: string; data?:any; path: string | Partial<Path>;}) => {
@@ -146,7 +145,7 @@ const BlogHome = (props: Props) => {
                 <BlogCard key={item.blogContentIdx}>
                   <BlogThumb imagePath={item.blogThumbnailUrl === null ? '/images/no-image.png' : item.blogThumbnailUrl}></BlogThumb>
                   <BlogCardBody>
-                    <UserProfile imagePath={item.accountProfileUrl === null ? '/images/no-image.png' : item.accountProfileUrl}></UserProfile>
+                    <UserProfile imagePath={item.accountProfileUrl === null ? '/images/no-profile.png' : item.accountProfileUrl}></UserProfile>
                     <BlogInfo>
                       <BlogInfoHeader>
                         <UserProfileName>{item.accountNickname}</UserProfileName>

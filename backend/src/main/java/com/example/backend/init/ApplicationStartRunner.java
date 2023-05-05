@@ -1,15 +1,9 @@
 package com.example.backend.init;
 
 import com.example.backend.cmm.utils.GeneratorUtils;
-import com.example.backend.entity.Account;
-import com.example.backend.entity.AccountAuthority;
-import com.example.backend.entity.Authority;
-import com.example.backend.entity.BlogInfo;
+import com.example.backend.entity.*;
 import com.example.backend.entity.type.AccountType;
-import com.example.backend.repository.AccountAuthorityRepository;
-import com.example.backend.repository.AccountRepository;
-import com.example.backend.repository.AuthorityRepository;
-import com.example.backend.repository.BlogInfoRepository;
+import com.example.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -19,8 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Profile("default")
 @Component
@@ -33,10 +31,9 @@ public class ApplicationStartRunner implements ApplicationRunner {
     private final AccountAuthorityRepository accountAuthorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final BlogInfoRepository blogInfoRepository;
+    private final BlogContentRepository blogContentRepository;
 
     private final String ADMIN_EMAIL = "admin@admin.admin";
-
-
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -93,15 +90,30 @@ public class ApplicationStartRunner implements ApplicationRunner {
             log.info("계정을 찾을 수 없음");
         }
 
-        blogInfoRepository.save(BlogInfo.builder()
-                        .idx(1L)
-                        .account(account)
-                        .blogPath("test")
-                        .title(null)
-                        .introduction(null)
-                        .imagePath(null)
-                        .enabled(true)
+        BlogInfo saveBlogInfo = blogInfoRepository.save(BlogInfo.builder()
+                .idx(1L)
+                .account(account)
+                .blogPath("test")
+                .title(null)
+                .introduction(null)
+                .imagePath(null)
+                .enabled(true)
                 .build());
+
+//        List<BlogContent> blogContents = new ArrayList<>();
+        for (int i = 0; i < 55; i++) {
+            Thread.sleep(500);
+            BlogContent buildBlogContent = BlogContent.builder()
+                    .title("테스트 블로그 타이틀!![" + i + "]")
+                    .content("<p>[" + i + "]테스트 블로그 콘텐츠!!!!!!!</p>")
+                    .blogInfo(saveBlogInfo)
+                    .enabled(true)
+                    .build();
+//            blogContents.add(buildBlogContent);
+            blogContentRepository.save(buildBlogContent);
+        }
+
+//        blogContentRepository.saveAll(blogContents);
 
     }
 }

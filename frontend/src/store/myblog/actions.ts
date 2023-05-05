@@ -1,5 +1,5 @@
 import type * as T from './types';
-import {MyBlogBannerImagePath, MyBlogIntro} from "../CommonTypes";
+import {MyBlogBannerImagePath, MyBlogEnabled, MyBlogIntro} from "../CommonTypes";
 
 export const setMyBlogInfo = (payload: T.State): T.SetMyBlogInfo => ({
   type: '@myBlogInfo/setMyBlogInfo',
@@ -13,5 +13,10 @@ export const updateMyBlogIntro = (payload: MyBlogIntro): T.UpdateBlogIntro => ({
 
 export const updateMyBlogBanner = (payload: MyBlogBannerImagePath): T.UpdateBlogBanner => ({
   type: '@UpdateBlogBanner/setUpdateBlogBanner',
+  payload,
+});
+
+export const updateMyBlogEnabled = (payload: MyBlogEnabled): T.UpdateBlogEnabled => ({
+  type: '@UpdateBlogEnabled/setUpdateBlogEnabled',
   payload,
 });

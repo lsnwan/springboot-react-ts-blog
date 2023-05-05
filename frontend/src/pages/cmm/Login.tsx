@@ -44,6 +44,8 @@ const Login = () => {
   }
 
   useEffect(() => {
+    setUserId("admin@admin.admin");
+    setUserPassword("1234");
     if (inputRef.current !== null) {
       inputRef.current.focus();
     }
@@ -60,10 +62,10 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <InputLabelBlock htmlFor="userId" className="mt-3">이메일</InputLabelBlock>
-          <InputTextBlock theme={theme} type="text" id="userId" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserId(e.target.value)} ref={inputRef} />
+          <InputTextBlock theme={theme} type="text" id="userId" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserId(e.target.value)} ref={inputRef} value={userId} />
 
           <InputLabelBlock htmlFor="userPw" className="mt-3">비밀번호</InputLabelBlock>
-          <InputTextBlock theme={theme} type="password" id="userPw" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserPassword(e.target.value)} />
+          <InputTextBlock theme={theme} type="password" id="userPw" onChange={(e: ChangeEvent<HTMLInputElement>) => setUserPassword(e.target.value)} value={userPassword} />
 
           {message !== '' && (
             <MessageBox className="center error">{message}</MessageBox>

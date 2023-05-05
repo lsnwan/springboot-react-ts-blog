@@ -17,3 +17,5 @@ export type MyBlogInfoState = {
 export type MyBlogIntro = string;
 
 export type MyBlogBannerImagePath = string | null;
+
+export type MyBlogEnabled = boolean;

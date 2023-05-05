@@ -7,6 +7,7 @@ import com.example.backend.service.blog.dto.BlogContentRegisteredDto;
 import com.example.backend.service.blog.dto.BlogInfoDto;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -66,7 +67,13 @@ public class BlogService {
                 .fetchOne();
     }
 
-    public List<BlogContentDto> getBlogContent(String blogId, int pageIndex, int pageUnit) {
+    public List<BlogContentDto> getBlogContent(String blogId, int pageIndex, int pageUnit, boolean isOwner) {
+
+        BooleanExpression expression = blogInfo.blogPath.eq(blogId);
+        if (!isOwner) {
+            expression = expression.and(blogContent.enabled.isTrue());
+        }
+
         return queryFactory
                 .select(
                         Projections.fields(
@@ -86,13 +93,19 @@ public class BlogService {
                 .from(blogContent)
                 .leftJoin(blogInfo).on(blogContent.blogInfo.blogPath.eq(blogInfo.blogPath))
                 .leftJoin(account).on(blogInfo.account.id.eq(account.id))
-                .where(blogInfo.blogPath.eq(blogId))
+                .where(expression)
                 .orderBy(blogContent.registeredDate.desc())
-                .offset(pageIndex - 1).limit(pageUnit)
+                .offset(((long) (pageIndex - 1) * pageUnit)).limit(pageUnit)
                 .fetch();
     }
 
-    public List<BlogContentRegisteredDto> getBlogRegisteredCalendar(String blogId) {
+    public List<BlogContentRegisteredDto> getBlogRegisteredCalendar(String blogId, boolean isOwner) {
+
+        BooleanExpression expression = blogInfo.blogPath.eq(blogId);
+        if (!isOwner) {
+            expression = expression.and(blogContent.enabled.isTrue());
+        }
+
         return queryFactory
                 .select(
                     Projections.fields(
@@ -106,7 +119,7 @@ public class BlogService {
                 ).from(blogContent)
                 .leftJoin(blogInfo)
                 .on(blogContent.blogInfo.blogPath.eq(blogInfo.blogPath))
-                .where(blogContent.blogInfo.blogPath.eq(blogId))
+                .where(expression)
                 .groupBy(Expressions.stringTemplate(
                         "DATE_FORMAT({0}, {1})",
                         blogContent.registeredDate,

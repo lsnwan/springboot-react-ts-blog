@@ -138,7 +138,7 @@ export const UserProfile = styled.div<ImagePropsType>`
   ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   border-radius: 100%;
   line-height: 35px;
   text-align: center;

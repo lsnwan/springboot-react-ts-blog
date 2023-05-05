@@ -96,6 +96,7 @@ const Settings = (props: Props) => {
   const handleChangeEnabled = () => {
 
     setEnabled(!enabled);
+    dispatch(MB.updateMyBlogEnabled(!enabled));
 
     axios.post(`/api/blogs/${blogPath}/settings/enabled`, {enabled: !enabled})
       .then(res => res.data)

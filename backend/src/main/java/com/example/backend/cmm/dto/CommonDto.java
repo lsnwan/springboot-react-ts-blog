@@ -9,8 +9,9 @@ public class CommonDto implements Serializable {
 
     @Data
     public static class Request {
-        private int pageIndex;
-        private int pageNum;
-        private int pageUnit;
+        private Integer pageIndex;
+        private Integer pageNum;
+        private Integer pageUnit;
+        private Integer loadCnt;
     }
 }
