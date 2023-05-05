@@ -94,8 +94,6 @@ const BlogHome = (props: Props) => {
     })
       .then(res => res.data)
       .then((result: {code: string; message: string; data?:any; path: string | Partial<Path>;}) => {
-        console.log(result);
-
         if (result.code == '200') {
           const calendar: CalendarType = {};
           result.data.calendar.forEach((item: { registeredDate: string; blogCnt: number }) => {
