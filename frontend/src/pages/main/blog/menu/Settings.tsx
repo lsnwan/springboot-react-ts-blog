@@ -38,7 +38,7 @@ const Settings = (props: Props) => {
   useEffect(() => {
     const authenticated = localStorage.getItem("userId");
     if (authenticated == null) {
-      navigate("/login");
+      navigate(-1);
     }
 
   }, []);
