@@ -274,8 +274,6 @@ const CreateBlog = (props: Props) => {
     })
       .then(res => res.data)
       .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
-        console.log(result);
-
         if (result.code === 'Q-001') {
           if (result.data.title) {
             setTitleMessage(result.data.title);
