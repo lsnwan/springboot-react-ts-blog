@@ -17,6 +17,7 @@ import {
 import {BsClockHistory, BsFillHouseFill, BsFillStarFill, GoLightBulb} from "react-icons/all";
 import {useAuth} from "../../contexts";
 import {ButtonPrimary} from "../styled/common-styled";
+import {useNavigate} from "react-router";
 
 type PropsType = {
   isSideBar: boolean;
@@ -26,11 +27,12 @@ const SideMenu = (props :PropsType) => {
 
   const auth = useAuth();
   const loggedUser = auth.loggedUser;
+  const navigate = useNavigate();
 
   return (
     <SideMenuStyled>
       <SingleMenuUL>
-        <SingleMenuLI isSideBar={props.isSideBar}>
+        <SingleMenuLI isSideBar={props.isSideBar} onClick={() => navigate("/")}>
           <SingleMenuButton isSideBar={props.isSideBar}>
             <SingleMenuIcon><BsFillHouseFill/></SingleMenuIcon>
             {props.isSideBar && (

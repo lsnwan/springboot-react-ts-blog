@@ -62,6 +62,7 @@ export const SingleMenuButton = styled.h1<isSideBarProps>`
   align-items: center;
   &:hover {
     background-color: cornflowerblue;
+    color: white;
   }
 `;
 
