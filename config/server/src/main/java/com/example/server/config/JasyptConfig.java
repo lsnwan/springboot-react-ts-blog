@@ -1,4 +1,4 @@
-package com.example.backend.config;
+package com.example.server.config;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

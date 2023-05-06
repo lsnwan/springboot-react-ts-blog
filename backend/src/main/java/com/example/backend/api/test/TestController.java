@@ -10,6 +10,7 @@ import com.example.backend.security.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,16 @@ public class TestController {
 
     private final AES256 aes256;
 
+    private final Environment environment;
+
+    @GetMapping("/health")
+    public ResponseDto health() {
+
+        return ResponseDto.builder()
+                .code("OK")
+                .message(environment.getProperty("test.message"))
+                .build();
+    }
 
     @GetMapping("/get")
     public ResponseDataDto<Object> test() {
