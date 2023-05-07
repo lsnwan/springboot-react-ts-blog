@@ -202,7 +202,7 @@ export const ProfileDropBoxList = styled.li`
   height: 40px;
   line-height: 40px;
   padding: 0 10px;
-  
+  cursor: pointer;
   &:first-child {
     margin-top: 10px;
   }

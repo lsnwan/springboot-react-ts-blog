@@ -19,6 +19,7 @@ import Published from "./pages/main/blog/menu/Published";
 import BlogInst from "./pages/main/blog/menu/BlogInst";
 import Settings from "./pages/main/blog/menu/Settings";
 import CreateBlog from "./pages/main/blog/CreateBlog";
+import ViewBlog from "./pages/main/blog/ViewBlog";
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/:blogPath/settings" element={<Settings />} />
               </Route>
               <Route path="/:blogPath/create" element={<CreateBlog />} />
+              <Route path="/:blogPath/view" element={<ViewBlog />} />
             </Route>
             <Route element={<CommonLayout/>}>
               <Route path="/login" element={<Login/>}/>

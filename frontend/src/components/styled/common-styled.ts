@@ -217,7 +217,6 @@ export const ButtonLight = styled.button`
   box-sizing: border-box;
   border-radius: 10px;
   border: none;
-  background-color: #e7e7e7;
   color: #333;
   cursor: pointer;
   transition: all .3s;
@@ -225,7 +224,7 @@ export const ButtonLight = styled.button`
   &.small {
     padding: 4px 20px;
   }
-  
+
   &.block {
     width: 100%;
   }
@@ -234,6 +233,7 @@ export const ButtonLight = styled.button`
     background-color: #d7d7d7;
   }
 `;
+
 export const ButtonDark = styled.button`
   padding: 8px 20px;
   line-height: 30px;

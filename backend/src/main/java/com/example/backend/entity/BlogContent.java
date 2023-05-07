@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "blog_content")
@@ -36,5 +38,8 @@ public class BlogContent extends AllDateEntity implements Serializable {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @OneToMany(mappedBy = "blogContent")
+    private List<BlogTag> blogTags = new ArrayList<>();
 
 }

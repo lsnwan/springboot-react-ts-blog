@@ -14,21 +14,8 @@ export const ContentBody = styled.div`
   padding: 66px 13px 10px 13px;
   width: calc(100% - 30px);
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #656565;
-    border-radius: 5px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #afafaf;
-    border-radius: 5px;
-  }
+  overflow: hidden;
+  position: relative;
 `;
 
 export const Container = styled.div`
@@ -120,7 +107,7 @@ export const BlogThumb = styled.div<ImagePropsType>`
   ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: contain;
   overflow: hidden;
   border-radius: inherit;
 `;
@@ -142,6 +129,11 @@ export const UserProfile = styled.div<ImagePropsType>`
   border-radius: 100%;
   line-height: 35px;
   text-align: center;
+  
+  &.large {
+    width: 50px;
+    height: 50px;
+  }
 `;
 
 export const BlogInfo = styled.div`

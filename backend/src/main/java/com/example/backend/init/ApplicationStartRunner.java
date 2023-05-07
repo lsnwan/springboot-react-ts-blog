@@ -32,6 +32,7 @@ public class ApplicationStartRunner implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final BlogInfoRepository blogInfoRepository;
     private final BlogContentRepository blogContentRepository;
+    private final BlogTagRepository blogTagRepository;
 
     private final String ADMIN_EMAIL = "admin@admin.admin";
 
@@ -100,20 +101,29 @@ public class ApplicationStartRunner implements ApplicationRunner {
                 .enabled(true)
                 .build());
 
-//        List<BlogContent> blogContents = new ArrayList<>();
+        List<BlogContent> blogContents = new ArrayList<>();
         for (int i = 0; i < 55; i++) {
-            Thread.sleep(500);
             BlogContent buildBlogContent = BlogContent.builder()
                     .title("테스트 블로그 타이틀!![" + i + "]")
                     .content("<p>[" + i + "]테스트 블로그 콘텐츠!!!!!!!</p>")
                     .blogInfo(saveBlogInfo)
                     .enabled(true)
                     .build();
-//            blogContents.add(buildBlogContent);
-            blogContentRepository.save(buildBlogContent);
+            blogContents.add(buildBlogContent);
+//            blogContentRepository.save(buildBlogContent);
         }
 
-//        blogContentRepository.saveAll(blogContents);
+        blogContentRepository.saveAll(blogContents);
+
+        blogTagRepository.save(BlogTag.builder()
+                        .blogContent(blogContents.get(54))
+                        .tagName("리액트")
+                .build());
+
+        blogTagRepository.save(BlogTag.builder()
+                .blogContent(blogContents.get(54))
+                .tagName("타입스크립트")
+                .build());
 
     }
 }

@@ -10,6 +10,7 @@ import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.blog.BlogService;
 import com.example.backend.service.blog.dto.BlogContentDto;
 import com.example.backend.service.blog.dto.BlogContentRegisteredDto;
+import com.example.backend.service.blog.dto.BlogContentViewDto;
 import com.example.backend.service.blog.dto.BlogInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +33,10 @@ public class BlogReadController {
     private final BlogService blogService;
 
 
-    @PostMapping("/{blogId}/recent")
-    public ResponseEntity<?> getMyBlogHome(@CurrentAccount Account account, @PathVariable String blogId, @RequestBody @Valid CommonDto.Request request) {
+    @PostMapping("/{blogPath}/recent")
+    public ResponseEntity<?> getMyBlogHome(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid CommonDto.Request request) {
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -45,7 +46,7 @@ public class BlogReadController {
             );
         }
 
-        BlogInfoDto blogInfo = blogService.getBlogInfo(blogId.substring(1));
+        BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
         if (Objects.isNull(blogInfo)) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
@@ -72,10 +73,10 @@ public class BlogReadController {
             }
         }
 
-        List<BlogContentDto> blogContent = blogService.getBlogContent(blogId.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner());
+        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner());
         log.info(blogContent.toString());
 
-        List<BlogContentRegisteredDto> blogRegisteredCalendar = blogService.getBlogRegisteredCalendar(blogId.substring(1), blogInfo.isBlogOwner());
+        List<BlogContentRegisteredDto> blogRegisteredCalendar = blogService.getBlogRegisteredCalendar(blogPath.substring(1), blogInfo.isBlogOwner());
         log.info(blogRegisteredCalendar.toString());
 
         Map<String, Object> result = new HashMap<>();
@@ -90,10 +91,10 @@ public class BlogReadController {
                         .build());
     }
 
-    @PostMapping("/{blogId}/published")
-    public ResponseEntity<?> getMyBlogPublished(@CurrentAccount Account account, @PathVariable String blogId, @RequestBody @Valid CommonDto.Request request) {
+    @PostMapping("/{blogPath}/published")
+    public ResponseEntity<?> getMyBlogPublished(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid CommonDto.Request request) {
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -103,7 +104,7 @@ public class BlogReadController {
             );
         }
 
-        BlogInfoDto blogInfo = blogService.getBlogInfo(blogId.substring(1));
+        BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
         if (Objects.isNull(blogInfo)) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
@@ -130,7 +131,7 @@ public class BlogReadController {
             }
         }
 
-        List<BlogContentDto> blogContent = blogService.getBlogContent(blogId.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner());
+        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner());
         log.info(blogContent.toString());
 
         return ResponseEntity.ok().body(
@@ -138,6 +139,65 @@ public class BlogReadController {
                         .code(String.valueOf(HttpStatus.OK.value()))
                         .message("정상 처리 되었습니다.")
                         .data(blogContent)
+                        .build());
+    }
+
+    @GetMapping("/{blogPath}/view")
+    public ResponseEntity<?> getBlogView(@CurrentAccount Account account, @PathVariable String blogPath, Long id) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("블로그 주소가 잘못 되었습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
+        if (Objects.isNull(blogInfo)) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("블로그가 존재하지 않습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        if (!blogInfo.isEnabled()) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.PRIVATE_DATA.getErrorCode())
+                            .message("비공개 블로그 입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        if (account != null) {
+            if (account.getId().equals(blogInfo.getAccountId())) {
+                blogInfo.setBlogOwner(true);
+            }
+        }
+
+        BlogContentViewDto blogContentView = blogService.getBlogContentView(blogPath.substring(1), id, blogInfo.isBlogOwner());
+        if (blogContentView == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("존재하지 않는 게시글 입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+
+        return ResponseEntity.ok().body(
+                ResponseDataDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .data(blogContentView)
                         .build());
     }
 

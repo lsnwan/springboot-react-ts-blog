@@ -196,3 +196,84 @@ export const BannerImagePreview = styled.div<BannerImagePreviewType>`
   background-repeat: no-repeat;
   border-radius: 8px;
 `;
+
+export const ContentSubject = styled.h1`
+  
+`;
+
+export const BlogContentCardPanel = styled.div`
+  width: 210px;
+  margin-left: 10px;
+`;
+
+export const BlogContentCard = styled.div`
+  width: 200px;
+  margin-bottom: 10px;
+`;
+
+
+export const BlogContentThumbnail = styled.div<ImagePropsType>`
+  height: 112.5px;
+  background-color: white;
+  ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  overflow: hidden;
+  border-radius: 10px;
+`;
+
+export const BlogContentCardBody = styled.div`
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, .5);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+`;
+
+export const BlogContentWriterBody = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+`;
+
+export const BlogContentWriter = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+`;
+
+export const BlogContentUserProfile = styled.div`
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+`;
+
+export const BlogContentUserNickname = styled.div`
+  font-size: 13px;
+  margin-left: 5px;
+`;
+
+export const BlogContentRegDate = styled.div`
+  font-size: 13px;
+`;
+
+export const BlogContentCardSubject = styled.div`
+  font-size: 13px;
+  padding: 0 3px;
+  overflow: hidden;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
+
+export const BlogContentStyle = styled.div`
+  img {
+    width: 100%;
+  }
+`;

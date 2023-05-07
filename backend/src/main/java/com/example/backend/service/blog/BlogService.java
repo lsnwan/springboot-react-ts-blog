@@ -1,10 +1,12 @@
 package com.example.backend.service.blog;
 
+import com.example.backend.entity.BlogContent;
 import com.example.backend.entity.BlogInfo;
+import com.example.backend.entity.BlogTag;
+import com.example.backend.repository.BlogContentRepository;
 import com.example.backend.repository.BlogInfoRepository;
-import com.example.backend.service.blog.dto.BlogContentDto;
-import com.example.backend.service.blog.dto.BlogContentRegisteredDto;
-import com.example.backend.service.blog.dto.BlogInfoDto;
+import com.example.backend.service.blog.dto.*;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -12,21 +14,30 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.backend.entity.QAccount.account;
 import static com.example.backend.entity.QBlogContent.blogContent;
 import static com.example.backend.entity.QBlogInfo.blogInfo;
+import static com.example.backend.entity.QBlogTag.blogTag;
 import static com.example.backend.entity.QSubscribe.subscribe;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BlogService {
 
     private final BlogInfoRepository blogInfoRepository;
     private final JPAQueryFactory queryFactory;
+    private final BlogContentRepository blogContentRepository;
+    private final ModelMapper modelMapper;
 
     public BlogInfo createBlogInfo(final BlogInfo blogInfo) {
         return blogInfoRepository.save(blogInfo);
@@ -67,9 +78,9 @@ public class BlogService {
                 .fetchOne();
     }
 
-    public List<BlogContentDto> getBlogContent(String blogId, int pageIndex, int pageUnit, boolean isOwner) {
+    public List<BlogContentDto> getBlogContent(String blogPath, int pageIndex, int pageUnit, boolean isOwner) {
 
-        BooleanExpression expression = blogInfo.blogPath.eq(blogId);
+        BooleanExpression expression = blogInfo.blogPath.eq(blogPath);
         if (!isOwner) {
             expression = expression.and(blogContent.enabled.isTrue());
         }
@@ -99,9 +110,9 @@ public class BlogService {
                 .fetch();
     }
 
-    public List<BlogContentRegisteredDto> getBlogRegisteredCalendar(String blogId, boolean isOwner) {
+    public List<BlogContentRegisteredDto> getBlogRegisteredCalendar(String blogPath, boolean isOwner) {
 
-        BooleanExpression expression = blogInfo.blogPath.eq(blogId);
+        BooleanExpression expression = blogInfo.blogPath.eq(blogPath);
         if (!isOwner) {
             expression = expression.and(blogContent.enabled.isTrue());
         }
@@ -126,6 +137,57 @@ public class BlogService {
                         ConstantImpl.create("%Y-%m-%d")
                 ))
                 .fetch();
+    }
+
+    public BlogContentViewDto getBlogContentView(String blogPath, Long blogId, boolean isOwner) {
+
+        BooleanExpression expression = blogInfo.blogPath.eq(blogPath).and(blogContent.idx.eq(blogId));
+        if (!isOwner) {
+            expression = expression.and(blogContent.enabled.isTrue());
+        }
+
+        List<BlogContent> blogContents = queryFactory.select(
+                    blogContent
+                )
+                .from(blogInfo)
+                .leftJoin(account).on(account.id.eq(blogInfo.account.id)).fetchJoin()
+                .leftJoin(blogContent).on(blogContent.blogInfo.blogPath.eq(blogInfo.blogPath)).fetchJoin()
+                .leftJoin(blogTag).on(blogTag.blogContent.eq(blogContent)).fetchJoin()
+                .where(expression)
+                .distinct()
+                .fetch();
+
+        if (blogContents.isEmpty()) {
+            return null;
+        }
+
+        List<BlogContentViewTagDto> blogContentViewTagDtos = new ArrayList<>();
+        if (!blogContents.get(0).getBlogTags().isEmpty()) {
+            for (BlogTag blogTag : blogContents.get(0).getBlogTags()) {
+                BlogContentViewTagDto build = BlogContentViewTagDto.builder()
+                        .tagIdx(blogTag.getIdx())
+                        .tagName(blogTag.getTagName())
+                        .build();
+                blogContentViewTagDtos.add(build);
+            }
+        }
+
+        return BlogContentViewDto.builder()
+                .blogContentIdx(blogContents.get(0).getIdx())
+                .blogPathName(blogContents.get(0).getBlogInfo().getBlogPath())
+                .blogThumbnailUrl(blogContents.get(0).getThumbnail())
+                .registeredDate(blogContents.get(0).getRegisteredDate())
+                .modifiedDate(blogContents.get(0).getModifiedDate())
+                .blogSubject(blogContents.get(0).getTitle())
+                .blogContent(blogContents.get(0).getContent())
+                .contentEnabled(blogContents.get(0).isEnabled())
+                .blogEnabled(blogContents.get(0).getBlogInfo().isEnabled())
+                .accountId(blogContents.get(0).getBlogInfo().getAccount().getId())
+                .accountNickname(blogContents.get(0).getBlogInfo().getAccount().getNickname())
+                .accountProfileUrl(blogContents.get(0).getBlogInfo().getAccount().getProfilePath())
+                .blogOwner(isOwner)
+                .blogTags(blogContentViewTagDtos)
+                .build();
     }
 
 }

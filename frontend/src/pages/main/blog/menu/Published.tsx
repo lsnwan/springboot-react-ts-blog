@@ -10,7 +10,7 @@ import {
 } from "../../../../components/styled/content-styled";
 import axios from "axios";
 import {Path} from "@remix-run/router/history";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import * as U from "../../../../utils";
 import {AbsoluteDiv, Divider, DividerText} from "../../../../components/styled/common-styled";
 import {useSelector} from "react-redux";
@@ -38,9 +38,9 @@ const Published = (props: Props) => {
   const {blogPath} = useParams<string>();
   const [publishedBlog, setPublishedBlog] = useState<PublishedBlogType[]>([]);
   const [pageIndex, setPageIndex] = useState<number>(1);
-  const [lastRequest, setLasRequest] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [lastRequest, setLastRequest] = useState<boolean>(false);
   const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,13 +83,9 @@ const Published = (props: Props) => {
         setPublishedBlog((prevItems) => [...prevItems, ...result.data]);
         setPageIndex((prev) => prev + 1);
         if (result.data.length === 0) {
-          setLasRequest(true);
+          setLastRequest(true);
         }
         return;
-      }
-
-      if (result.code === 'A-004') {
-        setErrorMessage(result.message);
       }
 
     });
@@ -105,7 +101,7 @@ const Published = (props: Props) => {
           </AbsoluteDiv>
         )}
         {publishedBlog.map((item) => (
-          <BlogCard width={windowWidth} key={item.blogContentIdx}>
+          <BlogCard width={windowWidth} key={item.blogContentIdx} onClick={() => navigate(`/${blogPath}/view?id=${item.blogContentIdx}`)}>
             <BlogThumb imagePath={item.blogThumbnailUrl === null ? '/images/no-image.png' : item.blogThumbnailUrl}></BlogThumb>
             <BlogCardBody>
               <UserProfile imagePath={item.accountProfileUrl === null ? '/images/no-profile.png' : item.accountProfileUrl}></UserProfile>

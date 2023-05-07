@@ -18,7 +18,7 @@ import {AppState} from "../../../../store";
 import * as T from "../../../../store/theme";
 import * as MB from "../../../../store/myblog";
 import axios from "axios";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {Path} from "@remix-run/router/history";
 import * as U from "../../../../utils";
 
@@ -85,6 +85,8 @@ const BlogHome = (props: Props) => {
   const [recentBlog, setRecentBlog] = useState<Array<RecentBlogType>>([]);
   const [registeredCalendar, setRegisteredCalendar] = useState<CalendarType>({});
 
+  const navigate = useNavigate();
+
   useEffect(() => {
 
     axios.post(`/api/blogs/${blogPath}/recent`, {
@@ -142,7 +144,7 @@ const BlogHome = (props: Props) => {
               )}
 
               {recentBlog.map((item) => (
-                <BlogCard key={item.blogContentIdx}>
+                <BlogCard key={item.blogContentIdx} onClick={() => navigate(`/${blogPath}/view?id=${item.blogContentIdx}`)}>
                   <BlogThumb imagePath={item.blogThumbnailUrl === null ? '/images/no-image.png' : item.blogThumbnailUrl}></BlogThumb>
                   <BlogCardBody>
                     <UserProfile imagePath={item.accountProfileUrl === null ? '/images/no-profile.png' : item.accountProfileUrl}></UserProfile>
