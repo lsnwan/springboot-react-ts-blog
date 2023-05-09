@@ -30,8 +30,6 @@ public class BlogValidateAdvice {
         if (pathVariable.get("blogPath") != null) {
             String blogPath = (String) pathVariable.get("blogPath");
 
-            log.info(blogPath);
-
             if (blogPath == null || !blogPath.startsWith("@")) {
                 return ResponseEntity.ok().body(
                         ResponseDto.builder()
