@@ -160,9 +160,10 @@ public class BlogReadController {
             if (toAccount != null) {
                 blogInfo.setSubscribed(subscribeRepository.existsByFromAccountAndToAccount(account, toAccount));
             }
+
         }
 
-        BlogContentViewDto blogContentView = blogService.getBlogContentView(blogPath.substring(1), id, blogInfo.isBlogOwner(), blogInfo.isSubscribed());
+        BlogContentViewDto blogContentView = blogService.getBlogContentView(account != null ? account : null, blogPath.substring(1), id, blogInfo.isBlogOwner(), blogInfo.isSubscribed());
         if (blogContentView == null) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
@@ -172,7 +173,6 @@ public class BlogReadController {
                             .build()
             );
         }
-
 
         return ResponseEntity.ok().body(
                 ResponseDataDto.builder()

@@ -1,8 +1,7 @@
 package com.example.backend.service.blog;
 
-import com.example.backend.entity.BlogContent;
-import com.example.backend.entity.BlogInfo;
-import com.example.backend.entity.BlogTag;
+import com.example.backend.entity.*;
+import com.example.backend.repository.BlogHistoryRepository;
 import com.example.backend.repository.BlogInfoRepository;
 import com.example.backend.service.blog.dto.*;
 import com.querydsl.core.types.ConstantImpl;
@@ -15,11 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.backend.entity.QAccount.account;
 import static com.example.backend.entity.QBlogContent.blogContent;
+import static com.example.backend.entity.QBlogHistory.blogHistory;
 import static com.example.backend.entity.QBlogInfo.blogInfo;
 import static com.example.backend.entity.QBlogTag.blogTag;
 import static com.example.backend.entity.QSubscribe.subscribe;
@@ -31,6 +32,7 @@ public class BlogService {
 
     private final BlogInfoRepository blogInfoRepository;
     private final JPAQueryFactory queryFactory;
+    private final BlogHistoryRepository blogHistoryRepository;
 
     public BlogInfo createBlogInfo(final BlogInfo blogInfo) {
         return blogInfoRepository.save(blogInfo);
@@ -152,7 +154,7 @@ public class BlogService {
         return blogContents.get(0);
     }
 
-    public BlogContentViewDto getBlogContentView(String blogPath, Long blogId, boolean isOwner, boolean subscribed) {
+    public BlogContentViewDto getBlogContentView(Account loginAccount, String blogPath, Long blogId, boolean isOwner, boolean subscribed) {
 
         BooleanExpression expression = blogInfo.blogPath.eq(blogPath).and(blogContent.idx.eq(blogId));
         if (!isOwner) {
@@ -172,6 +174,32 @@ public class BlogService {
 
         if (blogContents.isEmpty()) {
             return null;
+        }
+
+        List<BlogHistory> blogHistories = new ArrayList<>();
+        if (loginAccount != null) {
+            blogHistories = queryFactory.select(
+                            blogHistory
+                    ).from(blogHistory)
+                    .where(blogHistory.blogContent.eq(blogContents.get(0))
+                            .and(blogHistory.account.id.eq(loginAccount.getId()))
+                            .and(Expressions.stringTemplate("DATE_FORMAT({0}, {1})", blogHistory.registeredDate, ConstantImpl.create("%Y-%m-%d")).eq(LocalDate.now().toString())))
+                    .groupBy(Expressions.stringTemplate(
+                            "DATE_FORMAT({0}, {1})",
+                            blogHistory.registeredDate,
+                            ConstantImpl.create("%Y-%m-%d")
+                    ))
+                    .fetch();
+        }
+
+        /**
+         * 이력 저장
+         */
+        if (blogHistories.isEmpty()) {
+            blogHistoryRepository.save(BlogHistory.builder()
+                            .account(loginAccount)
+                            .blogContent(blogContents.get(0))
+                    .build());
         }
 
         List<BlogContentViewTagDto> blogContentViewTagDtos = new ArrayList<>();
