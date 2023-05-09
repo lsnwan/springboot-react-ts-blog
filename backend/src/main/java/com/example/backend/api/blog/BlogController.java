@@ -12,6 +12,7 @@ import com.example.backend.cmm.utils.FileStorageService;
 import com.example.backend.entity.*;
 import com.example.backend.repository.*;
 import com.example.backend.security.CurrentAccount;
+import com.example.backend.service.account.AccountService;
 import com.example.backend.service.blog.BlogService;
 import com.example.backend.service.blog.dto.BlogInfoDto;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,8 +43,8 @@ public class BlogController {
     private final BlogContentRepository blogContentRepository;
     private final BlogTagRepository blogTagRepository;
     private final BlogFavoriteRepository blogFavoriteRepository;
-
-    private final FindAccountRepository findAccountRepository;
+    private final AccountService accountService;
+    private final SubscribeRepository subscribeRepository;
 
     @GetMapping("/check")
     @PreAuthorize("isAuthenticated()")
@@ -123,12 +123,18 @@ public class BlogController {
         }
 
         /*
-         ! 로그인 사용자 본인 블로그인지 체크
+         ! 로그인 사용자 본인 블로그인지 체크 & 구독 여부 체크
          */
         if (account != null) {
             if (account.getId().equals(blogInfo.getAccountId())) {
                 blogInfo.setBlogOwner(true);
             }
+
+            Account toAccount = accountService.getAccount(blogInfo.getAccountId());
+            if (toAccount != null) {
+                blogInfo.setSubscribed(subscribeRepository.existsByFromAccountAndToAccount(account, toAccount));
+            }
+
         }
 
         return ResponseEntity.ok().body(
@@ -298,4 +304,117 @@ public class BlogController {
                         .build());
     }
 
+    @PostMapping("/{blogPath}/subscribe/{toAccountId}")
+    public ResponseEntity<?> registeredSubscribe(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable String toAccountId) {
+
+        if (blogPath == null || !blogPath.startsWith("@")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("블로그 주소가 잘못 되었습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
+        if (Objects.isNull(blogInfo)) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("블로그가 존재하지 않습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        Account toAccount = accountService.getAccount(toAccountId);
+
+        if (toAccount == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("존재하지 않는 계정 입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        if (!toAccount.isEnabled()) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.PRIVATE_DATA.getErrorCode())
+                            .message("사용이 중지된 사용자입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        subscribeRepository.save(Subscribe.builder()
+                        .fromAccount(account)
+                        .toAccount(toAccount)
+                .build());
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.CREATED.value()))
+                        .message("정상 처리 되었습니다.")
+                        .build());
+    }
+
+
+    @DeleteMapping("/{blogPath}/subscribe/{toAccountId}")
+    public ResponseEntity<?> deletedSubscribe(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable String toAccountId) {
+
+        if (blogPath == null || !blogPath.startsWith("@")) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
+                            .message("블로그 주소가 잘못 되었습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
+        if (Objects.isNull(blogInfo)) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("블로그가 존재하지 않습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        Account toAccount = accountService.getAccount(toAccountId);
+
+        if (toAccount == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("존재하지 않는 계정 입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        if (!toAccount.isEnabled()) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.PRIVATE_DATA.getErrorCode())
+                            .message("사용이 중지된 사용자입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        subscribeRepository.delete(subscribeRepository.findByFromAccountAndToAccount(account, toAccount));
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.CREATED.value()))
+                        .message("정상 처리 되었습니다.")
+                        .build());
+    }
 }

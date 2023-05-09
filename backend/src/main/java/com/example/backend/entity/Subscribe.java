@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "subscribe")
 @Getter @Setter @EqualsAndHashCode(of = "idx", callSuper = false)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Subscribe extends RegisteredDateEntity implements Serializable {

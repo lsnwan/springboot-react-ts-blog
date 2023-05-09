@@ -2,16 +2,24 @@ import React, {useEffect, useState} from 'react';
 import {BlogAuthorDiv, BlogAvatar, BlogBgDiv, BlogTabMenuDiv, BlogWrite,} from "../components/styled/myblog-styled";
 import {Helmet} from "react-helmet";
 import {useNavigate, useParams} from "react-router";
-import {AbsoluteDiv, ButtonDark, ButtonLight, FlexBetween, LinkTeg} from "../components/styled/common-styled";
+import {
+  AbsoluteDiv,
+  ButtonDark,
+  ButtonLight,
+  ButtonSecondary,
+  FlexBetween,
+  LinkTeg
+} from "../components/styled/common-styled";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../store";
 import * as T from "../store/theme";
 import * as MB from "../store/myblog";
 import {ContentBody} from "../components/styled/content-styled";
-import {Outlet} from "react-router-dom";
+import {Outlet, useLocation} from "react-router-dom";
 import axios from "axios";
 import {Path} from "@remix-run/router/history";
 import {MyBlogInfoState} from "../store/CommonTypes";
+import {useAuth} from "../contexts";
 
 const BlogLayout = () => {
 
@@ -20,6 +28,8 @@ const BlogLayout = () => {
   const {blogPath} = useParams<string>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {loggedUser} = useAuth();
+  const location = useLocation();
   const tabs = [
     {index: 0, title: '홈', path: `/${blogPath}`},
     {index: 1, title: '게시글', path: `/${blogPath}/published`},
@@ -32,6 +42,7 @@ const BlogLayout = () => {
   });
 
   useEffect(() => {
+    
     axios.get(`/api/blogs/${blogPath}/info`)
       .then(res => res.data)
       .then((result: {code: string; message: string; path: string | Partial<Path>; data: MyBlogInfoState;}) => {
@@ -40,10 +51,10 @@ const BlogLayout = () => {
           navigate(result.path);
           return;
         }
-
+        
         dispatch({type: '@myBlogInfo/setMyBlogInfo', payload: result.data});
       })
-  }, [])
+  }, [location])
 
   const handleMyInst = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
@@ -52,6 +63,43 @@ const BlogLayout = () => {
 
   const handleMoveLink = (path: string) => {
     navigate(path);
+  }
+
+  /*
+   * 구독하기 핸들러
+   */
+  const handleRegisteredSubscribe = () => {
+    if (loggedUser === undefined) {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
+
+    axios.post(`/api/blogs/${blogPath}/subscribe/${blogInfo.accountId}`)
+      .then(res => res.data)
+      .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+        alert(result.message);
+        dispatch(MB.updateMySubscribed(true));
+      });
+
+  }
+
+  /*
+   * 구독 취소 핸들러
+   */
+  const handleDeletedSubscribe = () => {
+    if (loggedUser === undefined) {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
+
+    if (confirm('구독을 취소하시겠습니까?')) {
+      axios.delete(`/api/blogs/${blogPath}/subscribe/${blogInfo.accountId}`)
+        .then(res => res.data)
+        .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+          alert(result.message);
+          dispatch(MB.updateMySubscribed(false));
+        });
+    }
   }
 
   return (
@@ -109,7 +157,18 @@ const BlogLayout = () => {
              <ButtonLight className="small" onClick={() => navigate(`/${blogPath}/create`)}>글쓰기</ButtonLight>
            )}
            {!blogInfo.blogOwner && (
-             <ButtonDark className="small">구독</ButtonDark>
+             <>
+               {blogInfo.subscribed && (
+                 <>
+                   <ButtonSecondary className="small" onClick={handleDeletedSubscribe}>구독중</ButtonSecondary>
+                 </>
+               )}
+               {!blogInfo.subscribed && (
+                 <>
+                   <ButtonDark className="small" onClick={handleRegisteredSubscribe}>구독</ButtonDark>
+                 </>
+               )}
+             </>
            )}
          </BlogWrite>
        </FlexBetween>

@@ -24,5 +24,6 @@ public class BlogInfoDto implements Serializable {
     private Long totalContentCount;
 
     private boolean blogOwner;
+    private boolean subscribed;
 
 }

@@ -6,7 +6,9 @@ import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.entity.Account;
+import com.example.backend.repository.SubscribeRepository;
 import com.example.backend.security.CurrentAccount;
+import com.example.backend.service.account.AccountService;
 import com.example.backend.service.blog.BlogService;
 import com.example.backend.service.blog.dto.BlogContentDto;
 import com.example.backend.service.blog.dto.BlogContentRegisteredDto;
@@ -31,7 +33,8 @@ import java.util.Objects;
 public class BlogReadController {
 
     private final BlogService blogService;
-
+    private final AccountService accountService;
+    private final SubscribeRepository subscribeRepository;
 
     @PostMapping("/{blogPath}/recent")
     public ResponseEntity<?> getMyBlogHome(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid CommonDto.Request request) {
@@ -175,13 +178,21 @@ public class BlogReadController {
             );
         }
 
+        /*
+         ! 로그인 사용자 본인 블로그인지 체크 & 구독 여부 체크
+         */
         if (account != null) {
             if (account.getId().equals(blogInfo.getAccountId())) {
                 blogInfo.setBlogOwner(true);
             }
+
+            Account toAccount = accountService.getAccount(blogInfo.getAccountId());
+            if (toAccount != null) {
+                blogInfo.setSubscribed(subscribeRepository.existsByFromAccountAndToAccount(account, toAccount));
+            }
         }
 
-        BlogContentViewDto blogContentView = blogService.getBlogContentView(blogPath.substring(1), id, blogInfo.isBlogOwner());
+        BlogContentViewDto blogContentView = blogService.getBlogContentView(blogPath.substring(1), id, blogInfo.isBlogOwner(), blogInfo.isSubscribed());
         if (blogContentView == null) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()

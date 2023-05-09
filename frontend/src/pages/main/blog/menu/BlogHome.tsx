@@ -21,6 +21,7 @@ import axios from "axios";
 import {useNavigate, useParams} from "react-router";
 import {Path} from "@remix-run/router/history";
 import * as U from "../../../../utils";
+import {useLocation} from "react-router-dom";
 
 
 
@@ -86,6 +87,7 @@ const BlogHome = (props: Props) => {
   const [registeredCalendar, setRegisteredCalendar] = useState<CalendarType>({});
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
 
@@ -109,7 +111,7 @@ const BlogHome = (props: Props) => {
 
 
 
-  }, []);
+  }, [location]);
 
   return (
     <BlogContainer>

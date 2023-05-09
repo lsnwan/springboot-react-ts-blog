@@ -34,11 +34,11 @@ public class BlogSettingController {
     private final BlogInfoRepository blogInfoRepository;
     private final Environment environment;
 
-    @PostMapping("/{blogId}/settings/intro")
+    @PostMapping("/{blogPath}/settings/intro")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> updateIntroduction(@CurrentAccount Account account, @PathVariable String blogId, @RequestBody @Valid UpdateIntroDto.Request request, BindingResult bindingResult) {
+    public ResponseEntity<?> updateIntroduction(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid UpdateIntroDto.Request request, BindingResult bindingResult) {
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -48,7 +48,7 @@ public class BlogSettingController {
             );
         }
 
-        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1)).orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1)).orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
         if (!blogInfo.getAccount().getId().equals(account.getId())) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
@@ -69,11 +69,11 @@ public class BlogSettingController {
         );
     }
 
-    @GetMapping("/{blogId}/settings")
+    @GetMapping("/{blogPath}/settings")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getSettingsData(@CurrentAccount Account account, @PathVariable String blogId) {
+    public ResponseEntity<?> getSettingsData(@CurrentAccount Account account, @PathVariable String blogPath) {
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -83,7 +83,7 @@ public class BlogSettingController {
             );
         }
 
-        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1))
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
 
         if (!blogInfo.getAccount().getId().equals(account.getId())) {
@@ -111,11 +111,11 @@ public class BlogSettingController {
 
     }
 
-    @PostMapping("/{blogId}/settings/enabled")
+    @PostMapping("/{blogPath}/settings/enabled")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> changeBlogEnabled(@CurrentAccount Account account, @PathVariable String blogId, @RequestBody UpdateEnabledDto.Request request) {
+    public ResponseEntity<?> changeBlogEnabled(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody UpdateEnabledDto.Request request) {
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -125,7 +125,7 @@ public class BlogSettingController {
             );
         }
 
-        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1))
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
 
         if (!blogInfo.getAccount().getId().equals(account.getId())) {
@@ -150,9 +150,9 @@ public class BlogSettingController {
 
     }
 
-    @PostMapping("/{blogId}/settings/banner")
+    @PostMapping("/{blogPath}/settings/banner")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> updateBannerImage(@CurrentAccount Account account, @PathVariable String blogId, MultipartFile file) {
+    public ResponseEntity<?> updateBannerImage(@CurrentAccount Account account, @PathVariable String blogPath, MultipartFile file) {
 
         if (file.isEmpty()) {
             log.info("파일이 존재하지 않습니다.");
@@ -163,7 +163,7 @@ public class BlogSettingController {
                             .build());
         }
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -182,7 +182,7 @@ public class BlogSettingController {
             );
         }
 
-        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1))
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
 
         if (!blogInfo.getAccount().getId().equals(account.getId())) {
@@ -218,10 +218,10 @@ public class BlogSettingController {
 
     }
 
-    @DeleteMapping("/{blogId}/settings/banner")
+    @DeleteMapping("/{blogPath}/settings/banner")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> deleteBannerImage(@CurrentAccount Account account, @PathVariable String blogId) {
-        if (blogId == null || !blogId.startsWith("@")) {
+    public ResponseEntity<?> deleteBannerImage(@CurrentAccount Account account, @PathVariable String blogPath) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -231,7 +231,7 @@ public class BlogSettingController {
             );
         }
 
-        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1))
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
 
         if (!blogInfo.getAccount().getId().equals(account.getId())) {

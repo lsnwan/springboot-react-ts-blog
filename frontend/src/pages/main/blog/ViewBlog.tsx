@@ -28,6 +28,9 @@ import {useNavigate, useParams} from "react-router";
 import {Path} from "@remix-run/router/history";
 import * as U from "../../../utils";
 import Loading from "../../../components/cmm/Loading";
+import * as MB from "../../../store/myblog";
+import {useAuth} from "../../../contexts";
+import {produce} from "immer";
 
 const tags = ['react','typescript','springboot','springcloud',];
 
@@ -50,6 +53,7 @@ type BlogContentViewType = {
   modifiedDate: string;
   registeredDate: string;
   blogOwner: boolean;
+  subscribed: boolean;
   blogTags: Array<BlogTagType>;
 }
 
@@ -62,6 +66,7 @@ const ViewBlog = () => {
   const [blogContent, setBlogContent] = useState<BlogContentViewType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const {loggedUser} = useAuth();
 
   const handleMenuOpen = () => {
     setMenuOpen((prevValue) => !prevValue);
@@ -124,6 +129,45 @@ const ViewBlog = () => {
       });
   }
 
+  /*
+   * 구독하기 핸들러
+   */
+  const handleRegisteredSubscribe = () => {
+    if (loggedUser === undefined) {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
+
+    axios.post(`/api/blogs/${blogPath}/subscribe/${blogContent?.accountId}`)
+      .then(res => res.data)
+      .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+        alert(result.message);
+        const newData = Object.assign({}, blogContent, { subscribed: true });
+        setBlogContent(newData);
+      });
+
+  }
+
+  /*
+   * 구독 취소 핸들러
+   */
+  const handleDeletedSubscribe = () => {
+    if (loggedUser === undefined) {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
+
+    if (confirm('구독을 취소하시겠습니까?')) {
+      axios.delete(`/api/blogs/${blogPath}/subscribe/${blogContent?.accountId}`)
+        .then(res => res.data)
+        .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+          alert(result.message);
+          const newData = Object.assign({}, blogContent, { subscribed: false });
+          setBlogContent(newData);
+        });
+    }
+  }
+
   return (
     <ContentBody>
       {isLoading && (
@@ -169,7 +213,17 @@ const ViewBlog = () => {
               )}
               {!blogContent?.blogOwner && (
                 <>
-                  <SH.ProfileDropBoxList theme={theme}>구독하기</SH.ProfileDropBoxList>
+                  {blogContent?.subscribed && (
+                    <>
+                      <SH.ProfileDropBoxList theme={theme} onClick={handleDeletedSubscribe}>구독중</SH.ProfileDropBoxList>
+                    </>
+                  )}
+                  {!blogContent?.subscribed && (
+                    <>
+                      <SH.ProfileDropBoxList theme={theme} onClick={handleRegisteredSubscribe}>구독하기</SH.ProfileDropBoxList>
+                    </>
+                  )}
+
                 </>
               )}
             </SH.ProfileDropBoxBody>

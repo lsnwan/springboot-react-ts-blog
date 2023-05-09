@@ -16,6 +16,7 @@ import {AbsoluteDiv, Divider, DividerText} from "../../../../components/styled/c
 import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as MB from "../../../../store/myblog";
+import {useLocation} from "react-router-dom";
 
 type Props = {};
 
@@ -41,6 +42,7 @@ const Published = (props: Props) => {
   const [lastRequest, setLastRequest] = useState<boolean>(false);
   const blogInfo = useSelector<AppState, MB.State>(state => state.myBlog);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -68,7 +70,7 @@ const Published = (props: Props) => {
 
   useEffect(() => {
     loadBlogContent();
-  }, []);
+  }, [location]);
 
   const loadBlogContent = async () => {
 
@@ -117,9 +119,15 @@ const Published = (props: Props) => {
         ))}
       </ContentContainer>
       {lastRequest && (
-        <Divider>
-          <DividerText className="text-center">더 이상 데이터가 없습니다.</DividerText>
-        </Divider>
+        <>
+          {pageIndex === 2 ?
+            (<>
+              <h5 className="text-center">등록한 글이 없습니다.</h5>
+            </>) :
+            (<>
+              <Divider/>
+            </>)}
+        </>
       )}
     </BlogContainer>
   );

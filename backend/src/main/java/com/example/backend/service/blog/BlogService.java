@@ -3,10 +3,8 @@ package com.example.backend.service.blog;
 import com.example.backend.entity.BlogContent;
 import com.example.backend.entity.BlogInfo;
 import com.example.backend.entity.BlogTag;
-import com.example.backend.repository.BlogContentRepository;
 import com.example.backend.repository.BlogInfoRepository;
 import com.example.backend.service.blog.dto.*;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,13 +13,10 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.backend.entity.QAccount.account;
 import static com.example.backend.entity.QBlogContent.blogContent;
@@ -157,7 +152,7 @@ public class BlogService {
         return blogContents.get(0);
     }
 
-    public BlogContentViewDto getBlogContentView(String blogPath, Long blogId, boolean isOwner) {
+    public BlogContentViewDto getBlogContentView(String blogPath, Long blogId, boolean isOwner, boolean subscribed) {
 
         BooleanExpression expression = blogInfo.blogPath.eq(blogPath).and(blogContent.idx.eq(blogId));
         if (!isOwner) {
@@ -204,6 +199,7 @@ public class BlogService {
                 .accountNickname(blogContents.get(0).getBlogInfo().getAccount().getNickname())
                 .accountProfileUrl(blogContents.get(0).getBlogInfo().getAccount().getProfilePath())
                 .blogOwner(isOwner)
+                .subscribed(subscribed)
                 .blogTags(blogContentViewTagDtos)
                 .build();
     }

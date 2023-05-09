@@ -13,7 +13,8 @@ const initialState: T.State = {
   enabled: false,
   registeredDate: '',
   totalContentCount: 0,
-  totalSubscribeCount: 0
+  totalSubscribeCount: 0,
+  subscribed: false,
 }
 
 export const reducer = (state: T.State = initialState, action: T.Actions) => {
@@ -29,6 +30,9 @@ export const reducer = (state: T.State = initialState, action: T.Actions) => {
 
     case '@UpdateBlogEnabled/setUpdateBlogEnabled':
       return {...state, enabled: action.payload};
+
+    case '@UpdateSubscribed/setUpdateSubscribed':
+      return {...state, subscribed: action.payload}
 
   }
   return state

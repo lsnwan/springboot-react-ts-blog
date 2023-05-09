@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {AppState} from "../../../../store";
 import * as MB from "../../../../store/myblog";
 import {AbsoluteDiv} from "../../../../components/styled/common-styled";
+import {useLocation} from "react-router-dom";
 
 type Props = {};
 

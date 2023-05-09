@@ -1,5 +1,5 @@
 import {Action} from "redux";
-import {MyBlogBannerImagePath, MyBlogEnabled, MyBlogInfoState, MyBlogIntro} from "../CommonTypes";
+import {MyBlogBannerImagePath, MyBlogEnabled, MyBlogInfoState, MyBlogIntro, MySubscribed} from "../CommonTypes";
 
 export type State = MyBlogInfoState
 
@@ -20,10 +20,15 @@ export type UpdateBlogEnabled = Action<'@UpdateBlogEnabled/setUpdateBlogEnabled'
   payload: MyBlogEnabled
 }
 
+export type UpdateSubscribed = Action<'@UpdateSubscribed/setUpdateSubscribed'> & {
+  payload: MySubscribed
+}
+
 
 
 export type Actions =
     SetMyBlogInfo
   | UpdateBlogIntro
   | UpdateBlogBanner
-  | UpdateBlogEnabled;
+  | UpdateBlogEnabled
+  | UpdateSubscribed;

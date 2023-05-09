@@ -119,6 +119,7 @@ const Header = (props: PropsType) => {
           return;
         }
 
+        // location.href = result.path.toString();
         navigate(result.path);
       })
   }
