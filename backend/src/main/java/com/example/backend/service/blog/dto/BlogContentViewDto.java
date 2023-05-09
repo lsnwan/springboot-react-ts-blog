@@ -1,7 +1,5 @@
 package com.example.backend.service.blog.dto;
 
-import com.example.backend.entity.BlogTag;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 

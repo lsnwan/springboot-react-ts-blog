@@ -1,6 +1,5 @@
 package com.example.backend.api.blog;
 
-import com.example.backend.api.blog.dto.BlogCardDto;
 import com.example.backend.cmm.dto.CommonDto;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
