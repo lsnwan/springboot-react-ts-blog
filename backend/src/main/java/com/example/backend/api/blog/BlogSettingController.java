@@ -38,16 +38,6 @@ public class BlogSettingController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> updateIntroduction(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid UpdateIntroDto.Request request, BindingResult bindingResult) {
 
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
-        }
-
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1)).orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
         if (!blogInfo.getAccount().getId().equals(account.getId())) {
             return ResponseEntity.ok().body(
@@ -72,16 +62,6 @@ public class BlogSettingController {
     @GetMapping("/{blogPath}/settings")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getSettingsData(@CurrentAccount Account account, @PathVariable String blogPath) {
-
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
-        }
 
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
@@ -114,16 +94,6 @@ public class BlogSettingController {
     @PostMapping("/{blogPath}/settings/enabled")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> changeBlogEnabled(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody UpdateEnabledDto.Request request) {
-
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
-        }
 
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
@@ -161,16 +131,6 @@ public class BlogSettingController {
                             .code(String.valueOf(ErrorType.REQUEST_ERROR.getErrorCode()))
                             .message("파일이 존재하지 않습니다.")
                             .build());
-        }
-
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
         }
 
         if (!file.getContentType().startsWith("image")) {
@@ -221,15 +181,6 @@ public class BlogSettingController {
     @DeleteMapping("/{blogPath}/settings/banner")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deleteBannerImage(@CurrentAccount Account account, @PathVariable String blogPath) {
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
-        }
 
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));

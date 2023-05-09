@@ -99,17 +99,7 @@ public class BlogController {
     }
 
     @GetMapping("/{blogPath}/info")
-    public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogPath) {
-
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
-        }
+    public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogPath, String param) {
 
         BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
         if (Objects.isNull(blogInfo)) {
@@ -307,16 +297,6 @@ public class BlogController {
     @PostMapping("/{blogPath}/subscribe/{toAccountId}")
     public ResponseEntity<?> registeredSubscribe(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable String toAccountId) {
 
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
-        }
-
         BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
         if (Objects.isNull(blogInfo)) {
             return ResponseEntity.ok().body(
@@ -365,16 +345,6 @@ public class BlogController {
 
     @DeleteMapping("/{blogPath}/subscribe/{toAccountId}")
     public ResponseEntity<?> deletedSubscribe(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable String toAccountId) {
-
-        if (blogPath == null || !blogPath.startsWith("@")) {
-            return ResponseEntity.ok().body(
-                    ResponseDto.builder()
-                            .code(ErrorType.REQUEST_ERROR.getErrorCode())
-                            .message("블로그 주소가 잘못 되었습니다.")
-                            .path("/")
-                            .build()
-            );
-        }
 
         BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
         if (Objects.isNull(blogInfo)) {
