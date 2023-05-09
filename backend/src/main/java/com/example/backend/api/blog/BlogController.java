@@ -99,7 +99,7 @@ public class BlogController {
     }
 
     @GetMapping("/{blogPath}/info")
-    public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogPath, String param) {
+    public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogPath) {
 
         BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
         if (Objects.isNull(blogInfo)) {
