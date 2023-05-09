@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface FindAccountRepository extends JpaRepository<FindAccount, Long> {
 
     FindAccount findFirstByEmailOrderByRegisteredDateDesc(String email);
+    FindAccount findByIdx(Long id);
 }

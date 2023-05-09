@@ -1,6 +1,8 @@
 import {createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState} from "react";
 import * as U from '../utils';
 import axios from "axios";
+import {useNavigate} from "react-router";
+import {Path} from "@remix-run/router/history";
 
 export type LoggedUser = {
   userId: string;
@@ -32,7 +34,7 @@ type AuthProviderProps = {}
 export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children}) => {
   const [loggedUser, setLoggedUser] = useState<LoggedUser | undefined>(undefined)
   const [message, setMessage] = useState<string>('')
-
+  const navigate = useNavigate();
   /*
    ! 회원가입
    */
@@ -108,7 +110,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
     if (loggedUser == undefined) {
       axios.post(`/api/accounts/my-info`, {userId: userId})
         .then(res => res.data)
-        .then((result: { status: number; code: string; message: string; data: any; }) => {
+        .then((result: { status: number; code: string; message: string; data: any; path: string | Partial<Path>;}) => {
           if (result.code === '200') {
             setLoggedUser(result.data)
             return;
@@ -117,6 +119,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
           if (result.code === 'A-001') {
             U.removeStringP("userId").then(() => {
             });
+            navigate(result.path);
           }
         })
         .catch(e => {

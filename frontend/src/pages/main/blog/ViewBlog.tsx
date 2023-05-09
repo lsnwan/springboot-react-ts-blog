@@ -24,7 +24,7 @@ import {AppState} from "../../../store";
 import * as T from "../../../store/theme";
 import * as SH from "../../../components/styled/header-styled";
 import axios from "axios";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {Path} from "@remix-run/router/history";
 import * as U from "../../../utils";
 import Loading from "../../../components/cmm/Loading";
@@ -61,6 +61,7 @@ const ViewBlog = () => {
   const {blogPath} = useParams<string>();
   const [blogContent, setBlogContent] = useState<BlogContentViewType>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   const handleMenuOpen = () => {
     setMenuOpen((prevValue) => !prevValue);
@@ -79,6 +80,11 @@ const ViewBlog = () => {
   }, [dropboxRef]);
 
   useEffect(() => {
+
+    if (searchParams.get("id") == null) {
+      navigate(-1);
+    }
+
     loadBlogContent();
   }, []);
 
@@ -92,91 +98,87 @@ const ViewBlog = () => {
       });
   }
 
+  /*
+   * 즐겨찾기 등록 핸들러
+   */
+  const handleRegisteredFavorite = () => {
+    if (blogContent == null) {
+      alert('게시글 정보를 읽을 수 없습니다.');
+      navigate(-1);
+      return;
+    }
+    axios.post(`/api/blogs/${blogPath}/favorite`, {
+      blogContentIdx: blogContent.blogContentIdx
+    })
+      .then(res => res.data)
+      .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+        console.log(result);
+        if (result.code === 'A-001') {
+          alert(result.message);
+          navigate(result.path);
+          return;
+        }
+
+        alert(result.message);
+
+      });
+  }
+
   return (
     <ContentBody>
       {isLoading && (
         <Loading />
       )}
       <Container>
-        <div className="d-flex">
-          <div style={{width: "865px", paddingRight: "10px"}}>
-            <div className="mb-3">
-              <BadgeBox className="mt-2">
-                {blogContent?.blogTags.map((tag) => (
-                  <span key={tag.tagIdx} className="badge bg-secondary">{tag.tagName}</span>
-                ))}
-              </BadgeBox>
-            </div>
-
-            <ContentSubject>{blogContent?.blogSubject}</ContentSubject>
-
-            <div className="d-flex justify-content-between align-items-center mt-3">
-              <div className="d-flex justify-content-start align-items-center">
-                <UserProfile className="large" imagePath='/images/no-profile.png' />
-                <div className="ms-2">
-                  <h6 className="fw-semibold mb-0">{blogContent?.accountNickname}</h6>
-                  {/*<small>{blogContent.registeredDate}</small>*/}
-                  <small>
-                    {blogContent?.registeredDate && (
-                      <>
-                        {U.formatDate(blogContent.registeredDate)}
-                      </>
-                    )}</small>
-                </div>
-              </div>
-              <RelativeDiv ref={dropboxRef} onClick={handleMenuOpen}>
-                <ButtonLight theme={theme}>
-                  <FontAwesomeIcon icon={icon.faEllipsisV} />
-                </ButtonLight>
-                <SH.ProfileDropBoxBody theme={theme} className={menuOpen ? "active" : ""}>
-                  <SH.ProfileDropBoxList theme={theme}>즐겨찾기</SH.ProfileDropBoxList>
-                  <SC.Divider></SC.Divider>
-                  {blogContent?.blogOwner && (
-                    <>
-                      <SH.ProfileDropBoxList theme={theme}>수정</SH.ProfileDropBoxList>
-                      <SH.ProfileDropBoxList theme={theme}>삭제</SH.ProfileDropBoxList>
-                    </>
-                  )}
-                  {!blogContent?.blogOwner && (
-                    <>
-                      <SH.ProfileDropBoxList theme={theme}>구독하기</SH.ProfileDropBoxList>
-                    </>
-                  )}
-                </SH.ProfileDropBoxBody>
-              </RelativeDiv>
-            </div>
-
-            {blogContent?.blogContent && (
-              <BlogContentStyle className="mt-5" dangerouslySetInnerHTML={{ __html: blogContent.blogContent }} />
-            )}
-
-          </div>
-
-          <BlogContentCardPanel>
-            {[1,2,3,4,5,6,7,8,9,10].map((item) => (
-              <BlogContentCard key={item}>
-                <BlogContentThumbnail  />
-                <BlogContentCardBody>
-                  <BlogContentWriterBody>
-                    <BlogContentWriter>
-                      <BlogContentUserProfile />
-                      <BlogContentUserNickname>
-                        닉네임입니다
-                      </BlogContentUserNickname>
-                    </BlogContentWriter>
-                    <BlogContentRegDate>
-                      방금전
-                    </BlogContentRegDate>
-                  </BlogContentWriterBody>
-                  <BlogContentCardSubject>
-                    동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산
-                  </BlogContentCardSubject>
-                </BlogContentCardBody>
-              </BlogContentCard>
+        <div className="mb-3">
+          <BadgeBox className="mt-2">
+            {blogContent?.blogTags.map((tag) => (
+              <span key={tag.tagIdx} className="badge bg-secondary">{tag.tagName}</span>
             ))}
-          </BlogContentCardPanel>
+          </BadgeBox>
         </div>
 
+        <ContentSubject>{blogContent?.blogSubject}</ContentSubject>
+
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <div className="d-flex justify-content-start align-items-center">
+            <UserProfile className="large" imagePath='/images/no-profile.png' />
+            <div className="ms-2">
+              <h6 className="fw-semibold mb-0">{blogContent?.accountNickname}</h6>
+              {/*<small>{blogContent.registeredDate}</small>*/}
+              <small>
+                {blogContent?.registeredDate && (
+                  <>
+                    {U.formatDate(blogContent.registeredDate)}
+                  </>
+                )}</small>
+            </div>
+          </div>
+          <RelativeDiv ref={dropboxRef} onClick={handleMenuOpen}>
+            <ButtonLight theme={theme}>
+              <FontAwesomeIcon icon={icon.faEllipsisV} />
+            </ButtonLight>
+            <SH.ProfileDropBoxBody theme={theme} className={menuOpen ? "active" : ""}>
+              <SH.ProfileDropBoxList theme={theme} onClick={handleRegisteredFavorite}>즐겨찾기</SH.ProfileDropBoxList>
+              <SC.Divider></SC.Divider>
+              {blogContent?.blogOwner && (
+                <>
+                  <SH.ProfileDropBoxList theme={theme}>수정</SH.ProfileDropBoxList>
+                  <SH.ProfileDropBoxList theme={theme}>삭제</SH.ProfileDropBoxList>
+                </>
+              )}
+              {!blogContent?.blogOwner && (
+                <>
+                  <SH.ProfileDropBoxList theme={theme}>구독하기</SH.ProfileDropBoxList>
+                </>
+              )}
+            </SH.ProfileDropBoxBody>
+          </RelativeDiv>
+        </div>
+
+        {blogContent?.blogContent && (
+          <BlogContentStyle className="mt-5" dangerouslySetInnerHTML={{ __html: blogContent.blogContent }} />
+        )}
 
       </Container>
     </ContentBody>

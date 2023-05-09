@@ -27,5 +27,4 @@ public class Subscribe extends RegisteredDateEntity implements Serializable {
     @JoinColumn(name = "to_acc_id", referencedColumnName = "acc_id")
     private Account toAccount;
 
-
 }

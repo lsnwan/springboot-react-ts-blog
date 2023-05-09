@@ -2,6 +2,7 @@ package com.example.backend.api.blog;
 
 import com.example.backend.api.blog.dto.CreateBlogDto;
 import com.example.backend.api.blog.dto.CreateBlogPostDto;
+import com.example.backend.api.blog.dto.RegisteredFavoriteDto;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.BadRequestException;
@@ -9,10 +10,7 @@ import com.example.backend.cmm.error.exception.NotFoundDataException;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.utils.FileStorageService;
 import com.example.backend.entity.*;
-import com.example.backend.repository.BlogContentRepository;
-import com.example.backend.repository.BlogInfoRepository;
-import com.example.backend.repository.BlogTagRepository;
-import com.example.backend.repository.FileManagerRepository;
+import com.example.backend.repository.*;
 import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.blog.BlogService;
 import com.example.backend.service.blog.dto.BlogInfoDto;
@@ -23,6 +21,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +42,9 @@ public class BlogController {
     private final FileManagerRepository fileManagerRepository;
     private final BlogContentRepository blogContentRepository;
     private final BlogTagRepository blogTagRepository;
+    private final BlogFavoriteRepository blogFavoriteRepository;
+
+    private final FindAccountRepository findAccountRepository;
 
     @GetMapping("/check")
     @PreAuthorize("isAuthenticated()")
@@ -96,10 +98,10 @@ public class BlogController {
         );
     }
 
-    @GetMapping("/{blogId}/info")
-    public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogId) {
+    @GetMapping("/{blogPath}/info")
+    public ResponseEntity<?> getBlogInfo(@CurrentAccount Account account, @PathVariable String blogPath) {
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -109,7 +111,7 @@ public class BlogController {
             );
         }
 
-        BlogInfoDto blogInfo = blogService.getBlogInfo(blogId.substring(1));
+        BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
         if (Objects.isNull(blogInfo)) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
@@ -138,9 +140,9 @@ public class BlogController {
         );
     }
 
-    @PostMapping("/{blogId}/create/image")
+    @PostMapping("/{blogPath}/create/image")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> uploadImageFile(@CurrentAccount Account account, @PathVariable String blogId, MultipartFile file) {
+    public ResponseEntity<?> uploadImageFile(@CurrentAccount Account account, @PathVariable String blogPath, MultipartFile file) {
 
         if (file.isEmpty()) {
             log.info("파일이 존재하지 않습니다.");
@@ -151,7 +153,7 @@ public class BlogController {
                             .build());
         }
 
-        if (blogId == null || !blogId.startsWith("@")) {
+        if (blogPath == null || !blogPath.startsWith("@")) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
                             .code(ErrorType.REQUEST_ERROR.getErrorCode())
@@ -171,7 +173,7 @@ public class BlogController {
         }
 
         String fileDirPath = environment.getProperty("app.files");
-        FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/blog-images/" + blogId.substring(1));
+        FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/blog-images/" + blogPath.substring(1));
         String saveFileName = fileStorageService.storeFile(file);
 
 
@@ -185,7 +187,7 @@ public class BlogController {
 
         Map<String, Object> result = new HashMap<>();
         result.put("fileIdx", saveFileManager.getIdx());
-        result.put("imageUrl", environment.getProperty("app.host") + "/files/blog-images/" + blogId.substring(1) + "/" + saveFileName);
+        result.put("imageUrl", environment.getProperty("app.host") + "/files/blog-images/" + blogPath.substring(1) + "/" + saveFileName);
 
         return ResponseEntity.ok().body(
                 ResponseDataDto.builder()
@@ -195,9 +197,9 @@ public class BlogController {
                         .build());
     }
 
-    @PostMapping(value = "/{blogId}/create")
+    @PostMapping(value = "/{blogPath}/create")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @PathVariable String blogId, MultipartFile file, @Valid CreateBlogPostDto.Request request, BindingResult bindingResult) {
+    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @PathVariable String blogPath, MultipartFile file, @Valid CreateBlogPostDto.Request request, BindingResult bindingResult) {
 
         String thumbnailUrl = null;
 
@@ -212,12 +214,12 @@ public class BlogController {
             }
 
             String fileDirPath = environment.getProperty("app.files");
-            FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/blog-thumbnail/" + blogId.substring(1));
+            FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/blog-thumbnail/" + blogPath.substring(1));
             String saveFileName = fileStorageService.storeFile(file);
-            thumbnailUrl = environment.getProperty("app.host") + "/files/blog-thumbnail/" + blogId.substring(1) + "/" + saveFileName;
+            thumbnailUrl = environment.getProperty("app.host") + "/files/blog-thumbnail/" + blogPath.substring(1) + "/" + saveFileName;
         }
 
-        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogId.substring(1))
+        BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
 
         BlogContent savedBlogContent = blogContentRepository.save(BlogContent.builder()
@@ -243,7 +245,56 @@ public class BlogController {
                 ResponseDto.builder()
                         .code(String.valueOf(HttpStatus.CREATED.value()))
                         .message("정상 처리 되었습니다.")
-                        .path("/" + blogId)
+                        .path("/" + blogPath)
+                        .build());
+    }
+
+    @PostMapping("/{blogPath}/favorite")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> registeredFavorite(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody RegisteredFavoriteDto.Request request) {
+
+        log.info("");
+        log.info("파리미터: " + request.getBlogContentIdx());
+
+        BlogContent blogContent = blogService.getBlogContentView(blogPath.substring(1), Long.valueOf(request.getBlogContentIdx()));
+
+        if (blogContent == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("존재하지 않는 게시글 입니다.")
+                            .build());
+        }
+
+        if (!blogContent.isEnabled()) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.PRIVATE_DATA.getErrorCode())
+                            .message("비공개 블로그 입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        boolean existedFavorite = blogFavoriteRepository.existsByAccountAndBlogContent(account, blogContent);
+        if (existedFavorite) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.DUPLICATE_DATA.getErrorCode())
+                            .message("이미 즐겨찾기한 게시글 입니다.")
+                            .build()
+            );
+        }
+
+        blogFavoriteRepository.save(BlogFavorite.builder()
+                        .account(account)
+                        .blogContent(blogContent)
+                .build());
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.CREATED.value()))
+                        .message("정상 처리 되었습니다.")
                         .build());
     }
 

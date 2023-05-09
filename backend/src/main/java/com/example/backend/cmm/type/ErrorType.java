@@ -35,6 +35,7 @@ public enum ErrorType {
     UN_SUPPORT_ENCODING(HttpStatus.INTERNAL_SERVER_ERROR, "E-001", "지원하지 않는 인코딩"),
 
     NOT_FOUND_DATA(HttpStatus.NOT_FOUND, "D-001", "데이터 없음"),
+    DUPLICATE_DATA(HttpStatus.INTERNAL_SERVER_ERROR, "D-002", "중복 데이터"),
 
     NO_RESPONSE_TIME(HttpStatus.INTERNAL_SERVER_ERROR, "P-001", "응답 시간이 되지 않음"),
 

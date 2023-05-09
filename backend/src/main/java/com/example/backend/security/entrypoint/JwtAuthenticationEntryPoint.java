@@ -28,6 +28,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 response.getOutputStream(),
                 ResponseDto.builder()
                         .code(ErrorType.UNAUTHORIZED.getErrorCode())
+                        .path("/login")
                         .message("로그인이 필요합니다.").build()
         );
     }

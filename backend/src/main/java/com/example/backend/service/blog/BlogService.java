@@ -36,14 +36,12 @@ public class BlogService {
 
     private final BlogInfoRepository blogInfoRepository;
     private final JPAQueryFactory queryFactory;
-    private final BlogContentRepository blogContentRepository;
-    private final ModelMapper modelMapper;
 
     public BlogInfo createBlogInfo(final BlogInfo blogInfo) {
         return blogInfoRepository.save(blogInfo);
     }
 
-    public BlogInfoDto getBlogInfo(String blogId) {
+    public BlogInfoDto getBlogInfo(String blogPath) {
         return queryFactory
                 .select(
                         Projections.fields(
@@ -74,7 +72,7 @@ public class BlogService {
                 ).from(blogInfo)
                 .leftJoin(account)
                 .on(blogInfo.account.id.eq(account.id))
-                .where(blogInfo.blogPath.eq(blogId))
+                .where(blogInfo.blogPath.eq(blogPath))
                 .fetchOne();
     }
 
@@ -137,6 +135,26 @@ public class BlogService {
                         ConstantImpl.create("%Y-%m-%d")
                 ))
                 .fetch();
+    }
+
+    public BlogContent getBlogContentView(String blogPath, Long blogId) {
+        BooleanExpression expression = blogInfo.blogPath.eq(blogPath).and(blogContent.idx.eq(blogId));
+        List<BlogContent> blogContents = queryFactory.select(
+                        blogContent
+                )
+                .from(blogInfo)
+                .leftJoin(account).on(account.id.eq(blogInfo.account.id)).fetchJoin()
+                .leftJoin(blogContent).on(blogContent.blogInfo.blogPath.eq(blogInfo.blogPath)).fetchJoin()
+                .leftJoin(blogTag).on(blogTag.blogContent.eq(blogContent)).fetchJoin()
+                .where(expression)
+                .distinct()
+                .fetch();
+
+        if (blogContents.isEmpty()) {
+            return null;
+        }
+
+        return blogContents.get(0);
     }
 
     public BlogContentViewDto getBlogContentView(String blogPath, Long blogId, boolean isOwner) {
