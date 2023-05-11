@@ -9,7 +9,7 @@ export type LoggedUser = {
   userEmail: string;
   userNickname: string;
   emailVerifiedConfirmDate: string
-  profilePath: string;
+  profilePath: string | null;
   userRole: string[]}
 type Callback = (message?: string) => void
 
@@ -20,6 +20,7 @@ type ContextType = {
   login: (email: string, password: string, callback?: Callback) => void
   socialLogin: (code: string, platformName: string, callback?: Callback) => void
   logout: (callback?: Callback) => void
+  updateProfile: (profilePath: string | null) => void
 }
 
 export const AuthContext = createContext<ContextType>({
@@ -27,6 +28,7 @@ export const AuthContext = createContext<ContextType>({
   login: (email: string, password: string, callback?: Callback) => {},
   socialLogin: (code: string, platformName: string, callback?: Callback) => {},
   logout: (callback?: Callback) => {},
+  updateProfile: (profilePath: string | null) => {},
 })
 
 type AuthProviderProps = {}
@@ -103,6 +105,14 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
     callback && callback();
   }, []);
 
+  const updateProfile = ((profilePath: string | null) => {
+    if (loggedUser !== undefined) {
+      setLoggedUser(prevState => ({
+        ...prevState!,
+        profilePath: profilePath
+      }));
+    }
+  });
 
   useEffect(() => {
 
@@ -131,7 +141,7 @@ export const AuthProvider: FC<PropsWithChildren<AuthProviderProps>> = ({children
 
 
   const value = {
-    loggedUser, signup, login, socialLogin, logout
+    loggedUser, signup, login, socialLogin, logout, updateProfile
   }
 
   return <AuthContext.Provider value={value} children={children} />
