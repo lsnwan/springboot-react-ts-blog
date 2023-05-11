@@ -181,6 +181,7 @@ public class BlogReadController {
         }
 
         // 즐겨찾기 정보
+        blogContentView.setBlogOwner(blogInfo.isBlogOwner());
         blogContentView.setFavorite(blogFavoriteRepository.existsByAccountAndBlogContent(account, (BlogContent) resultService.get("blogContent")));
         blogContentView.setSubscribed(blogInfo.isSubscribed());
 
