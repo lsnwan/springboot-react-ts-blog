@@ -437,3 +437,4 @@ export const ButtonBlink = styled.button`
   border: none;
   color: ${(props) => (props.theme === "light" ? "#333" : "#fff")};
 `;
+

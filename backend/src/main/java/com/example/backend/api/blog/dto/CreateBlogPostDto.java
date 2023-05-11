@@ -21,6 +21,9 @@ public class CreateBlogPostDto implements Serializable {
         @NotBlank(message = "컨텐츠를 작성하지 않았습니다.")
         private String content;
 
+        @NotBlank(message = "카테고리를 선택하세요")
+        private String category;
+
         @Valid
         @NotNull(message = "1개 이상의 태그를 등록하세요")
         @Size(min = 1, message = "1개 이상의 태그를 등록하세요")

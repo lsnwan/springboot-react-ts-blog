@@ -10,6 +10,7 @@ import com.example.backend.cmm.error.exception.NotFoundDataException;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.utils.FileStorageService;
 import com.example.backend.entity.*;
+import com.example.backend.entity.type.BlogCategoryType;
 import com.example.backend.repository.*;
 import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.account.AccountService;
@@ -220,6 +221,7 @@ public class BlogController {
 
         BlogContent savedBlogContent = blogContentRepository.save(BlogContent.builder()
                 .blogInfo(blogInfo)
+                .category(BlogCategoryType.from(request.getCategory()))
                 .content(request.getContent())
                 .title(request.getTitle())
                 .thumbnail(thumbnailUrl)

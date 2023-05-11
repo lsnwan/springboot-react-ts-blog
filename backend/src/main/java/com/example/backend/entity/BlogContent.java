@@ -1,6 +1,7 @@
 package com.example.backend.entity;
 
 import com.example.backend.entity.base.AllDateEntity;
+import com.example.backend.entity.type.BlogCategoryType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +22,10 @@ public class BlogContent extends AllDateEntity implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bc_idx")
     private Long idx;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "blog_category")
+    private BlogCategoryType category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blog_path_name", referencedColumnName = "blog_path_name")

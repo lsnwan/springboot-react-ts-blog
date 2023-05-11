@@ -18,10 +18,6 @@ const Header = (props: PropsType) => {
 
   const themeType = useSelector<AppState, T.State>(state => state.themeType);
 
-  const goLoginHandler = useCallback(() => {
-    navigate('/login');
-  }, [navigate])
-
   const changeThemeHandler = () => {
 
     if (themeType === undefined || themeType === 'dark') {

@@ -3,6 +3,7 @@ package com.example.backend.init;
 import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.entity.*;
 import com.example.backend.entity.type.AccountType;
+import com.example.backend.entity.type.BlogCategoryType;
 import com.example.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,6 +102,7 @@ public class ApplicationStartRunner implements ApplicationRunner {
         List<BlogContent> blogContents = new ArrayList<>();
         for (int i = 0; i < 55; i++) {
             BlogContent buildBlogContent = BlogContent.builder()
+                    .category(i < 10 ? BlogCategoryType.HOBBY : i < 15 ? BlogCategoryType.LIFE : i < 25 ? BlogCategoryType.SHOPPING : BlogCategoryType.IT)
                     .title("테스트 블로그 타이틀!![" + i + "]")
                     .content("<p>[" + i + "]테스트 블로그 콘텐츠!!!!!!!</p>")
                     .blogInfo(saveBlogInfo)

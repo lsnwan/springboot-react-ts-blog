@@ -199,7 +199,7 @@ const Header = (props: PropsType) => {
           <SH.ProfileButton onClick={handleOpen} ref={dropboxRef} profilePath={loggedUser?.profilePath === null ? '/images/no-profile.png' : loggedUser?.profilePath}>
             <SH.ProfileDropBoxBody theme={theme} className={profileMenuOpen ? "active" : ""} >
               <SH.ProfileDropBoxList theme={theme} onClick={handleMyProfile}>내 블로그</SH.ProfileDropBoxList>
-              <SH.ProfileDropBoxList theme={theme}>설정</SH.ProfileDropBoxList>
+              <SH.ProfileDropBoxList theme={theme} onClick={() => navigate("/settings")}>설정</SH.ProfileDropBoxList>
               <SC.Divider></SC.Divider>
               <SH.ProfileDropBoxList theme={theme} onClick={handleLogout}>로그아웃</SH.ProfileDropBoxList>
             </SH.ProfileDropBoxBody>

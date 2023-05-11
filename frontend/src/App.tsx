@@ -20,6 +20,7 @@ import BlogInst from "./pages/main/blog/menu/BlogInst";
 import Settings from "./pages/main/blog/menu/Settings";
 import CreateBlog from "./pages/main/blog/CreateBlog";
 import ViewBlog from "./pages/main/blog/ViewBlog";
+import SettingHome from "./pages/main/setting/Home";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
               </Route>
               <Route path="/:blogPath/create" element={<CreateBlog />} />
               <Route path="/:blogPath/view" element={<ViewBlog />} />
+              <Route path="/settings" element={<SettingHome />} />
             </Route>
             <Route element={<CommonLayout/>}>
               <Route path="/login" element={<Login/>}/>

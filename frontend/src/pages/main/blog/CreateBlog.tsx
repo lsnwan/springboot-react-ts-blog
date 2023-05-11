@@ -24,36 +24,48 @@ import {useNavigate, useParams} from "react-router";
 import axios from "axios";
 import {Path} from "@remix-run/router/history";
 import ToggleSwitch from "../../../components/cmm/ToggleSwitch";
+import RadioCheckBox from "../../../components/cmm/RadioCheckBox";
+import {useLocation} from "react-router-dom";
 
 
-type Props = {};
+const CreateBlog = () => {
 
-const CreateBlog = (props: Props) => {
-
-  const [editorContent, setEditorContent] = useState('');
+  // 공통
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const {blogPath} = useParams<string>();
   const [showPublishedBlogModal, setShowPublishedBlogModal] = useState<boolean>();
-  const [title, setTitle] = useState<string>('');
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagText, setTagText] = useState<string>('');
+  const navigate = useNavigate();
+  const [dragging, setDragging] = useState<boolean>(false);
+  const location = useLocation();
+
+  // 참조
   const inputRef = useRef<HTMLInputElement>(null);
   const thumbnailImageRef = useRef<HTMLInputElement>(document.createElement('input'));
   const quillRef = useRef<ReactQuill>(null);
+
+  // 데이터
+  const [editorContent, setEditorContent] = useState('');
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState<string | null>(null);
-  const [dragging, setDragging] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const [title, setTitle] = useState<string>('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagText, setTagText] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
   const [enabled, setEnabled] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("hobby");
+
+  // 메시지
   const [tagsMessage, setTagsMessage] = useState<string>('');
   const [titleMessage, setTitleMessage] = useState<string>('');
+  const [categoryMessage, setCategoryMessage] = useState<string>('');
 
   useEffect(() => {
     const authenticated = localStorage.getItem("userId");
+    console.log(authenticated);
     if (authenticated == null) {
       navigate("/login");
     }
 
-  }, []);
+  }, [location]);
 
   const handleImageUpload = () => {
     const input = document.createElement('input');
@@ -251,6 +263,7 @@ const CreateBlog = (props: Props) => {
     formData.append('title', title);
     formData.append('content', editorContent);
     formData.append("enabled", enabled ? "1" : "0");
+    formData.append("category", selectedCategory);
     if (tags) {
       tags.map((tag) => {
         formData.append('tags', tag);
@@ -291,6 +304,10 @@ const CreateBlog = (props: Props) => {
 
   }
 
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+
   return (
     <ContentBody>
       <Container>
@@ -312,7 +329,22 @@ const CreateBlog = (props: Props) => {
         {showPublishedBlogModal && (
           <Modal title="블로그 발행하기" onDelete={handleDelete}>
             <ModalContent width="500px">
-              <div>
+
+              <div className="mt-3">
+                <ItemTitle className="mb-1">카테고리</ItemTitle>
+                <InputLabelBlock htmlFor="blogCategory" className="mt-3 visually-hidden">카테고리</InputLabelBlock>
+                <RadioCheckBox options={[
+                  {label: "취미", value: "hobby"},
+                  {label: "생활", value: "life"},
+                  {label: "쇼핑", value: "shopping"},
+                  {label: "IT", value: "it"},
+                ]} initValue="hobby" name="category" onChange={handleCategoryChange} />
+                {/*{titleMessage && (*/}
+                {/*  <MessageBox className="error">{titleMessage}</MessageBox>*/}
+                {/*)}*/}
+              </div>
+
+              <div className="mt-3">
                 <FlexBetween>
                   <ItemTitle className="mb-1">썸네일</ItemTitle>
                   {thumbnailImageUrl && <ButtonBlink theme={theme} style={{fontSize: '13px'}} onClick={handleDeleteImage}>삭제</ButtonBlink>}
