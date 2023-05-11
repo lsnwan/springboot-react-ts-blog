@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {Container, ContentBody, UserProfile} from "../../../components/styled/content-styled";
 import Loading from "../../../components/cmm/Loading";
 import {useLocation} from "react-router-dom";
@@ -8,17 +8,51 @@ import {ButtonDanger, ButtonPrimary, InputText, InputTextBlock} from "../../../c
 import {useSelector} from "react-redux";
 import {AppState} from "../../../store";
 import * as T from "../../../store/theme";
+import axios from "axios";
+import {Path} from "@remix-run/router/history";
+import {useNavigate} from "react-router";
+
+type UserInfoType = {
+  id: string;
+  profilePath: string;
+  nickname: string;
+}
 
 const SettingHome = () => {
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const location = useLocation();
   const theme = useSelector<AppState, T.State>(state => state.themeType);
-
+  const [userInfo, setUserInfo] = useState<UserInfoType>({
+    id: '',
+    profilePath: '',
+    nickname: ''
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
+    axios.get('/api/settings')
+      .then(res => res.data)
+      .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
+        console.log(result);
 
+        if (result.code === 'A-001') {
+          navigate('/login');
+        }
+
+        if (result.code === '200') {
+          setUserInfo(result.data);
+          setIsLoading(false);
+        }
+      })
   }, [location]);
+
+  const handleChangeNickname = (e: ChangeEvent<HTMLInputElement>) => {
+    setUserInfo(prevState => ({
+      ...prevState,
+      nickname: e.target.value
+    }));
+  }
 
   return (
     <ContentBody>
@@ -40,11 +74,10 @@ const SettingHome = () => {
           </div>
           <div className="flex-fill">
             <div className="d-flex justify-content-start">
-              <UserProfile width="75px" height="75px"></UserProfile>
+              <UserProfile imageWidth="75px" imageHeight="75px" imagePath={userInfo.profilePath != null ? userInfo.profilePath : '/images/no-profile.png'}></UserProfile>
               <div className="ms-2">
                 <input type="file"></input>
                 <p className="text-secondary small mb-0">파일은 10MB 이하, 확장자는 jpg, png파일만 가능합니다.</p>
-                <p className="text-secondary small">최적 해상도는 너비 1080px, 높이 400px 입니다.</p>
               </div>
             </div>
             <div className="text-end">
@@ -61,11 +94,9 @@ const SettingHome = () => {
           </div>
           <div className="flex-fill">
             <div className="ms-2">
-              <InputTextBlock type="text" theme={theme} />
-              <p className="text-secondary small mb-0">파일은 10MB 이하, 확장자는 jpg, png파일만 가능합니다.</p>
-              <p className="text-secondary small">최적 해상도는 너비 1080px, 높이 400px 입니다.</p>
+              <InputTextBlock type="text" theme={theme} value={userInfo?.nickname} onChange={handleChangeNickname} />
             </div>
-            <div className="text-end">
+            <div className="text-end mt-2">
               <ButtonPrimary type="submit" className="small ms-2">저장하기</ButtonPrimary>
             </div>
           </div>

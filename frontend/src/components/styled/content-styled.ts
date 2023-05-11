@@ -118,16 +118,17 @@ export const BlogCardBody = styled.div`
   margin-top: 5px;
 `;
 
-type UserProfileType = ImagePropsType & {
-  width?: string;
-  height?: string;
+type UserProfileType = {
+  imageWidth?: string;
+  imageHeight?: string;
+  imagePath: string;
 }
 
 export const UserProfile = styled.div<UserProfileType>`
-  ${(props) => props.width && (`width: ${props.width}`) || (`width: 35px`)};
-  ${(props) => props.height && (`height: ${props.height}`) || (`height: 35px`)};
+  ${(props) => props.imageWidth && (`width: ${props.imageWidth};`) || (`width: 35px;`)};
+  ${(props) => props.imageHeight && (`height: ${props.imageHeight};`) || (`height: 35px;`)};
+  ${(props) => props.imagePath && (`background-image: url(${props.imagePath});`)};
   background-color: white;
-  ${(props) => props.imagePath && (`background-image: url(${props.imagePath})`)};
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
