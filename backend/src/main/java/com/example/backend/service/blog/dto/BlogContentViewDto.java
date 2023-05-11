@@ -27,5 +27,6 @@ public class BlogContentViewDto implements Serializable {
     private String accountProfileUrl;
     private boolean blogOwner;
     private boolean subscribed;
+    private boolean favorite;
     private List<BlogContentViewTagDto> blogTags = new ArrayList<>();
 }

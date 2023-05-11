@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.backend.entity.QAccount.account;
 import static com.example.backend.entity.QBlogContent.blogContent;
@@ -154,7 +156,7 @@ public class BlogService {
         return blogContents.get(0);
     }
 
-    public BlogContentViewDto getBlogContentView(Account loginAccount, String blogPath, Long blogId, boolean isOwner, boolean subscribed) {
+    public Map<String, Object> getBlogContentView(Account loginAccount, String blogPath, Long blogId, boolean isOwner) {
 
         BooleanExpression expression = blogInfo.blogPath.eq(blogPath).and(blogContent.idx.eq(blogId));
         if (!isOwner) {
@@ -213,7 +215,7 @@ public class BlogService {
             }
         }
 
-        return BlogContentViewDto.builder()
+        BlogContentViewDto blogContentViewDto = BlogContentViewDto.builder()
                 .blogContentIdx(blogContents.get(0).getIdx())
                 .blogPathName(blogContents.get(0).getBlogInfo().getBlogPath())
                 .blogThumbnailUrl(blogContents.get(0).getThumbnail())
@@ -226,10 +228,13 @@ public class BlogService {
                 .accountId(blogContents.get(0).getBlogInfo().getAccount().getId())
                 .accountNickname(blogContents.get(0).getBlogInfo().getAccount().getNickname())
                 .accountProfileUrl(blogContents.get(0).getBlogInfo().getAccount().getProfilePath())
-                .blogOwner(isOwner)
-                .subscribed(subscribed)
                 .blogTags(blogContentViewTagDtos)
                 .build();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("blogContentViewDto", blogContentViewDto);
+        result.put("blogContent", blogContents.get(0));
+        return result;
     }
 
 }

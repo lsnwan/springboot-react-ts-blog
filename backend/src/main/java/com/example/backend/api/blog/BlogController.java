@@ -251,9 +251,6 @@ public class BlogController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> registeredFavorite(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody RegisteredFavoriteDto.Request request) {
 
-        log.info("");
-        log.info("파리미터: " + request.getBlogContentIdx());
-
         BlogContent blogContent = blogService.getBlogContentView(blogPath.substring(1), Long.valueOf(request.getBlogContentIdx()));
 
         if (blogContent == null) {
@@ -296,7 +293,41 @@ public class BlogController {
                         .build());
     }
 
+    @DeleteMapping("/{blogPath}/favorite/{blogContentId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deletedFavorite(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable Long blogContentId) {
+        BlogContent blogContent = blogService.getBlogContentView(blogPath.substring(1), blogContentId);
+
+        if (blogContent == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("존재하지 않는 게시글 입니다.")
+                            .build());
+        }
+
+        if (!blogContent.isEnabled()) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.PRIVATE_DATA.getErrorCode())
+                            .message("비공개 블로그 입니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        blogFavoriteRepository.delete(blogFavoriteRepository.findByAccountAndBlogContent(account, blogContent));
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .build());
+    }
+
+
     @PostMapping("/{blogPath}/subscribe/{toAccountId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> registeredSubscribe(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable String toAccountId) {
 
         BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));
@@ -346,6 +377,7 @@ public class BlogController {
 
 
     @DeleteMapping("/{blogPath}/subscribe/{toAccountId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deletedSubscribe(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable String toAccountId) {
 
         BlogInfoDto blogInfo = blogService.getBlogInfo(blogPath.substring(1));

@@ -5,6 +5,9 @@ import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.entity.Account;
+import com.example.backend.entity.BlogContent;
+import com.example.backend.entity.BlogFavorite;
+import com.example.backend.repository.BlogFavoriteRepository;
 import com.example.backend.repository.SubscribeRepository;
 import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.account.AccountService;
@@ -34,6 +37,7 @@ public class BlogReadController {
     private final BlogService blogService;
     private final AccountService accountService;
     private final SubscribeRepository subscribeRepository;
+    private final BlogFavoriteRepository blogFavoriteRepository;
 
     @PostMapping("/{blogPath}/recent")
     public ResponseEntity<?> getMyBlogHome(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid CommonDto.Request request) {
@@ -156,6 +160,7 @@ public class BlogReadController {
                 blogInfo.setBlogOwner(true);
             }
 
+            // 구독 정보
             Account toAccount = accountService.getAccount(blogInfo.getAccountId());
             if (toAccount != null) {
                 blogInfo.setSubscribed(subscribeRepository.existsByFromAccountAndToAccount(account, toAccount));
@@ -163,7 +168,8 @@ public class BlogReadController {
 
         }
 
-        BlogContentViewDto blogContentView = blogService.getBlogContentView(account != null ? account : null, blogPath.substring(1), id, blogInfo.isBlogOwner(), blogInfo.isSubscribed());
+        Map<String, Object> resultService = blogService.getBlogContentView(account != null ? account : null, blogPath.substring(1), id, blogInfo.isBlogOwner());
+        BlogContentViewDto blogContentView = (BlogContentViewDto) resultService.get("blogContentViewDto");
         if (blogContentView == null) {
             return ResponseEntity.ok().body(
                     ResponseDto.builder()
@@ -173,6 +179,10 @@ public class BlogReadController {
                             .build()
             );
         }
+
+        // 즐겨찾기 정보
+        blogContentView.setFavorite(blogFavoriteRepository.existsByAccountAndBlogContent(account, (BlogContent) resultService.get("blogContent")));
+        blogContentView.setSubscribed(blogInfo.isSubscribed());
 
         return ResponseEntity.ok().body(
                 ResponseDataDto.builder()

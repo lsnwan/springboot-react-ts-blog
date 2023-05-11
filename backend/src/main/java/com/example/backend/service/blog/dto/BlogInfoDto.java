@@ -25,5 +25,6 @@ public class BlogInfoDto implements Serializable {
 
     private boolean blogOwner;
     private boolean subscribed;
+    private boolean favorite;
 
 }

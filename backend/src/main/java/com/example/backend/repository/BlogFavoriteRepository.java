@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BlogFavoriteRepository extends JpaRepository<BlogFavorite, Long> {
 
     boolean existsByAccountAndBlogContent(Account account, BlogContent blogContent);
+    BlogFavorite findByAccountAndBlogContent(Account account, BlogContent blogContent);
 
 }

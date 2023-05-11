@@ -54,6 +54,7 @@ type BlogContentViewType = {
   registeredDate: string;
   blogOwner: boolean;
   subscribed: boolean;
+  favorite: boolean;
   blogTags: Array<BlogTagType>;
 }
 
@@ -125,6 +126,32 @@ const ViewBlog = () => {
         }
 
         alert(result.message);
+        const newData = Object.assign({}, blogContent, { favorite: true });
+        setBlogContent(newData);
+
+      });
+  }
+
+  const handleDeleteFavorite = () => {
+    if (blogContent == null) {
+      alert('게시글 정보를 읽을 수 없습니다.');
+      navigate(-1);
+      return;
+    }
+    axios.delete(`/api/blogs/${blogPath}/favorite/${blogContent.blogContentIdx}`)
+      .then(res => res.data)
+      .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+        console.log(result);
+
+        if (result.code === 'A-001') {
+          alert(result.message);
+          navigate(result.path);
+          return;
+        }
+
+        alert(result.message);
+        const newData = Object.assign({}, blogContent, { favorite: false });
+        setBlogContent(newData);
 
       });
   }
@@ -203,7 +230,12 @@ const ViewBlog = () => {
               <FontAwesomeIcon icon={icon.faEllipsisV} />
             </ButtonLight>
             <SH.ProfileDropBoxBody theme={theme} className={menuOpen ? "active" : ""}>
-              <SH.ProfileDropBoxList theme={theme} onClick={handleRegisteredFavorite}>즐겨찾기</SH.ProfileDropBoxList>
+              {!blogContent?.favorite && (
+                <SH.ProfileDropBoxList theme={theme} onClick={handleRegisteredFavorite}>즐겨찾기</SH.ProfileDropBoxList>
+              ) || (
+                <SH.ProfileDropBoxList theme={theme} onClick={handleDeleteFavorite}>즐겨찾기 취소</SH.ProfileDropBoxList>
+              )}
+
               <SC.Divider></SC.Divider>
               {blogContent?.blogOwner && (
                 <>
