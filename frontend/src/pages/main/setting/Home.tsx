@@ -4,7 +4,13 @@ import Loading from "../../../components/cmm/Loading";
 import {useLocation} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import {ProfileBox} from "../../../components/styled/header-styled";
-import {ButtonDanger, ButtonPrimary, InputText, InputTextBlock} from "../../../components/styled/common-styled";
+import {
+  ButtonDanger,
+  ButtonPrimary,
+  InputText,
+  InputTextBlock,
+  MessageBox
+} from "../../../components/styled/common-styled";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../store";
 import * as T from "../../../store/theme";
@@ -29,6 +35,7 @@ const SettingHome = () => {
     nickname: ''
   });
   const navigate = useNavigate();
+  const [nicknameMessage, setNicknameMessage] = useState<string>('');
 
   useEffect(() => {
     axios.get('/api/settings')
@@ -48,10 +55,28 @@ const SettingHome = () => {
   }, [location]);
 
   const handleChangeNickname = (e: ChangeEvent<HTMLInputElement>) => {
+    setNicknameMessage('');
     setUserInfo(prevState => ({
       ...prevState,
       nickname: e.target.value
     }));
+  }
+
+  const handleSubmitNickname = () => {
+    axios.post('/api/settings/nickname', {
+      nickname: userInfo.nickname
+    })
+      .then(res => res.data)
+      .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+        console.log(result);
+
+        if (result.code === 'Q-001') {
+          setNicknameMessage(result.data.nickname);
+        }
+
+        alert(result.message);
+
+      });
   }
 
   return (
@@ -95,9 +120,12 @@ const SettingHome = () => {
           <div className="flex-fill">
             <div className="ms-2">
               <InputTextBlock type="text" theme={theme} value={userInfo?.nickname} onChange={handleChangeNickname} />
+              {nicknameMessage && (
+                <MessageBox className="error">{nicknameMessage}</MessageBox>
+              )}
             </div>
             <div className="text-end mt-2">
-              <ButtonPrimary type="submit" className="small ms-2">저장하기</ButtonPrimary>
+              <ButtonPrimary type="submit" className="small ms-2" onClick={handleSubmitNickname}>저장하기</ButtonPrimary>
             </div>
           </div>
         </div>
