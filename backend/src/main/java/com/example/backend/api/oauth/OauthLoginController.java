@@ -20,6 +20,7 @@ import com.example.backend.service.oauth.OauthLoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Profile({"dev", "prod"})
 @RequestMapping("/oauth/")
 @Slf4j
 public class OauthLoginController {

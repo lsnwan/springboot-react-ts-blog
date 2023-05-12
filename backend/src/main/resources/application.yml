@@ -43,7 +43,4 @@ feign:
         connect-timeout: 5000
         read-timeout: 5000
 
-kakao:
-  client:
-    id: ENC(eDw+ByiufxmCmOqEkd3zavD/wt7bdSczJ10W2/XmPTkOVGq38hL77rEJcTSpewEZ)
-    secret: ENC(/fEVJ/hyuIjHXud3U0RVSlUyfUoEKr85ik/Xq9DD0iHXr1D1ysioHz8wZzlutN2o)
+
