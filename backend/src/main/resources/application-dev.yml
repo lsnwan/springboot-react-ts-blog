@@ -14,6 +14,17 @@ spring:
         format_sql: true
         show_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(BXsWBaf3j3Mt8TS7+3N9wxSqxsaqhLZwej6bsMxpVxc=)
+    password: ENC(ormcSLo5Xm45gsMswhad0ZROO8yWFxvV/zzzsEBdc3Y=)
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.timeout: 5000
+      mail.smtp.starttls.enable: true
+
+
 logging:
   level:
     com.example.backend: DEBUG
@@ -42,3 +53,8 @@ feign:
       default:
         connect-timeout: 5000
         read-timeout: 5000
+
+kakao:
+  client:
+    id: ENC(eDw+ByiufxmCmOqEkd3zavD/wt7bdSczJ10W2/XmPTkOVGq38hL77rEJcTSpewEZ)
+    secret: ENC(/fEVJ/hyuIjHXud3U0RVSlUyfUoEKr85ik/Xq9DD0iHXr1D1ysioHz8wZzlutN2o)

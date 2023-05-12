@@ -12,6 +12,8 @@ import com.example.backend.entity.FindAccount;
 import com.example.backend.entity.type.AccountType;
 import com.example.backend.mail.EmailDto;
 import com.example.backend.mail.EmailService;
+import com.example.backend.mail.EmailServiceImpl;
+import com.example.backend.mail.LocalEmailServiceImpl;
 import com.example.backend.repository.AccountAuthorityRepository;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.repository.AuthorityRepository;
@@ -19,6 +21,7 @@ import com.example.backend.repository.FindAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +50,9 @@ public class AuthService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
 
     /**
      * 웹 회원 가입
