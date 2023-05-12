@@ -44,7 +44,10 @@ public class BlogContent extends AllDateEntity implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @OneToMany(mappedBy = "blogContent")
+    @OneToMany(mappedBy = "blogContent", cascade = CascadeType.ALL)
     private List<BlogTag> blogTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "blogContent", cascade = CascadeType.ALL)
+    private List<BlogHistory> blogHistories = new ArrayList<>();
 
 }

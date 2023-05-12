@@ -195,6 +195,25 @@ const ViewBlog = () => {
     }
   }
 
+  // 블로그 삭제
+  const handleDeleteBlogContent = () => {
+    if (confirm('게시글을 삭제하시겠습니까?\n삭제 시 복구할 수 없습니다.')) {
+
+      axios.delete(`/api/blogs/${blogPath}/${blogContent?.blogContentIdx}`)
+        .then(res => res.data)
+        .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+          if (result.code === '200') {
+            alert(result.message);
+            navigate(result.path);
+            return;
+          }
+
+          alert(result.message);
+        });
+
+    }
+  }
+
   return (
     <ContentBody>
       {isLoading && (
@@ -240,7 +259,7 @@ const ViewBlog = () => {
               {blogContent?.blogOwner && (
                 <>
                   <SH.ProfileDropBoxList theme={theme}>수정</SH.ProfileDropBoxList>
-                  <SH.ProfileDropBoxList theme={theme}>삭제</SH.ProfileDropBoxList>
+                  <SH.ProfileDropBoxList theme={theme} onClick={handleDeleteBlogContent}>삭제</SH.ProfileDropBoxList>
                 </>
               )}
               {!blogContent?.blogOwner && (

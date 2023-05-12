@@ -2,6 +2,7 @@ package com.example.backend.api.blog;
 
 import com.example.backend.api.blog.dto.CreateBlogDto;
 import com.example.backend.api.blog.dto.CreateBlogPostDto;
+import com.example.backend.api.blog.dto.DeleteBlogContentModel;
 import com.example.backend.api.blog.dto.RegisteredFavoriteDto;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
@@ -421,4 +422,30 @@ public class BlogController {
                         .message("정상 처리 되었습니다.")
                         .build());
     }
+
+    @DeleteMapping("/{blogPath}/{blogContentIdx}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteBlogContent(@CurrentAccount Account account, @ModelAttribute @Valid DeleteBlogContentModel modelAttribute, BindingResult bindingResult) {
+
+        BlogContent blogContentView = blogService.getBlogContentView(modelAttribute.getBlogPath().substring(1), Long.valueOf(modelAttribute.getBlogContentIdx()));
+        if (blogContentView == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("게시글이 존재하지 않습니다.")
+                            .path("/")
+                            .build()
+            );
+        }
+
+        blogContentRepository.delete(blogContentView);
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .path("/" + modelAttribute.getBlogPath())
+                        .build());
+    }
+
 }
