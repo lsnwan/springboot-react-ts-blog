@@ -1,8 +1,8 @@
-package com.example.backend.api.oauth.dto.token;
+package com.example.backend.api.oauth.form.token;
 
 import lombok.*;
 
-public class KakaoTokenDto {
+public class KakaoTokenForm {
 
     @Builder
     @Data

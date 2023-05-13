@@ -21,6 +21,7 @@ import Settings from "./pages/main/blog/menu/Settings";
 import CreateBlog from "./pages/main/blog/CreateBlog";
 import ViewBlog from "./pages/main/blog/ViewBlog";
 import SettingHome from "./pages/main/setting/Home";
+import UpdateBlog from "./pages/main/blog/UpdateBlog";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/:blogPath/settings" element={<Settings />} />
               </Route>
               <Route path="/:blogPath/create" element={<CreateBlog />} />
+              <Route path="/:blogPath/update" element={<UpdateBlog />} />
               <Route path="/:blogPath/view" element={<ViewBlog />} />
               <Route path="/settings" element={<SettingHome />} />
             </Route>

@@ -1,4 +1,4 @@
-package com.example.backend.api.blog.dto;
+package com.example.backend.api.blog.model;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.example.backend.api.blog.dto;
+package com.example.backend.api.blog.form;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class CreateBlogDto implements Serializable {
+public class CreateBlogForm implements Serializable {
     private static final long serialVersionUID = 2162858189341350260L;
 
     @Data

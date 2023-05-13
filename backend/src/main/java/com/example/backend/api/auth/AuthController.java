@@ -1,8 +1,8 @@
 package com.example.backend.api.auth;
 
-import com.example.backend.api.auth.dto.FindPasswordDto;
-import com.example.backend.api.auth.dto.SignUpDto;
-import com.example.backend.api.auth.dto.VerifiedEmailDto;
+import com.example.backend.api.auth.form.FindPasswordForm;
+import com.example.backend.api.auth.form.SignUpForm;
+import com.example.backend.api.auth.form.VerifiedEmailForm;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.cmm.utils.CommonUtils;
@@ -58,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpDto.Request signUpForm, BindingResult bindingResult) {
+    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpForm.Request signUpForm, BindingResult bindingResult) {
 
         authService.signUp(signUpForm);
 
@@ -70,7 +70,7 @@ public class AuthController {
     }
 
     @GetMapping("/verified-email-check")
-    public void verifiedEmailCheck(HttpServletResponse response, VerifiedEmailDto.Request verifiedEmailForm) throws IOException {
+    public void verifiedEmailCheck(HttpServletResponse response, VerifiedEmailForm.Request verifiedEmailForm) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
@@ -104,7 +104,7 @@ public class AuthController {
     }
 
     @PostMapping("/find-password")
-    public ResponseEntity<?> findPassword(@RequestBody @Valid FindPasswordDto.Request findPasswordForm, BindingResult bindingResult) {
+    public ResponseEntity<?> findPassword(@RequestBody @Valid FindPasswordForm.Request findPasswordForm, BindingResult bindingResult) {
 
         log.info("비밀번호 찾기");
 

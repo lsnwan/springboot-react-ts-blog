@@ -1,8 +1,8 @@
 package com.example.backend.api.oauth;
 
 import com.example.backend.api.oauth.client.KakaoTokenClient;
-import com.example.backend.api.oauth.dto.OauthLoginDto;
-import com.example.backend.api.oauth.dto.token.KakaoTokenDto;
+import com.example.backend.api.oauth.form.OauthLoginForm;
+import com.example.backend.api.oauth.form.token.KakaoTokenForm;
 import com.example.backend.api.oauth.validator.OauthValidator;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.utils.CommonUtils;
@@ -63,7 +63,7 @@ public class OauthLoginController {
     private Long expiredTime;
 
     @PostMapping("/kakao/login")
-    public ResponseEntity<?> oauthLogin(@RequestBody OauthLoginDto.Request oauthLoginRequestDto, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> oauthLogin(@RequestBody OauthLoginForm.Request oauthLoginRequestDto, HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Object> result = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class OauthLoginController {
          ! 받아온 인가 코드로 카카오 토큰 가져오기
          */
         String contentType = "application/x-www-form-urlencoded;charset=utf-8";
-        KakaoTokenDto.Request kakaoTokenRequestDto = KakaoTokenDto.Request.builder()
+        KakaoTokenForm.Request kakaoTokenRequestDto = KakaoTokenForm.Request.builder()
                 .client_id(kakaoClientId)
                 .client_secret(kakaoSecret)
                 .grant_type("authorization_code")
@@ -82,13 +82,13 @@ public class OauthLoginController {
                 .build();
 
         // 카카오 토큰 요청
-        KakaoTokenDto.Response kakaoToken = kakaoTokenClient.requestKakaoToken(contentType, kakaoTokenRequestDto);
+        KakaoTokenForm.Response kakaoToken = kakaoTokenClient.requestKakaoToken(contentType, kakaoTokenRequestDto);
         log.info(kakaoToken.toString());
 
         /*
          ! 받아온 카카오 토큰으로 카카오 서버에서 사용자 정보 조회
          */
-        OauthLoginDto.Response oauthLoginDto = oauthLoginService.oauthLogin(kakaoToken.getAccess_token(), AccountType.from(oauthLoginRequestDto.getAccountType()));
+        OauthLoginForm.Response oauthLoginDto = oauthLoginService.oauthLogin(kakaoToken.getAccess_token(), AccountType.from(oauthLoginRequestDto.getAccountType()));
         log.info(oauthLoginDto.toString());
 
         /*

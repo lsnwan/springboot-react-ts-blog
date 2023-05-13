@@ -1,10 +1,10 @@
-package com.example.backend.api.blog.dto;
+package com.example.backend.api.blog.form;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
-public class RegisteredFavoriteDto implements Serializable {
+public class RegisteredFavoriteForm implements Serializable {
     private static final long serialVersionUID = -4409013955985048058L;
 
     @Data

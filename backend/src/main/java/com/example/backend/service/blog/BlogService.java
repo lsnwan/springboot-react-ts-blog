@@ -229,6 +229,7 @@ public class BlogService {
                 .accountNickname(blogContents.get(0).getBlogInfo().getAccount().getNickname())
                 .accountProfileUrl(blogContents.get(0).getBlogInfo().getAccount().getProfilePath())
                 .blogTags(blogContentViewTagDtos)
+                .blogCategory(blogContents.get(0).getCategory().toString())
                 .build();
 
         Map<String, Object> result = new HashMap<>();

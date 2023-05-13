@@ -1,9 +1,9 @@
 package com.example.backend.api.blog;
 
-import com.example.backend.api.blog.dto.CreateBlogDto;
-import com.example.backend.api.blog.dto.CreateBlogPostDto;
-import com.example.backend.api.blog.dto.DeleteBlogContentModel;
-import com.example.backend.api.blog.dto.RegisteredFavoriteDto;
+import com.example.backend.api.blog.form.CreateBlogForm;
+import com.example.backend.api.blog.form.CreateBlogPostForm;
+import com.example.backend.api.blog.model.DeleteBlogContentModel;
+import com.example.backend.api.blog.form.RegisteredFavoriteForm;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.BadRequestException;
@@ -70,7 +70,7 @@ public class BlogController {
 
     @PostMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @RequestBody @Valid CreateBlogDto.Request createBlogForm, BindingResult bindingResult) {
+    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @RequestBody @Valid CreateBlogForm.Request createBlogForm, BindingResult bindingResult) {
 
         Map<String, Object> errorMap = new HashMap<>();
         String blogPath = createBlogForm.getBlogPath();
@@ -197,7 +197,7 @@ public class BlogController {
 
     @PostMapping(value = "/{blogPath}/create")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @PathVariable String blogPath, MultipartFile file, @Valid CreateBlogPostDto.Request request, BindingResult bindingResult) {
+    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @PathVariable String blogPath, MultipartFile file, @Valid CreateBlogPostForm.Request request, BindingResult bindingResult) {
 
         String thumbnailUrl = null;
 
@@ -250,7 +250,7 @@ public class BlogController {
 
     @PostMapping("/{blogPath}/favorite")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> registeredFavorite(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody RegisteredFavoriteDto.Request request) {
+    public ResponseEntity<?> registeredFavorite(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody RegisteredFavoriteForm.Request request) {
 
         BlogContent blogContent = blogService.getBlogContentView(blogPath.substring(1), Long.valueOf(request.getBlogContentIdx()));
 

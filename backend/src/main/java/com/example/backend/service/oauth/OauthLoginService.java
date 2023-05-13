@@ -1,6 +1,6 @@
 package com.example.backend.service.oauth;
 
-import com.example.backend.api.oauth.dto.OauthLoginDto;
+import com.example.backend.api.oauth.form.OauthLoginForm;
 import com.example.backend.api.oauth.model.OauthAttributes;
 import com.example.backend.api.oauth.service.SocialLoginApiService;
 import com.example.backend.api.oauth.service.SocialLoginApiServiceFactory;
@@ -23,12 +23,12 @@ public class OauthLoginService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public OauthLoginDto.Response oauthLogin(String accessToken, AccountType accountType) {
+    public OauthLoginForm.Response oauthLogin(String accessToken, AccountType accountType) {
         SocialLoginApiService socialLoginApiService = SocialLoginApiServiceFactory.getSocialLoginApiService(accountType);
         OauthAttributes userInfo = socialLoginApiService.getUserInfo(accessToken);
         log.info(userInfo.toString());
 
-        OauthLoginDto.Response oauthAccount = modelMapper.map(userInfo, OauthLoginDto.Response.class);
+        OauthLoginForm.Response oauthAccount = modelMapper.map(userInfo, OauthLoginForm.Response.class);
         oauthAccount.setId(GeneratorUtils.uniqueId());
         oauthAccount.setEnabled(true);
         oauthAccount.setEmailVerifiedDate(LocalDateTime.now());

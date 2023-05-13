@@ -1,4 +1,4 @@
-package com.example.backend.api.auth.dto;
+package com.example.backend.api.auth.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
-public class FindPasswordDto implements Serializable {
+public class FindPasswordForm implements Serializable {
     private static final long serialVersionUID = 4005700950959195159L;
 
     @Data

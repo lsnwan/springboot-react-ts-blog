@@ -1,7 +1,7 @@
 package com.example.backend.api.blog;
 
-import com.example.backend.api.blog.dto.UpdateEnabledDto;
-import com.example.backend.api.blog.dto.UpdateIntroDto;
+import com.example.backend.api.blog.form.UpdateEnabledForm;
+import com.example.backend.api.blog.form.UpdateIntroForm;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.NotFoundDataException;
@@ -36,7 +36,7 @@ public class BlogSettingController {
 
     @PostMapping("/{blogPath}/settings/intro")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> updateIntroduction(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid UpdateIntroDto.Request request, BindingResult bindingResult) {
+    public ResponseEntity<?> updateIntroduction(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody @Valid UpdateIntroForm.Request request, BindingResult bindingResult) {
 
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1)).orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
         if (!blogInfo.getAccount().getId().equals(account.getId())) {
@@ -93,7 +93,7 @@ public class BlogSettingController {
 
     @PostMapping("/{blogPath}/settings/enabled")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> changeBlogEnabled(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody UpdateEnabledDto.Request request) {
+    public ResponseEntity<?> changeBlogEnabled(@CurrentAccount Account account, @PathVariable String blogPath, @RequestBody UpdateEnabledForm.Request request) {
 
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));

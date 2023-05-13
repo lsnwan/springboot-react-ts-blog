@@ -1,4 +1,4 @@
-package com.example.backend.api.oauth.dto;
+package com.example.backend.api.oauth.form;
 
 import com.example.backend.entity.AccountAuthority;
 import com.example.backend.entity.type.AccountType;
@@ -7,7 +7,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OauthLoginDto {
+public class OauthLoginForm {
 
     @Getter @Setter
     public static class Request {

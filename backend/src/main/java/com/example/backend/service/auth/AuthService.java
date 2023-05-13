@@ -1,7 +1,7 @@
 package com.example.backend.service.auth;
 
-import com.example.backend.api.auth.dto.SignUpDto;
-import com.example.backend.api.oauth.dto.OauthLoginDto;
+import com.example.backend.api.auth.form.SignUpForm;
+import com.example.backend.api.oauth.form.OauthLoginForm;
 import com.example.backend.cmm.error.exception.DifferentPasswordException;
 import com.example.backend.cmm.utils.GeneratorUtils;
 import com.example.backend.config.AppProperties;
@@ -12,8 +12,6 @@ import com.example.backend.entity.FindAccount;
 import com.example.backend.entity.type.AccountType;
 import com.example.backend.mail.EmailDto;
 import com.example.backend.mail.EmailService;
-import com.example.backend.mail.EmailServiceImpl;
-import com.example.backend.mail.LocalEmailServiceImpl;
 import com.example.backend.repository.AccountAuthorityRepository;
 import com.example.backend.repository.AccountRepository;
 import com.example.backend.repository.AuthorityRepository;
@@ -58,7 +56,7 @@ public class AuthService {
      * 웹 회원 가입
      * @param signUpForm
      */
-    public void signUp(final SignUpDto.Request signUpForm) {
+    public void signUp(final SignUpForm.Request signUpForm) {
 
         if (!signUpForm.getPassword().equals(signUpForm.getPasswordConfirm())) {
             throw new DifferentPasswordException("비밀번호가 일치하지 않습니다.");
@@ -99,7 +97,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void createSocialAccount(final OauthLoginDto.Response oauthLoginDto) {
+    public void createSocialAccount(final OauthLoginForm.Response oauthLoginDto) {
         /*
          * 유저 권한 가져오기
          */

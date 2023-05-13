@@ -1,4 +1,4 @@
-package com.example.backend.api.auth.dto;
+package com.example.backend.api.auth.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
-public class SignUpDto implements Serializable {
+public class SignUpForm implements Serializable {
 
     private static final long serialVersionUID = 5386467531389666701L;
 

@@ -1,4 +1,4 @@
-package com.example.backend.api.auth.dto;
+package com.example.backend.api.auth.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-public class VerifiedEmailDto implements Serializable {
+public class VerifiedEmailForm implements Serializable {
     private static final long serialVersionUID = -6134098133394636450L;
 
     @Data

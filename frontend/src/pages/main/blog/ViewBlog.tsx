@@ -1,20 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useSearchParams} from "react-router-dom";
 import {Container, ContentBody, UserProfile} from "../../../components/styled/content-styled";
-import {
-  BadgeBox,
-  BlogContentCard,
-  BlogContentCardBody,
-  BlogContentCardPanel,
-  BlogContentCardSubject,
-  BlogContentRegDate, BlogContentStyle,
-  BlogContentThumbnail,
-  BlogContentUserNickname,
-  BlogContentUserProfile,
-  BlogContentWriter,
-  BlogContentWriterBody,
-  ContentSubject
-} from "../../../components/styled/myblog-styled";
+import {BadgeBox, BlogContentStyle, ContentSubject} from "../../../components/styled/myblog-styled";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SC from "../../../components/styled/common-styled";
@@ -28,9 +15,7 @@ import {useNavigate, useParams} from "react-router";
 import {Path} from "@remix-run/router/history";
 import * as U from "../../../utils";
 import Loading from "../../../components/cmm/Loading";
-import * as MB from "../../../store/myblog";
 import {useAuth} from "../../../contexts";
-import {produce} from "immer";
 
 const tags = ['react','typescript','springboot','springcloud',];
 
@@ -214,6 +199,11 @@ const ViewBlog = () => {
     }
   }
 
+  // 블로그 수정 링크
+  const handleUpdateBlogContent = () => {
+    navigate(`/${blogPath}/update?id=${blogContent?.blogContentIdx}`);
+  }
+
   return (
     <ContentBody>
       {isLoading && (
@@ -258,7 +248,7 @@ const ViewBlog = () => {
               <SC.Divider></SC.Divider>
               {blogContent?.blogOwner && (
                 <>
-                  <SH.ProfileDropBoxList theme={theme}>수정</SH.ProfileDropBoxList>
+                  <SH.ProfileDropBoxList theme={theme} onClick={handleUpdateBlogContent}>수정</SH.ProfileDropBoxList>
                   <SH.ProfileDropBoxList theme={theme} onClick={handleDeleteBlogContent}>삭제</SH.ProfileDropBoxList>
                 </>
               )}
