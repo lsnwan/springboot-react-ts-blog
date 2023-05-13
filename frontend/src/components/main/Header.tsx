@@ -80,7 +80,7 @@ const Header = (props: PropsType) => {
    ! 프로필 클릭 이벤트(드롭다운 토글)
    */
   const handleOpen = () => {
-    setProfileMenuOpen(!profileMenuOpen);
+    setProfileMenuOpen(prevState => !prevState);
   }
 
   /*
