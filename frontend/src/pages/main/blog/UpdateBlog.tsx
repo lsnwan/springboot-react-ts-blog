@@ -98,7 +98,6 @@ const UpdateBlog = () => {
     await axios.get(`/api/blogs/${blogPath}/view?id=${searchParams.get("id")}`)
       .then(res => res.data)
       .then((result: {code: string; message: string; data?:any; path: string | Partial<Path>;}) => {
-        console.log("axios 결과", result);
         setEditorContent(result.data.blogContent);
         setThumbnailImageUrl(result.data.blogThumbnailUrl);
         setTitle(result.data.blogSubject);
@@ -341,7 +340,6 @@ const UpdateBlog = () => {
     })
       .then(res => res.data)
       .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
-        console.log(result);
         if (result.code === 'Q-001') {
           if (result.data.title) {
             setTitleMessage(result.data.title);

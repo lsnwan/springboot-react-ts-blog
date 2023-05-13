@@ -45,7 +45,6 @@ const SettingHome = () => {
     axios.get('/api/settings')
       .then(res => res.data)
       .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
-        console.log(result);
 
         if (result.code === 'A-001') {
           navigate('/login');
@@ -72,7 +71,6 @@ const SettingHome = () => {
     })
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-        console.log(result);
 
         if (result.code === 'Q-001') {
           setNicknameMessage(result.data.nickname);

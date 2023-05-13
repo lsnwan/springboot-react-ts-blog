@@ -60,7 +60,6 @@ const CreateBlog = () => {
 
   useEffect(() => {
     const authenticated = localStorage.getItem("userId");
-    console.log(authenticated);
     if (authenticated == null) {
       navigate("/login");
     }

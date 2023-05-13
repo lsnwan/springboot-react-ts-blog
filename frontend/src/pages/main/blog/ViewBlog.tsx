@@ -83,7 +83,6 @@ const ViewBlog = () => {
     await axios.get(`/api/blogs/${blogPath}/view?id=${searchParams.get("id")}`)
       .then(res => res.data)
       .then((result: {code: string; message: string; data?:any; path: string | Partial<Path>;}) => {
-        console.log(result);
         setBlogContent(result.data);
         setIsLoading(false);
       });
@@ -103,7 +102,6 @@ const ViewBlog = () => {
     })
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-        console.log(result);
         if (result.code === 'A-001') {
           alert(result.message);
           navigate(result.path);
@@ -126,7 +124,6 @@ const ViewBlog = () => {
     axios.delete(`/api/blogs/${blogPath}/favorite/${blogContent.blogContentIdx}`)
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-        console.log(result);
 
         if (result.code === 'A-001') {
           alert(result.message);

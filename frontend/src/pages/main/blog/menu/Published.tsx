@@ -80,7 +80,6 @@ const Published = (props: Props) => {
     })
     .then(res => res.data)
     .then((result: {code: string; message: string; data?:any; path: string | Partial<Path>;}) => {
-      console.log(result);
       if (result.code == '200') {
         setPublishedBlog((prevItems) => [...prevItems, ...result.data]);
         setPageIndex((prev) => prev + 1);
