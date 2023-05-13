@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
-public class CreateBlogPostForm implements Serializable {
+public class CreateBlogContentForm implements Serializable {
 
     private static final long serialVersionUID = -4766670369260338768L;
 

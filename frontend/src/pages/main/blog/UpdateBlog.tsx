@@ -78,6 +78,7 @@ const UpdateBlog = () => {
   const [category, setCategory] = useState<string>('');
   const [enabled, setEnabled] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("hobby");
+  const [thumbnailChanged, setThumbnailChanged] = useState<boolean>(false);
 
   // 메시지
   const [tagsMessage, setTagsMessage] = useState<string>('');
@@ -235,10 +236,12 @@ const UpdateBlog = () => {
   /**********************************************
    **** 썸네일 관련  ******************************
    **********************************************/
+  // 이미지 영역 클릭 시 파일 클릭
   const handleThumbnailImageUpload = () => {
     thumbnailImageRef.current.click();
   }
 
+  // 파일 input 변경 이벤트
   const handleFileInputChange = () => {
     const file = thumbnailImageRef.current?.files?.[0];
     if (file) {
@@ -254,6 +257,7 @@ const UpdateBlog = () => {
       reader.onload = () => {
         setThumbnailImageUrl(reader.result as string);
       };
+      setThumbnailChanged(true);
     } else {
       setThumbnailImageUrl(null);
     }
@@ -261,6 +265,7 @@ const UpdateBlog = () => {
 
   const handleDeleteImage = () => {
     setThumbnailImageUrl(null);
+    setThumbnailChanged(true);
   }
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
@@ -294,6 +299,7 @@ const UpdateBlog = () => {
       reader.onload = () => {
         setThumbnailImageUrl(reader.result as string);
       };
+      setThumbnailChanged(true);
     }
   };
 
@@ -301,12 +307,17 @@ const UpdateBlog = () => {
     setEnabled(!enabled);
   }
 
+  /*
+   * 블로그 발행하기
+   */
   const handleBlogSubmit = () => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', editorContent);
     formData.append("enabled", enabled ? "1" : "0");
     formData.append("category", selectedCategory);
+    formData.append("thumbnailChanged", thumbnailChanged ? "1" : "0");
+
     if (tags) {
       tags.map((tag) => {
         formData.append('tags', tag);
@@ -318,11 +329,11 @@ const UpdateBlog = () => {
       formData.append('file', file);
     }
 
-    if (!confirm('게시글을 등록하시겠습니까?')) {
+    if (!confirm('게시글을 수정하시겠습니까?')) {
       return;
     }
 
-    axios.post(`/api/blogs/${blogPath}/create`, formData, {
+    axios.put(`/api/blogs/${blogPath}/${searchParams.get("id")}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -330,6 +341,7 @@ const UpdateBlog = () => {
     })
       .then(res => res.data)
       .then((result: {code: string; message: string; data?: any; path: string | Partial<Path>;}) => {
+        console.log(result);
         if (result.code === 'Q-001') {
           if (result.data.title) {
             setTitleMessage(result.data.title);
@@ -337,9 +349,11 @@ const UpdateBlog = () => {
           if (result.data.tags) {
             setTagsMessage(result.data.tags);
           }
+          return;
         }
 
-        if (result.code === '201') {
+        if (result.code === '200') {
+          alert(result.message);
           navigate(result.path);
         }
 

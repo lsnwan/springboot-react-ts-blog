@@ -1,7 +1,8 @@
 package com.example.backend.api.blog;
 
 import com.example.backend.api.blog.form.CreateBlogForm;
-import com.example.backend.api.blog.form.CreateBlogPostForm;
+import com.example.backend.api.blog.form.CreateBlogContentForm;
+import com.example.backend.api.blog.form.UpdateBlogContentForm;
 import com.example.backend.api.blog.model.DeleteBlogContentModel;
 import com.example.backend.api.blog.form.RegisteredFavoriteForm;
 import com.example.backend.cmm.dto.ResponseDataDto;
@@ -197,7 +198,7 @@ public class BlogController {
 
     @PostMapping(value = "/{blogPath}/create")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @PathVariable String blogPath, MultipartFile file, @Valid CreateBlogPostForm.Request request, BindingResult bindingResult) {
+    public ResponseEntity<?> createBlog(@CurrentAccount Account account, @PathVariable String blogPath, MultipartFile file, @Valid CreateBlogContentForm.Request request, BindingResult bindingResult) {
 
         String thumbnailUrl = null;
 
@@ -219,6 +220,15 @@ public class BlogController {
 
         BlogInfo blogInfo = blogInfoRepository.findByBlogPath(blogPath.substring(1))
                 .orElseThrow(() -> new NotFoundDataException("데이터를 찾을 수 없습니다."));
+
+        if (!account.getId().equals(blogInfo.getAccount().getId())) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.UNAUTHORIZED.getErrorCode())
+                            .message("본인의 블로그에서만 등록할 수 있습니다.")
+                            .build()
+            );
+        }
 
         BlogContent savedBlogContent = blogContentRepository.save(BlogContent.builder()
                 .blogInfo(blogInfo)
@@ -445,6 +455,86 @@ public class BlogController {
                         .code(String.valueOf(HttpStatus.OK.value()))
                         .message("정상 처리 되었습니다.")
                         .path("/" + modelAttribute.getBlogPath())
+                        .build());
+    }
+
+    @PutMapping(value = "/{blogPath}/{blogContentIdx}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> updateBlog(@CurrentAccount Account account, @PathVariable String blogPath, @PathVariable String blogContentIdx, MultipartFile file, @Valid UpdateBlogContentForm.Request request, BindingResult bindingResult) {
+
+        log.info(request.toString());
+
+        // 게시글 조회
+        BlogContent blogContentView = blogService.getBlogContentView(blogPath.substring(1), Long.valueOf(blogContentIdx));
+        if (blogContentView == null) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.NOT_FOUND_DATA.getErrorCode())
+                            .message("게시글이 존재하지 않습니다.")
+                            .build()
+            );
+        }
+
+
+        if (!account.getId().equals(blogContentView.getBlogInfo().getAccount().getId())) {
+            return ResponseEntity.ok().body(
+                    ResponseDto.builder()
+                            .code(ErrorType.UNAUTHORIZED.getErrorCode())
+                            .message("본인의 게시글만 수정할 수 있습니다.")
+                            .build()
+            );
+        }
+
+        // 게시글 태그 삭제
+        blogTagRepository.deleteAll(blogTagRepository.findByBlogContent(blogContentView));
+
+        // 썸네일 파일 변경 시 파일 저장
+        String thumbnailUrl = null;
+        if (request.isThumbnailChanged()) {
+            if (file != null) {
+                if (!file.getContentType().startsWith("image")) {
+                    return ResponseEntity.ok().body(
+                            ResponseDto.builder()
+                                    .code(ErrorType.FILE_CONTENT.getErrorCode())
+                                    .message("이미지 파일만 업로드 가능 합니다.")
+                                    .build()
+                    );
+                }
+
+                String fileDirPath = environment.getProperty("app.files");
+                FileStorageService fileStorageService = new FileStorageService(fileDirPath + "/blog-thumbnail/" + blogPath.substring(1));
+                String saveFileName = fileStorageService.storeFile(file);
+                thumbnailUrl = environment.getProperty("app.host") + "/files/blog-thumbnail/" + blogPath.substring(1) + "/" + saveFileName;
+
+                blogContentView.setThumbnail(thumbnailUrl);
+            }
+        }
+
+        // 데이터 매핑
+        blogContentView.setTitle(request.getTitle());
+        blogContentView.setContent(request.getContent());
+        blogContentView.setCategory(BlogCategoryType.from(request.getCategory()));
+        blogContentView.setEnabled(request.isEnabled());
+
+        // 게시글 수정
+        BlogContent updatedBlogContent = blogContentRepository.save(blogContentView);
+
+        // 게시글 태그 재등록
+        List<BlogTag> savedBlogTags = new ArrayList<>();
+        request.getTags().forEach((tag) ->
+                savedBlogTags.add(BlogTag.builder()
+                        .blogContent(updatedBlogContent)
+                        .tagName(tag)
+                        .build())
+        );
+
+        blogTagRepository.saveAll(savedBlogTags);
+
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .path("/" + blogPath)
                         .build());
     }
 
