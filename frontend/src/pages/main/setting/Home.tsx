@@ -76,6 +76,7 @@ const SettingHome = () => {
 
         if (result.code === 'Q-001') {
           setNicknameMessage(result.data.nickname);
+          return;
         }
 
         alert(result.message);
