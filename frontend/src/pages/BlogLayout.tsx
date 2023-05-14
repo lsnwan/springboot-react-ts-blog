@@ -14,6 +14,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../store";
 import * as T from "../store/theme";
 import * as MB from "../store/myblog";
+import * as MS from "../store/subscribe";
 import {ContentBody} from "../components/styled/content-styled";
 import {Outlet, useLocation} from "react-router-dom";
 import axios from "axios";
@@ -77,8 +78,12 @@ const BlogLayout = () => {
     axios.post(`/api/subscribe/${blogPath}/${blogInfo.accountId}`)
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-        alert(result.message);
         dispatch(MB.updateMySubscribed(true));
+        dispatch(MS.addMySubscribes({
+          blogPath: blogInfo.blogPath,
+          nickname: blogInfo.accountName,
+          profilePath: blogInfo.accountProfilePath
+        }));
       });
 
   }
@@ -96,8 +101,8 @@ const BlogLayout = () => {
       axios.delete(`/api/subscribe/${blogPath}/${blogInfo.accountId}`)
         .then(res => res.data)
         .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-          alert(result.message);
           dispatch(MB.updateMySubscribed(false));
+          dispatch(MS.removeMySubscribes(blogInfo.blogPath));
         });
     }
   }

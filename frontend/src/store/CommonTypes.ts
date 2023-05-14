@@ -15,9 +15,22 @@ export type MyBlogInfoState = {
   subscribed: boolean;
 }
 
+export type MySubscribeBlogPath = {
+  blogPath: string;
+}
+
+export type MySubscribeState = {
+  blogPath: string;
+  nickname: string;
+  profilePath: string;
+}
+
+
+
 export type MyBlogIntro = string;
 
 export type MyBlogBannerImagePath = string | null;
 
 export type MyBlogEnabled = boolean;
 export type MySubscribed = boolean;
+

@@ -41,8 +41,22 @@ export const SingleMenuUL = styled.ul`
   list-style: none;
   padding-left: 0;
   border-bottom: 1px solid gray;
+  
   &.border_none {
     border: none;
+  }
+  
+  &.subscribe {
+    max-height: 480px;
+    overflow: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* 인터넷 익스플로러 */
+    scrollbar-width: none; /* 파이어폭스 */
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
   }
 `;
 
@@ -99,18 +113,30 @@ export const Footer = styled.footer`
 
 export const SubscribeProfileBox = styled.div<isSideBarProps>`
   display: flex;
-  padding: ${(props) => props.isSideBar ? "10px 20px;" : "0;"}
+  padding: ${(props) => props.isSideBar ? "5px 20px;" : "0;"}
   justify-content: ${(props) => props.isSideBar ? "0;" : "center;"}
   align-items: center;
   cursor: pointer;
   margin: 5px 0;
+  border-radius: 10px;
+  &:hover {
+    background-color: cornflowerblue;
+    color: white;
+  }
 `;
 
-export const SubscribeProfile = styled.div`
+type SubscribeProfileType = {
+  imagePath: string
+}
+export const SubscribeProfile = styled.div<SubscribeProfileType>`
   width: 30px;
   height: 30px;
   border-radius: 100%;
-  background-color: cornflowerblue;
+  ${(props) => props.imagePath && (`background-image: url(${props.imagePath});`)};
+  background-color: white;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
 `;
 
 export const SubscribeProfileName = styled.h5`

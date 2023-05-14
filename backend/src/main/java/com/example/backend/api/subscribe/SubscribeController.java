@@ -1,5 +1,6 @@
 package com.example.backend.api.subscribe;
 
+import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.entity.Account;
@@ -9,6 +10,7 @@ import com.example.backend.security.CurrentAccount;
 import com.example.backend.service.account.AccountService;
 import com.example.backend.service.blog.BlogService;
 import com.example.backend.service.blog.dto.BlogInfoDto;
+import com.example.backend.service.subscribe.SubscribeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,20 @@ public class SubscribeController {
 
     private final BlogService blogService;
     private final AccountService accountService;
+    private final SubscribeService subscribeService;
     private final SubscribeRepository subscribeRepository;
+
+    @PostMapping("")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getMySubscribe(@CurrentAccount Account account) {
+        return ResponseEntity.ok().body(
+                ResponseDataDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .data(subscribeService.findMySubscribes(account))
+                        .build()
+        );
+    }
 
     @PostMapping("/{blogPath}/{toAccountId}")
     @PreAuthorize("isAuthenticated()")
