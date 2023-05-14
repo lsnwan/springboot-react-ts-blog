@@ -97,7 +97,7 @@ const ViewBlog = () => {
       navigate(-1);
       return;
     }
-    axios.post(`/api/blogs/${blogPath}/favorite`, {
+    axios.post(`/api/favorite/${blogPath}`, {
       blogContentIdx: blogContent.blogContentIdx
     })
       .then(res => res.data)
@@ -121,7 +121,7 @@ const ViewBlog = () => {
       navigate(-1);
       return;
     }
-    axios.delete(`/api/blogs/${blogPath}/favorite/${blogContent.blogContentIdx}`)
+    axios.delete(`/api/favorite/${blogPath}/${blogContent.blogContentIdx}`)
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
 
@@ -147,7 +147,7 @@ const ViewBlog = () => {
       return;
     }
 
-    axios.post(`/api/blogs/${blogPath}/subscribe/${blogContent?.accountId}`)
+    axios.post(`/api/subscribe/${blogPath}/${blogContent?.accountId}`)
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
         alert(result.message);
@@ -167,7 +167,7 @@ const ViewBlog = () => {
     }
 
     if (confirm('구독을 취소하시겠습니까?')) {
-      axios.delete(`/api/blogs/${blogPath}/subscribe/${blogContent?.accountId}`)
+      axios.delete(`/api/subscribe/${blogPath}/${blogContent?.accountId}`)
         .then(res => res.data)
         .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
           alert(result.message);

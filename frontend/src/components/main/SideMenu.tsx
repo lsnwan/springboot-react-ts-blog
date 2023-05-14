@@ -77,6 +77,7 @@ const SideMenu = (props :PropsType) => {
                 <SubMenuLI>
                   <SubMenuTitle isSideBar={props.isSideBar}>구독</SubMenuTitle>
                   <SingleMenuUL className="border_none">
+
                     <SingleMenuLI isSideBar={props.isSideBar}>
                       <SubscribeProfileBox isSideBar={props.isSideBar}>
                         <SubscribeProfile></SubscribeProfile>
@@ -85,6 +86,7 @@ const SideMenu = (props :PropsType) => {
                         )}
                       </SubscribeProfileBox>
                     </SingleMenuLI>
+
                   </SingleMenuUL>
                 </SubMenuLI>
               </SubMenuUL>

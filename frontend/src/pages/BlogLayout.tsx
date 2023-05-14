@@ -74,7 +74,7 @@ const BlogLayout = () => {
       return;
     }
 
-    axios.post(`/api/blogs/${blogPath}/subscribe/${blogInfo.accountId}`)
+    axios.post(`/api/subscribe/${blogPath}/${blogInfo.accountId}`)
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
         alert(result.message);
@@ -93,7 +93,7 @@ const BlogLayout = () => {
     }
 
     if (confirm('구독을 취소하시겠습니까?')) {
-      axios.delete(`/api/blogs/${blogPath}/subscribe/${blogInfo.accountId}`)
+      axios.delete(`/api/subscribe/${blogPath}/${blogInfo.accountId}`)
         .then(res => res.data)
         .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
           alert(result.message);
