@@ -81,7 +81,7 @@ const SideMenu = (props :PropsType) => {
           {loggedUser?.emailVerifiedConfirmDate && (
             <>
               <SingleMenuUL>
-                <SingleMenuLI isSideBar={props.isSideBar}>
+                <SingleMenuLI isSideBar={props.isSideBar} onClick={() => navigate('/favorite')}>
                   <SingleMenuButton isSideBar={props.isSideBar}>
                     <SingleMenuIcon><BsFillStarFill/></SingleMenuIcon>
                     {props.isSideBar && (

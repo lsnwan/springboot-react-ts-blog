@@ -24,6 +24,11 @@ export const Container = styled.div`
   margin-right: auto;
 `;
 
+export const TitleContainer = styled.div<ContentWidthType>`
+  margin: 0 auto;
+  width: ${(props) => (props.width && (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1500px;" : "1100px;"))}
+`;
+
 export const ContentContainer = styled.div<ContentWidthType>`
   margin: 0 auto;
   display: flex;

@@ -28,7 +28,7 @@ const Home = () => {
         <BlogCard width={windowWidth} key={i}>
           <BlogThumb></BlogThumb>
           <BlogCardBody>
-            <UserProfile></UserProfile>
+            <UserProfile imagePath='/images/no-profile.png'></UserProfile>
             <BlogInfo>
               <BlogInfoHeader>
                 <UserProfileName>사용자닉네임</UserProfileName>
@@ -42,8 +42,6 @@ const Home = () => {
     }
     return result;
   };
-
-
 
   useEffect(() => {
     const handleResize = () => {
