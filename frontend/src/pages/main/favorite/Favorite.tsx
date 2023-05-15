@@ -59,6 +59,7 @@ const Favorite = () => {
       <TitleContainer width={windowWidth}>
         <h2 className="fw-semibold">즐겨찾기</h2>
       </TitleContainer>
+
       <ContentContainer width={windowWidth}>
         {myFavorites.length !== 0 && myFavorites.map((my) => (
           <BlogCard width={windowWidth} key={my.contentIdx} onClick={() => navigate(`/@${my.blogPathName}/view?id=${my.contentIdx}`)}>
@@ -79,8 +80,6 @@ const Favorite = () => {
             <span className="fw-semibold">즐겨찾기한 게시글이 없습니다.</span>
           </div>
         )}
-
-
       </ContentContainer>
 
     </ContentBody>

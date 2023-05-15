@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.history.HistoryMapper">
+
+    <resultMap id="historiesMap" type="com.example.backend.service.history.dto.HistoriesDto">
+        <result property="historyDate" column="hist_registered_date" />
+        <collection property="historyContents" resultMap="historyContentMap" />
+    </resultMap>
+
+    <resultMap id="historyContentMap" type="com.example.backend.service.history.dto.HistoryContentDto">
+        <result property="contentIdx" column="bc_idx"/>
+        <result property="blogCategory" column="blog_category" />
+        <result property="contentTitle" column="blog_title" />
+        <result property="blogPathName" column="blog_path_name" />
+        <result property="contentThumbnail" column="blog_thumbnail" />
+        <result property="contentRegisteredDate" column="content_registered_date"/>
+        <result property="contentEnabled" column="enabled" />
+        <result property="accountProfile" column="profile_path" />
+        <result property="accountNickname" column="nickname" />
+    </resultMap>
+
+    <select id="getMyHistories" resultMap="historiesMap">
+        /* [HistoryMapper]:[getMyHistories] */
+        select * from
+        (
+            select
+                  FOUND_ROWS() as TOTAL_CNT
+                , A.*
+            from
+            (
+                select
+                    @rownum := @rownum + 1 as rnum ,
+                    A.*
+                from
+                (
+                    select
+                        DATE_FORMAT(bh.registered_date, '%Y-%m-%d') as hist_registered_date,
+                        bh.registered_date as hist_registered_datetime,
+                        bc.bc_idx ,
+                        bc.blog_category ,
+                        bc.blog_title ,
+                        bc.blog_path_name ,
+                        bc.blog_thumbnail ,
+                        bc.registered_date as content_registered_date ,
+                        bc.enabled ,
+                        (
+                            select
+                                a.acc_profile_path
+                            from
+                                blog_info bi
+                                    left outer join account a on
+                                    bi.acc_id = a.acc_id
+                            where
+                                bi.blog_path_name = bc.blog_path_name
+                        ) as profile_path ,
+                        (
+                            select
+                                a.acc_nnm
+                            from
+                                blog_info bi
+                                    left outer join account a on
+                                    bi.acc_id = a.acc_id
+                            where
+                                bi.blog_path_name = bc.blog_path_name
+                        ) as nickname
+                    from
+                        blog_history bh
+                    left outer join blog_content bc on
+                        bh.bc_idx = bc.bc_idx
+                    where
+                        bh.acc_id = #{accountId}
+                ) A, (select @ROWNUM := 0) TMP
+                order by
+                A.hist_registered_datetime desc
+            ) A
+            WHERE RNUM <![CDATA[>=]]> ((#{commonDto.pageIndex} - 1) * #{commonDto.pageUnit}) + 1
+        ) A
+        WHERE RNUM <![CDATA[<=]]> #{commonDto.pageIndex} * #{commonDto.pageUnit}
+    </select>
+
+</mapper>

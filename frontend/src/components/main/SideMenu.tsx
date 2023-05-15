@@ -89,7 +89,7 @@ const SideMenu = (props :PropsType) => {
                     )}
                   </SingleMenuButton>
                 </SingleMenuLI>
-                <SingleMenuLI isSideBar={props.isSideBar}>
+                <SingleMenuLI isSideBar={props.isSideBar} onClick={() => navigate('/history')}>
                   <SingleMenuButton isSideBar={props.isSideBar}>
                     <SingleMenuIcon><BsClockHistory/></SingleMenuIcon>
                     {props.isSideBar && (

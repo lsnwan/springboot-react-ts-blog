@@ -37,6 +37,15 @@ export const ContentContainer = styled.div<ContentWidthType>`
   width: ${(props) => (props.width && (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1500px;" : "1100px;"))}
 `;
 
+export const HistoryDate = styled.div`
+  flex: 1;
+  font-weight: 600;
+  color: #5b5b5b;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #bdbdbd;
+  margin-bottom: 10px;
+`;
+
 export const TagBody = styled.div<ContentWidthType>`
   width: ${(props) => (props.width && (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1430px;" : "1070px;"))};
   height: 50px;
