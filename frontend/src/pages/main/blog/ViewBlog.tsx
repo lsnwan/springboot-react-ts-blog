@@ -6,7 +6,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SC from "../../../components/styled/common-styled";
 import {ButtonLight, RelativeDiv} from "../../../components/styled/common-styled";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../store";
 import * as T from "../../../store/theme";
 import * as SH from "../../../components/styled/header-styled";
@@ -16,6 +16,7 @@ import {Path} from "@remix-run/router/history";
 import * as U from "../../../utils";
 import Loading from "../../../components/cmm/Loading";
 import {useAuth} from "../../../contexts";
+import * as MS from "../../../store/subscribe";
 
 const tags = ['react','typescript','springboot','springcloud',];
 
@@ -53,6 +54,7 @@ const ViewBlog = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const {loggedUser} = useAuth();
+  const dispatch = useDispatch();
 
   const handleMenuOpen = () => {
     setMenuOpen((prevValue) => !prevValue);
@@ -153,6 +155,14 @@ const ViewBlog = () => {
         alert(result.message);
         const newData = Object.assign({}, blogContent, { subscribed: true });
         setBlogContent(newData);
+        if (blogContent) {
+          dispatch(MS.addMySubscribes({
+            blogPath: blogContent.blogPathName,
+            nickname: blogContent.accountNickname,
+            profilePath: blogContent.accountProfileUrl
+          }));
+        }
+
       });
 
   }
@@ -173,6 +183,10 @@ const ViewBlog = () => {
           alert(result.message);
           const newData = Object.assign({}, blogContent, { subscribed: false });
           setBlogContent(newData);
+          if (blogContent) {
+            dispatch(MS.removeMySubscribes(blogContent.blogPathName));
+          }
+
         });
     }
   }
