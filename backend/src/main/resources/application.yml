@@ -43,4 +43,5 @@ feign:
         connect-timeout: 5000
         read-timeout: 5000
 
-
+mybatis:
+  mapper-locations: mapper/*.xml
