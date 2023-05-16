@@ -24,6 +24,10 @@ import SettingHome from "./pages/main/setting/Home";
 import UpdateBlog from "./pages/main/blog/UpdateBlog";
 import Favorite from "./pages/main/favorite/Favorite";
 import History from "./pages/main/history/History";
+import HobbyExplore from "./pages/main/explore/HobbyExplore";
+import LifeExplore from "./pages/main/explore/LifeExplore";
+import ShoppingExplore from "./pages/main/explore/ShoppingExplore";
+import ItExplore from "./pages/main/explore/ItExplore";
 
 function App() {
 
@@ -48,6 +52,10 @@ function App() {
               <Route path="/settings" element={<SettingHome />} />
               <Route path="/favorite" element={<Favorite />}/>
               <Route path="/history" element={<History />}/>
+              <Route path="/explore/hobby" element={<HobbyExplore />}/>
+              <Route path="/explore/life" element={<LifeExplore />}/>
+              <Route path="/explore/shopping" element={<ShoppingExplore />}/>
+              <Route path="/explore/it" element={<ItExplore />}/>
             </Route>
             <Route element={<CommonLayout/>}>
               <Route path="/login" element={<Login/>}/>

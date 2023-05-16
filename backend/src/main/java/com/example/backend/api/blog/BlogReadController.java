@@ -69,7 +69,7 @@ public class BlogReadController {
             }
         }
 
-        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner());
+        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner(), null);
         log.info(blogContent.toString());
 
         List<BlogContentRegisteredDto> blogRegisteredCalendar = blogService.getBlogRegisteredCalendar(blogPath.substring(1), blogInfo.isBlogOwner());
@@ -117,7 +117,7 @@ public class BlogReadController {
             }
         }
 
-        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner());
+        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner(), null);
         log.info(blogContent.toString());
 
         return ResponseEntity.ok().body(

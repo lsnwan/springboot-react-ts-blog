@@ -1,6 +1,7 @@
 package com.example.backend.service.blog;
 
 import com.example.backend.entity.*;
+import com.example.backend.entity.type.BlogCategoryType;
 import com.example.backend.repository.BlogHistoryRepository;
 import com.example.backend.repository.BlogInfoRepository;
 import com.example.backend.service.blog.dto.*;
@@ -75,11 +76,22 @@ public class BlogService {
                 .fetchOne();
     }
 
-    public List<BlogContentDto> getBlogContent(String blogPath, int pageIndex, int pageUnit, boolean isOwner) {
+    public List<BlogContentDto> getBlogContent(String blogPath, int pageIndex, int pageUnit, Boolean isOwner, String categoryType) {
 
-        BooleanExpression expression = blogInfo.blogPath.eq(blogPath);
-        if (!isOwner) {
-            expression = expression.and(blogContent.enabled.isTrue());
+        BooleanExpression expression = Expressions.asString("1").eq("1");
+
+        if (blogPath != null) {
+            expression = blogInfo.blogPath.eq(blogPath);
+        }
+
+        if (isOwner != null) {
+            if (!isOwner) {
+                expression = expression.and(blogContent.enabled.isTrue());
+            }
+        }
+
+        if (categoryType != null) {
+            expression = expression.and(blogContent.category.eq(BlogCategoryType.from(categoryType)));
         }
 
         return queryFactory

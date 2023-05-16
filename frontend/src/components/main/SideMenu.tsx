@@ -134,7 +134,7 @@ const SideMenu = (props :PropsType) => {
         <SubMenuLI>
           <SubMenuTitle isSideBar={props.isSideBar}>탐색</SubMenuTitle>
           <SingleMenuUL className="border_none">
-            <SingleMenuLI isSideBar={props.isSideBar}>
+            <SingleMenuLI isSideBar={props.isSideBar} onClick={() => navigate('/explore/hobby')}>
               <SingleMenuButton isSideBar={props.isSideBar}>
                 <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (
@@ -142,7 +142,7 @@ const SideMenu = (props :PropsType) => {
                 )}
               </SingleMenuButton>
             </SingleMenuLI>
-            <SingleMenuLI isSideBar={props.isSideBar}>
+            <SingleMenuLI isSideBar={props.isSideBar} onClick={() => navigate('/explore/life')}>
               <SingleMenuButton isSideBar={props.isSideBar}>
                 <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (
@@ -150,7 +150,7 @@ const SideMenu = (props :PropsType) => {
                 )}
               </SingleMenuButton>
             </SingleMenuLI>
-            <SingleMenuLI isSideBar={props.isSideBar}>
+            <SingleMenuLI isSideBar={props.isSideBar} onClick={() => navigate('/explore/shopping')}>
               <SingleMenuButton isSideBar={props.isSideBar}>
                 <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (
@@ -158,7 +158,7 @@ const SideMenu = (props :PropsType) => {
                 )}
               </SingleMenuButton>
             </SingleMenuLI>
-            <SingleMenuLI isSideBar={props.isSideBar}>
+            <SingleMenuLI isSideBar={props.isSideBar} onClick={() => navigate('/explore/it')}>
               <SingleMenuButton isSideBar={props.isSideBar}>
                 <SingleMenuIcon><GoLightBulb/></SingleMenuIcon>
                 {props.isSideBar && (

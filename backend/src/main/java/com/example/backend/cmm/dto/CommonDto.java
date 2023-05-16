@@ -13,5 +13,6 @@ public class CommonDto implements Serializable {
         private Integer pageNum;
         private Integer pageUnit;
         private Integer loadCnt;
+        private String condition;
     }
 }
