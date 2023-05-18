@@ -28,6 +28,7 @@ import HobbyExplore from "./pages/main/explore/HobbyExplore";
 import LifeExplore from "./pages/main/explore/LifeExplore";
 import ShoppingExplore from "./pages/main/explore/ShoppingExplore";
 import ItExplore from "./pages/main/explore/ItExplore";
+import Search from "./pages/main/Search";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
           <Routes>
             <Route element={<MainLayout/>}>
               <Route index path="/" element={<Home/>}/>
+              <Route index path="/search" element={<Search />}/>
               <Route element={<BlogLayout />}>
                 <Route path="/:blogPath" element={<BlogHome/>} />
                 <Route path="/:blogPath/published" element={<Published />} />

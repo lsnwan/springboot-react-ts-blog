@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as icon from "@fortawesome/free-solid-svg-icons";
 import * as SH from "../styled/header-styled";
@@ -33,6 +33,7 @@ const Header = (props: PropsType) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState<boolean>();
   const dropboxRef = useRef<HTMLDivElement>(null);
   const theme = useSelector<AppState, T.State>(state => state.themeType);
+  const [keyword, setKeyword] = useState<string>('');
 
   const [showCreateBlogModal, setShowCreateBlogModal] = useState<boolean>();
   const handleDelete = () => {
@@ -162,6 +163,10 @@ const Header = (props: PropsType) => {
 
   }
 
+  const handleSearchSubmit = () => {
+    navigate(`/search?keyword=${keyword}`);
+  }
+
   return (
     <SH.HeaderBox theme={props.theme}>
       <SH.BrandBox>
@@ -171,9 +176,9 @@ const Header = (props: PropsType) => {
 
       <SH.SearchBox>
         <SH.SearchInputBox theme={props.theme}>
-          <SH.SearchInput theme={props.theme}/>
+          <SH.SearchInput theme={props.theme} type="text" onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)} />
         </SH.SearchInputBox>
-        <SH.SearchButtonBox theme={props.theme}>
+        <SH.SearchButtonBox theme={props.theme} onClick={handleSearchSubmit}>
           <FontAwesomeIcon icon={icon.faSearch}/>
         </SH.SearchButtonBox>
       </SH.SearchBox>

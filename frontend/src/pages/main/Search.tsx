@@ -1,25 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {
   BlogCard,
-  BlogCardBody,
-  BlogInfo,
-  BlogInfoHeader,
-  BlogThumb,
-  BlogTitle,
-  ContentBody,
-  ContentContainer,
-  TagBadge,
-  TagBody,
-  UserProfile,
-  UserProfileMoreButton,
-  UserProfileName
+  BlogCardBody, BlogInfo, BlogInfoHeader,
+  BlogThumb, BlogTitle,
+  ContentBody, ContentContainer,
+  TitleContainer,
+  UserProfile, UserProfileMoreButton, UserProfileName
 } from "../../components/styled/content-styled";
 import {Helmet} from "react-helmet";
-import {useNavigate} from "react-router";
+import {useLocation, useSearchParams} from "react-router-dom";
 import axios from "axios";
 import {Path} from "@remix-run/router/history";
+import {useNavigate} from "react-router";
 import * as U from "../../utils";
-import {useLocation} from "react-router-dom";
 
 type BlogContentType = {
   blogContentIdx: number;
@@ -34,25 +27,37 @@ type BlogContentType = {
   accountProfileUrl: string;
 }
 
-type TagType = {
-  tagIdx: number;
-  tagName: string;
-}
-
-const Home = () => {
+const Search = () => {
 
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-  const [mainContents, setMainContents] = useState<Array<BlogContentType>>([]);
-  const navigate = useNavigate();
   const [pageIndex, setPageIndex] = useState<number>(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [previousQueryString, setPreviousQueryString] = useState<string>('');
+  const [currentQueryString, setCurrentQueryString] = useState<string>('');
+  const [initSearch, setInitSearch] = useState<boolean>(false);
+
+  const [searchContents, setSearchContents] = useState<Array<BlogContentType>>([]);
   const [lastRequest, setLastRequest] = useState<boolean>(false);
-  const [selTag, setSelTag] = useState<string>('');
-  const [tags, setTags] = useState<Array<TagType>>([]);
+  const navigate = useNavigate();
   const location = useLocation();
 
+
   useEffect(() => {
-    loadContents();
+    setPreviousQueryString(currentQueryString);
+    setCurrentQueryString(searchParams.get("keyword")!);
   }, [location]);
+
+  useEffect(() => {
+    console.log(previousQueryString + " :: " + currentQueryString);
+    if (previousQueryString !== currentQueryString) {
+      if (previousQueryString !== '') {
+        setPageIndex(1);
+        setSearchContents([]);
+      }
+      loadContents();
+    }
+  }, [previousQueryString, currentQueryString]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -74,17 +79,19 @@ const Home = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  });
 
   const loadContents = async () => {
+    console.log("loadContents !!!!!!!!!!!");
     if (!lastRequest) {
-      console.log('시작!!!!!!!!!!!!!!');
-      await axios.get(`/api/blogs?pageIndex=${pageIndex}&pageUnit=10&selTag=${selTag}`)
+
+      await axios.get(`/api/blogs/search?pageIndex=${pageIndex}&pageUnit=10&keyword=${searchParams.get("keyword")}`)
         .then(res => res.data)
         .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-          console.log(result);
 
-          console.log(pageIndex);
+          setPageIndex(prevState => prevState + 1);
+          setSearchContents((prevItems) => [...prevItems, ...result.data]);
+
           if (result.data.length === 0) {
             setLastRequest(true);
           }
@@ -95,34 +102,15 @@ const Home = () => {
   return (
     <ContentBody>
       <Helmet>
-        <title>YouBlog</title>
+        <title>{searchParams.get("keyword")} - YouBlog</title>
       </Helmet>
-      <TagBody width={windowWidth}>
-        <TagBadge className="active">리액트</TagBadge>
-        <TagBadge>typescript</TagBadge>
-        <TagBadge>Spring</TagBadge>
-        <TagBadge>SpringBoot</TagBadge>
-        <TagBadge>HTML</TagBadge>
-        <TagBadge>CSS</TagBadge>
-        <TagBadge>JQuery</TagBadge>
-        <TagBadge>전자정부프레임워크</TagBadge>
-        <TagBadge>Nginx</TagBadge>
-        <TagBadge>Apache</TagBadge>
-        <TagBadge>Vue.js</TagBadge>
-        <TagBadge>typescript</TagBadge>
-        <TagBadge>Spring</TagBadge>
-        <TagBadge>SpringBoot</TagBadge>
-        <TagBadge>HTML</TagBadge>
-        <TagBadge>CSS</TagBadge>
-        <TagBadge>JQuery</TagBadge>
-        <TagBadge>전자정부프레임워크</TagBadge>
-        <TagBadge>Nginx</TagBadge>
-        <TagBadge>Apache</TagBadge>
-        <TagBadge>Vue.js</TagBadge>
-      </TagBody>
+
+      <TitleContainer width={windowWidth}>
+        <h2 className="fw-semibold"><span>{searchParams.get("keyword")}</span> 검색</h2>
+      </TitleContainer>
 
       <ContentContainer width={windowWidth}>
-        {mainContents.length !== 0 && mainContents.map((content) => (
+        {searchContents.length !== 0 && searchContents.map((content) => (
           <BlogCard width={windowWidth} key={content.blogContentIdx} onClick={() => navigate(`/@${content.blogPathName}/view?id=${content.blogContentIdx}`)}>
             <BlogThumb imagePath={content.blogThumbnailUrl === null ? '/images/no-image.png' : content.blogThumbnailUrl} />
             <BlogCardBody>
@@ -138,8 +126,9 @@ const Home = () => {
           </BlogCard>
         ))}
       </ContentContainer>
+
     </ContentBody>
   );
 };
 
-export default Home;
+export default Search;

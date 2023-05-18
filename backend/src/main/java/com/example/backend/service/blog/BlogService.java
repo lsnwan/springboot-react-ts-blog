@@ -9,6 +9,7 @@ import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,7 @@ public class BlogService {
                 .fetchOne();
     }
 
-    public List<BlogContentDto> getBlogContent(String blogPath, int pageIndex, int pageUnit, Boolean isOwner, String categoryType) {
+    public List<BlogContentDto> getBlogContent(String blogPath, int pageIndex, int pageUnit, Boolean isOwner, String categoryType, String selTag, String keyword) {
 
         BooleanExpression expression = Expressions.asString("1").eq("1");
 
@@ -92,6 +93,17 @@ public class BlogService {
 
         if (categoryType != null) {
             expression = expression.and(blogContent.category.eq(BlogCategoryType.from(categoryType)));
+        }
+
+        if (selTag != null && !selTag.equals("")) {
+            expression = expression.and(blogContent.blogTags.any().tagName.contains(selTag));
+        }
+
+        if (keyword != null && !keyword.equals("")) {
+            expression = expression.and(blogContent.title.like("%" + keyword + "%"));
+            expression = expression.or(blogContent.content.like("%" + keyword + "%"));
+            expression = expression.or(blogContent.blogTags.any().tagName.contains(keyword));
+
         }
 
         return queryFactory

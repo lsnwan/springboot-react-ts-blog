@@ -4,7 +4,6 @@ import com.example.backend.api.blog.form.CreateBlogForm;
 import com.example.backend.api.blog.form.CreateBlogContentForm;
 import com.example.backend.api.blog.form.UpdateBlogContentForm;
 import com.example.backend.api.blog.model.DeleteBlogContentModel;
-import com.example.backend.api.blog.form.RegisteredFavoriteForm;
 import com.example.backend.cmm.dto.ResponseDataDto;
 import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.error.exception.BadRequestException;

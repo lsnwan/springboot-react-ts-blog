@@ -14,5 +14,6 @@ public class CommonDto implements Serializable {
         private Integer pageUnit;
         private Integer loadCnt;
         private String condition;
+        private String keyword;
     }
 }

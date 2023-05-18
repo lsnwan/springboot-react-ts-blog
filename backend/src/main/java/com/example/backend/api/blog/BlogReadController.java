@@ -6,7 +6,6 @@ import com.example.backend.cmm.dto.ResponseDto;
 import com.example.backend.cmm.type.ErrorType;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.BlogContent;
-import com.example.backend.entity.BlogFavorite;
 import com.example.backend.repository.BlogFavoriteRepository;
 import com.example.backend.repository.SubscribeRepository;
 import com.example.backend.security.CurrentAccount;
@@ -20,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -69,7 +69,7 @@ public class BlogReadController {
             }
         }
 
-        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner(), null);
+        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner(), null, null, null);
         log.info(blogContent.toString());
 
         List<BlogContentRegisteredDto> blogRegisteredCalendar = blogService.getBlogRegisteredCalendar(blogPath.substring(1), blogInfo.isBlogOwner());
@@ -117,7 +117,7 @@ public class BlogReadController {
             }
         }
 
-        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner(), null);
+        List<BlogContentDto> blogContent = blogService.getBlogContent(blogPath.substring(1), request.getPageIndex(), request.getPageUnit(), blogInfo.isBlogOwner(), null, null, null);
         log.info(blogContent.toString());
 
         return ResponseEntity.ok().body(
@@ -191,6 +191,47 @@ public class BlogReadController {
                         .message("정상 처리 되었습니다.")
                         .data(blogContentView)
                         .build());
+    }
+
+
+    @GetMapping("")
+    public ResponseEntity<?> getMainBlogContents(@ModelAttribute @Valid CommonDto.Request request, String selTag, BindingResult bindingResult) {
+
+        List<BlogContentDto> blogContents = blogService.getBlogContent(
+                null,
+                request.getPageIndex(),
+                request.getPageUnit(),
+                false,
+                null,
+                selTag,
+                null);
+
+        return ResponseEntity.ok().body(
+                ResponseDataDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .data(blogContents)
+                        .build());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> getSearchBlogContents(@ModelAttribute @Valid CommonDto.Request request, BindingResult bindingResult) {
+        List<BlogContentDto> blogContents = blogService.getBlogContent(
+                null,
+                request.getPageIndex(),
+                request.getPageUnit(),
+                false,
+                null,
+                null,
+                request.getKeyword());
+
+        return ResponseEntity.ok().body(
+                ResponseDataDto.builder()
+                        .code(String.valueOf(HttpStatus.OK.value()))
+                        .message("정상 처리 되었습니다.")
+                        .data(blogContents)
+                        .build()
+        );
     }
 
 }
