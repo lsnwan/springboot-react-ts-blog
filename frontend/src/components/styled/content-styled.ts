@@ -34,7 +34,8 @@ export const ContentContainer = styled.div<ContentWidthType>`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  width: ${(props) => (props.width && (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1500px;" : "1100px;"))}
+  width: ${(props) => (props.width && (props.width > 2430 ? "2160px;" : props.width > 2070 ? "1800px;" : props.width > 1770 ? "1500px;" : "1100px;"))};
+  
 `;
 
 export const HistoryDate = styled.div`
@@ -51,8 +52,7 @@ export const TagBody = styled.div<ContentWidthType>`
   height: 50px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 10px;
-  padding: 2px 0 55px 0;
+  padding: 2px 0 10px 0;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: hidden;

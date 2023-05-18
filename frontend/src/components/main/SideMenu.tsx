@@ -48,8 +48,9 @@ const SideMenu = (props :PropsType) => {
         axios.post("/api/subscribe")
           .then(res => res.data)
           .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-            console.log(result);
-            dispatch(MS.setSubscribes(result.data));
+            if (result.code === '200') {
+              dispatch(MS.setSubscribes(result.data));
+            }
           });
       }
     }

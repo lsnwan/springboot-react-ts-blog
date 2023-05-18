@@ -68,7 +68,7 @@ const ShoppingExplore = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
     };
-  });
+  }, []);
 
   const loadContents = async () => {
     if (!lastRequest) {

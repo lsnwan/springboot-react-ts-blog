@@ -46,10 +46,11 @@ type RadioProps = {
   name: string;
   initValue?: string;
   onChange: (selectedValue: string) => void;
+  labelStyle?: React.CSSProperties;
 };
 
 
-const RadioCheckbox: React.FC<RadioProps> = ({options, initValue, name, onChange}) => {
+const RadioCheckbox: React.FC<RadioProps> = ({options, initValue, name, onChange, labelStyle}) => {
 
   const theme = useSelector<AppState, T.State>(state => state.themeType);
   const [selectedValue, setSelectedValue] = useState<string>(initValue && (initValue) || (''));
@@ -72,7 +73,7 @@ const RadioCheckbox: React.FC<RadioProps> = ({options, initValue, name, onChange
             checked={selectedValue === option.value}
             onChange={handleRadioChange}
           />
-          <label htmlFor={option.value}>{option.label}</label>
+          <label style={labelStyle} htmlFor={option.value}>{option.label}</label>
         </RadioCheckStyled>
       ))}
     </>

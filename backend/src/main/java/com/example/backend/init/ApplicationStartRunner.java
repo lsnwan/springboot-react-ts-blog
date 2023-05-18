@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Profile("default")
 @Component
@@ -100,28 +101,46 @@ public class ApplicationStartRunner implements ApplicationRunner {
                 .build());
 
         List<BlogContent> blogContents = new ArrayList<>();
-        for (int i = 0; i < 55; i++) {
+        List<BlogCategoryType> categories = new ArrayList<>();
+        categories.add(BlogCategoryType.LIFE);
+        categories.add(BlogCategoryType.HOBBY);
+        categories.add(BlogCategoryType.SHOPPING);
+        categories.add(BlogCategoryType.IT);
+
+        Random random = new Random();
+        for (int i = 0; i < 300; i++) {
+
             BlogContent buildBlogContent = BlogContent.builder()
-                    .category(i < 10 ? BlogCategoryType.HOBBY : i < 15 ? BlogCategoryType.LIFE : i < 25 ? BlogCategoryType.SHOPPING : BlogCategoryType.IT)
+                    .category(categories.get(random.nextInt(4)))
                     .title("테스트 블로그 타이틀!![" + i + "]")
                     .content("<p>[" + i + "]테스트 블로그 콘텐츠!!!!!!!</p>")
                     .blogInfo(saveBlogInfo)
                     .enabled(true)
                     .build();
             blogContents.add(buildBlogContent);
-//            blogContentRepository.save(buildBlogContent);
         }
 
         blogContentRepository.saveAll(blogContents);
 
         blogTagRepository.save(BlogTag.builder()
-                        .blogContent(blogContents.get(54))
-                        .tagName("리액트")
+                .blogContent(blogContents.get(299))
+                .tagName("리액트")
                 .build());
 
         blogTagRepository.save(BlogTag.builder()
-                .blogContent(blogContents.get(54))
+                .blogContent(blogContents.get(299))
                 .tagName("타입스크립트")
+                .build());
+
+
+        blogTagRepository.save(BlogTag.builder()
+                .blogContent(blogContents.get(298))
+                .tagName("리액트")
+                .build());
+
+        blogTagRepository.save(BlogTag.builder()
+                .blogContent(blogContents.get(298))
+                .tagName("스프링부트")
                 .build());
 
     }

@@ -338,9 +338,6 @@ const CreateBlog = () => {
                   {label: "쇼핑", value: "shopping"},
                   {label: "IT", value: "it"},
                 ]} initValue="hobby" name="category" onChange={handleCategoryChange} />
-                {/*{titleMessage && (*/}
-                {/*  <MessageBox className="error">{titleMessage}</MessageBox>*/}
-                {/*)}*/}
               </div>
 
               <div className="mt-3">
