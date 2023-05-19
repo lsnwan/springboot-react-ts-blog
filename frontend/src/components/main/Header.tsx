@@ -167,6 +167,12 @@ const Header = (props: PropsType) => {
     navigate(`/search?keyword=${keyword}`);
   }
 
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      navigate(`/search?keyword=${keyword}`);
+    }
+  };
+
   return (
     <SH.HeaderBox theme={props.theme}>
       <SH.BrandBox>
@@ -176,7 +182,7 @@ const Header = (props: PropsType) => {
 
       <SH.SearchBox>
         <SH.SearchInputBox theme={props.theme}>
-          <SH.SearchInput theme={props.theme} type="text" onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)} />
+          <SH.SearchInput theme={props.theme} type="text" onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)} onKeyUp={handleKeyUp} />
         </SH.SearchInputBox>
         <SH.SearchButtonBox theme={props.theme} onClick={handleSearchSubmit}>
           <FontAwesomeIcon icon={icon.faSearch}/>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   BlogCard,
   BlogCardBody, BlogInfo, BlogInfoHeader,
@@ -35,68 +35,72 @@ const Search = () => {
 
   const [previousQueryString, setPreviousQueryString] = useState<string>('');
   const [currentQueryString, setCurrentQueryString] = useState<string>('');
+
   const [initSearch, setInitSearch] = useState<boolean>(false);
 
   const [searchContents, setSearchContents] = useState<Array<BlogContentType>>([]);
-  const [lastRequest, setLastRequest] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
 
+  const contentBoxRef = useRef<HTMLDivElement>(null);
+  const observerRef = React.useRef<IntersectionObserver>();
+  const boxRef = React.useRef<HTMLDivElement>(null);
+  const [endList, setEndList] = useState<boolean>(false);
+
+  useEffect(() => {
+    loadContents(pageIndex, currentQueryString);
+  }, [pageIndex, currentQueryString]);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(intersectionObserver); // IntersectionObserver
+    boxRef.current && observerRef.current.observe(boxRef.current);
+  }, [searchContents]);
 
   useEffect(() => {
     setPreviousQueryString(currentQueryString);
     setCurrentQueryString(searchParams.get("keyword")!);
   }, [location]);
 
+  const intersectionObserver = (entries: IntersectionObserverEntry[], io: IntersectionObserver) => {
+    entries.forEach((entry) => {
+      if(entry.isIntersecting) {
+        if (!endList) {
+          io.unobserve(entry.target);
+          setPageIndex((prevIndex) => prevIndex + 1);
+        }
+      }
+    })
+  }
+
   useEffect(() => {
-    console.log(previousQueryString + " :: " + currentQueryString);
     if (previousQueryString !== currentQueryString) {
       if (previousQueryString !== '') {
         setPageIndex(1);
         setSearchContents([]);
+        setEndList(false);
       }
-      loadContents();
     }
   }, [previousQueryString, currentQueryString]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
 
-    const handleScroll = () => {
-      const scrollBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight;
-      if (scrollBottom) {
-        loadContents();
-      }
-    }
+  const loadContents = async (page: number, keyword: string) => {
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll);
+    await axios.get(`/api/blogs/search?pageIndex=${page}&pageUnit=10&keyword=${keyword}`)
+      .then(res => res.data)
+      .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
 
-    // cleanup
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  });
+        if (result.data.length === 0) {
+          setEndList(true);
+        }
 
-  const loadContents = async () => {
-    console.log("loadContents !!!!!!!!!!!");
-    if (!lastRequest) {
+        if (page === 1) {
+          setSearchContents(result.data);
+          return;
+        }
 
-      await axios.get(`/api/blogs/search?pageIndex=${pageIndex}&pageUnit=10&keyword=${searchParams.get("keyword")}`)
-        .then(res => res.data)
-        .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
+        setSearchContents((prevItems) => [...prevItems, ...result.data]);
 
-          setPageIndex(prevState => prevState + 1);
-          setSearchContents((prevItems) => [...prevItems, ...result.data]);
-
-          if (result.data.length === 0) {
-            setLastRequest(true);
-          }
-        });
-    }
+      });
   }
 
   return (
@@ -110,21 +114,45 @@ const Search = () => {
       </TitleContainer>
 
       <ContentContainer width={windowWidth}>
-        {searchContents.length !== 0 && searchContents.map((content) => (
-          <BlogCard width={windowWidth} key={content.blogContentIdx} onClick={() => navigate(`/@${content.blogPathName}/view?id=${content.blogContentIdx}`)}>
-            <BlogThumb imagePath={content.blogThumbnailUrl === null ? '/images/no-image.png' : content.blogThumbnailUrl} />
-            <BlogCardBody>
-              <UserProfile imagePath={content.accountProfileUrl === null ? '/images/no-profile.png' : content.accountProfileUrl} />
-              <BlogInfo>
-                <BlogInfoHeader>
-                  <UserProfileName>{content.accountNickname}</UserProfileName>
-                  <UserProfileMoreButton>{U.formatDate(content.registeredDate)}</UserProfileMoreButton>
-                </BlogInfoHeader>
-                <BlogTitle>{content.blogTitle}</BlogTitle>
-              </BlogInfo>
-            </BlogCardBody>
-          </BlogCard>
-        ))}
+        {searchContents.length !== 0 && searchContents.map((content, index) => {
+          if (searchContents.length - 1 === index) {
+            return (
+              <BlogCard width={windowWidth} key={content.blogContentIdx} ref={boxRef} onClick={() => navigate(`/@${content.blogPathName}/view?id=${content.blogContentIdx}`)}>
+                <BlogThumb imagePath={content.blogThumbnailUrl === null ? '/images/no-image.png' : content.blogThumbnailUrl} />
+                <BlogCardBody>
+                  <UserProfile imagePath={content.accountProfileUrl === null ? '/images/no-profile.png' : content.accountProfileUrl} />
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>{content.accountNickname}</UserProfileName>
+                      <UserProfileMoreButton>{U.formatDate(content.registeredDate)}</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>{content.blogTitle}</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+            )
+          } else {
+            return (
+              <BlogCard width={windowWidth} key={content.blogContentIdx} onClick={() => navigate(`/@${content.blogPathName}/view?id=${content.blogContentIdx}`)}>
+                <BlogThumb imagePath={content.blogThumbnailUrl === null ? '/images/no-image.png' : content.blogThumbnailUrl} />
+                <BlogCardBody>
+                  <UserProfile imagePath={content.accountProfileUrl === null ? '/images/no-profile.png' : content.accountProfileUrl} />
+                  <BlogInfo>
+                    <BlogInfoHeader>
+                      <UserProfileName>{content.accountNickname}</UserProfileName>
+                      <UserProfileMoreButton>{U.formatDate(content.registeredDate)}</UserProfileMoreButton>
+                    </BlogInfoHeader>
+                    <BlogTitle>{content.blogTitle}</BlogTitle>
+                  </BlogInfo>
+                </BlogCardBody>
+              </BlogCard>
+            )
+          }
+        }) || (
+          <>
+            <h2>데이터를 찾지 못했습니다.</h2>
+          </>
+        )}
       </ContentContainer>
 
     </ContentBody>

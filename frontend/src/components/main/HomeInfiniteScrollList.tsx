@@ -31,12 +31,13 @@ const HomeInfiniteScrollList = (props: Props) => {
     value: '전체'
   }]);
   const [selTag, setSelTag] = useState<string>('전체');
-  const [endList, setEndList] = useState<boolean>(false);
-  const contentBoxRef = useRef<HTMLDivElement>(null);
+
   const navigate = useNavigate();
 
+  const contentBoxRef = useRef<HTMLDivElement>(null);
   const observerRef = React.useRef<IntersectionObserver>();
   const boxRef = React.useRef<HTMLDivElement>(null);
+  const [endList, setEndList] = useState<boolean>(false);
 
   useEffect(() => {
     TagFetchData();

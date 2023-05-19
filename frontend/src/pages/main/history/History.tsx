@@ -41,7 +41,6 @@ const History = () => {
     axios.get('/api/history?pageIndex=1&pageUnit=100')
       .then(res => res.data)
       .then((result: { code: string; message: string; data?: any; path: string | Partial<Path>; }) => {
-        console.log(result);
 
         if (result.code === 'A-001') {
           navigate('/login');
